@@ -28,13 +28,11 @@
 ---
 #### Технологические требования
 
-Back-End:
-СУБД: MSSQL server
-Язык: C#
+Backend:
+ - **СУБД:** MSSQL server
+ - **Язык:** C#
+ - **Фреймворк:** Entity Framework
 
-Фреймворк: Entity Framework
-
-Front-End:
-Язык: Typescript
-Фреймворк: React
-
+Frontend:
+ - **Язык:** Typescript
+ - **Фреймворк:** React
