@@ -1,5 +1,6 @@
 ﻿namespace Domain.Entities;
 
+//проверка
 public class Category
 {
     public int Id { get; set; }
