@@ -23,7 +23,7 @@ namespace Infrastructure.Configurations
                 .HasMaxLength( 256 );
 
             builder.Property( u => u.Avatar )
-                .HasMaxLength( 256 );
+                .HasMaxLength( 500 );
 
             builder.Property( u => u.RegistrationDate )
                 .IsRequired();

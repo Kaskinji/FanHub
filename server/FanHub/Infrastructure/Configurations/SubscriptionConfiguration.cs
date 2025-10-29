@@ -11,10 +11,12 @@ namespace Infrastructure.Configurations
             builder.HasKey( s => s.SubscriptionId );
 
             builder.Property( s => s.UserId )
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength( 1000000 );
 
             builder.Property( s => s.FandomId )
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength( 1000000 );
 
             builder.Property( s => s.Date )
                 .IsRequired();

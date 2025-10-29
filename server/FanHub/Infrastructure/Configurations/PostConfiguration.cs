@@ -24,13 +24,14 @@ namespace Infrastructure.Configurations
                 .HasMaxLength( 128 );
 
             builder.Property( p => p.Content )
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength( 5000 );
 
             builder.Property( p => p.PostDate )
                 .IsRequired();
 
             builder.Property( p => p.MediaContent )
-                .HasMaxLength( 256 );
+                .HasMaxLength( 500 );
 
             builder.Property( p => p.Status )
                 .IsRequired()

@@ -16,7 +16,7 @@ namespace Infrastructure.Configurations
 
             builder.Property( c => c.Icon )
                 .IsRequired()
-                .HasMaxLength( 256 );
+                .HasMaxLength( 500 );
         }
     }
 }

@@ -15,7 +15,8 @@ namespace Infrastructure.Configurations
                 .HasMaxLength( 256 );
 
             builder.Property( g => g.Description )
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength( 600 );
 
             builder.Property( g => g.ReleaseDate )
                 .IsRequired();
@@ -30,11 +31,11 @@ namespace Infrastructure.Configurations
 
             builder.Property( g => g.CoverImage )
                 .IsRequired()
-                .HasMaxLength( 256 );
+                .HasMaxLength( 500 );
 
             builder.Property( g => g.Genre )
                 .IsRequired()
-                .HasMaxLength( 256 );
+                .HasMaxLength( 50 );
         }
     }
 }
