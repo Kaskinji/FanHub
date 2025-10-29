@@ -25,8 +25,8 @@ namespace Domain.Validators
                 .GreaterThan( 0 ).WithMessage( "ID пользователя должен быть положительным числом" );
 
             RuleFor( x => x )
-                .Must( x => x.Post is not null || x.User is not null )
-                .WithMessage( "Должен быть указан либо пост, либо пользователь" );
+                .Must( x => x.Post is not null && x.User is not null )
+                .WithMessage( "Должен быть указан пост и комментатор" );
         }
     }
 }
