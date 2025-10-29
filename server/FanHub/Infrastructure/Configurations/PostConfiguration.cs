@@ -24,8 +24,7 @@ namespace Infrastructure.Configurations
                 .HasMaxLength( 128 );
 
             builder.Property( p => p.Content )
-                .IsRequired()
-                .HasMaxLength( 5000 );
+                .IsRequired();
 
             builder.Property( p => p.PostDate )
                 .IsRequired();

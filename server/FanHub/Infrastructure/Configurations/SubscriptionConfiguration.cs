@@ -11,8 +11,7 @@ namespace Infrastructure.Configurations
             builder.HasKey( s => s.SubscriptionId );
 
             builder.Property( s => s.UserId )
-                .IsRequired()
-                .HasMaxLength( 1000000 );
+                .IsRequired();
 
             builder.Property( s => s.FandomId )
                 .IsRequired()

@@ -18,15 +18,13 @@ namespace Infrastructure.Configurations
                 .HasMaxLength( 128 );
 
             builder.Property( f => f.Description )
-                .IsRequired()
-                .HasMaxLength( 2000 );
+                .IsRequired();
 
             builder.Property( f => f.CreationDate )
                 .IsRequired();
 
             builder.Property( f => f.Rules )
-                .IsRequired()
-                .HasMaxLength( 5000 );
+                .IsRequired();
 
             builder.HasOne( f => f.Game )
                 .WithMany()
