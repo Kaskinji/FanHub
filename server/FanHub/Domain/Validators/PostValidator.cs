@@ -48,17 +48,20 @@ namespace Domain.Validators
 
         protected virtual bool BeValidMediaUrl( string url )
         {
-            if ( string.IsNullOrEmpty( url ) ) return true;
+            if ( string.IsNullOrEmpty( url ) )
+            {
+                return true;
+            }
 
-            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".mp4", ".webm", ".youtube.com", "youtu.be" };
-            return Uri.TryCreate( url, UriKind.Absolute, out var uriResult ) &&
+            string[] allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".mp4", ".webm", ".youtube.com", "youtu.be" };
+            return Uri.TryCreate( url, UriKind.Absolute, out Uri? uriResult ) &&
                    ( allowedExtensions.Any( ext => uriResult.AbsoluteUri.Contains( ext ) ) ||
                     uriResult.Host.Contains( "youtube" ) || uriResult.Host.Contains( "vimeo" ) );
         }
 
         protected virtual bool ContainsForbiddenWords( string content )
         {
-            var forbiddenWords = new[] { "спам", "скам", "мошенничество", "взлом" };
+            string[] forbiddenWords = new[] { "спам", "скам", "мошенничество", "взлом" };
             return forbiddenWords.Any( word =>
                 content.ToLower().Contains( word.ToLower() ) );
         }

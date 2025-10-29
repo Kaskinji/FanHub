@@ -24,13 +24,13 @@ namespace Domain.Validators
         private bool BeValidIconPath( string iconPath )
         {
             if ( string.IsNullOrEmpty( iconPath ) )
+            {
                 return true;
+            }
 
-            // Проверяем допустимые расширения файлов
-            var allowedExtensions = new[] { ".png", ".jpg", ".jpeg", ".svg", ".gif", ".ico" };
-            var extension = Path.GetExtension( iconPath )?.ToLower();
+            string[] allowedExtensions = new[] { ".png", ".jpg", ".jpeg", ".svg", ".gif", ".ico" };
+            string? extension = Path.GetExtension( iconPath )?.ToLower();
 
-            // Проверяем валидный URL или локальный путь
             return Uri.TryCreate( iconPath, UriKind.Absolute, out _ ) ||
                    ( allowedExtensions.Contains( extension ) && !iconPath.Contains( ".." ) );
         }

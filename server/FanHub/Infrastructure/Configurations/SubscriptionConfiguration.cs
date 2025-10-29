@@ -16,7 +16,7 @@ namespace Infrastructure.Configurations
 
             builder.Property( s => s.FandomId )
                 .IsRequired()
-                .HasMaxLength( 1000000 );
+                .HasMaxLength( 100 );
 
             builder.Property( s => s.Date )
                 .IsRequired();

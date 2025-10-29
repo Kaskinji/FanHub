@@ -19,16 +19,6 @@ namespace Domain.Validators
                 .NotEmpty().WithMessage( "Дата подписки обязательна" )
                 .LessThanOrEqualTo( DateTime.UtcNow ).WithMessage( "Дата подписки не может быть в будущем" )
                 .GreaterThanOrEqualTo( DateTime.UtcNow.AddYears( -1 ) ).WithMessage( "Дата подписки не может быть старше 1 года" );
-
-            RuleFor( x => x )
-                .Must( HaveUniqueUserFandomPair ).WithMessage( "Пользователь уже подписан на этот фандом" );
-        }
-
-        protected virtual bool HaveUniqueUserFandomPair( Subscription subscription )
-        {
-
-            // проверка будет в сервисе с доступом к репозиторию
-            return true;
         }
     }
 }

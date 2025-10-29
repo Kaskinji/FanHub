@@ -16,14 +16,12 @@ namespace Domain.Validators
                 .NotEmpty().WithMessage( "Имя пользователя обязательно" )
                 .Length( 3, 256 ).WithMessage( "Имя пользователя должно быть от 3 до 256 символов" )
                 .Matches( "^[a-zA-Z0-9_]+$" ).WithMessage( "Имя пользователя может содержать только буквы, цифры и подчеркивания" )
-                .Must( BeUniqueUsername ).WithMessage( "Имя пользователя уже занято" )
                 .Must( username => !username.All( char.IsDigit ) ).WithMessage( "Имя пользователя не может состоять только из цифр" );
 
             RuleFor( x => x.Email )
                 .NotEmpty().WithMessage( "Email обязателен" )
                 .MaximumLength( 256 ).WithMessage( "Email не может превышать 256 символов" )
                 .EmailAddress().WithMessage( "Некорректный формат email" )
-                .Must( BeUniqueEmail ).WithMessage( "Email уже используется" )
                 .Must( email => !email.Contains( "+" ) ).WithMessage( "Email не должен содержать '+'" )
                 .When( x => !string.IsNullOrEmpty( x.Email ) );
 
@@ -46,30 +44,21 @@ namespace Domain.Validators
             RuleFor( x => x.Role )
                 .IsInEnum().WithMessage( "Некорректная роль пользователя" )
                 .Must( role => role != UserRole.Admin ).WithMessage( "Нельзя напрямую устанавливать роль Admin" )
-                .When( x => x.UserId == 0 ); // Только при создании
-        }
-
-        private bool BeUniqueUsername( string username )
-        {
-            // проверка будет в сервисе
-            return true;
-        }
-
-        private bool BeUniqueEmail( string email )
-        {
-            // Проверка уникальности email в БД
-            return true;
+                .When( x => x.UserId == 0 );
         }
 
         private bool BeStrongPassword( string password )
         {
-            if ( string.IsNullOrEmpty( password ) ) return false;
+            if ( string.IsNullOrEmpty( password ) )
+            {
+                return false;
+            }
 
             // мин 8 символов, 1 заглавная, 1 цифра, 1 специальный символ
-            var hasUpperCase = new Regex( @"[A-Z]" );
-            var hasLowerCase = new Regex( @"[a-z]" );
-            var hasDigit = new Regex( @"[0-9]" );
-            var hasSpecialChar = new Regex( @"[!@#$%^&*()_+\-=\[\]{};':""\\|,.<>\/?]" );
+            Regex hasUpperCase = new Regex( @"[A-Z]" );
+            Regex hasLowerCase = new Regex( @"[a-z]" );
+            Regex hasDigit = new Regex( @"[0-9]" );
+            Regex hasSpecialChar = new Regex( @"[!@#$%^&*()_+\-=\[\]{};':""\\|,.<>\/?]" );
 
             return hasUpperCase.IsMatch( password ) &&
                    hasLowerCase.IsMatch( password ) &&
@@ -79,16 +68,23 @@ namespace Domain.Validators
 
         private bool BeValidImageUrl( string url )
         {
-            if ( string.IsNullOrEmpty( url ) ) return true;
+            if ( string.IsNullOrEmpty( url ) )
+            {
+                return true;
+            }
 
-            if ( !Uri.TryCreate( url, UriKind.Absolute, out var uriResult ) )
+            if ( !Uri.TryCreate( url, UriKind.Absolute, out Uri? uriResult ) )
+            {
                 return false;
+            }
 
             if ( uriResult.Scheme != Uri.UriSchemeHttp && uriResult.Scheme != Uri.UriSchemeHttps )
+            {
                 return false;
+            }
 
-            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp" };
-            var extension = Path.GetExtension( uriResult.AbsolutePath )?.ToLower();
+            string[] allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp" };
+            string? extension = Path.GetExtension( uriResult.AbsolutePath )?.ToLower();
 
             return allowedExtensions.Contains( extension );
         }

@@ -23,27 +23,17 @@ namespace Domain.Validators
             RuleFor( x => x.Type )
                 .IsInEnum().WithMessage( "Некорректный тип реакции" )
                 .Must( BeValidReactionType ).WithMessage( "Тип реакции не поддерживается" );
-
-            RuleFor( x => x )
-                .Must( BeUniqueReaction ).WithMessage( "Пользователь уже поставил реакцию на этот пост" )
-                .When( x => x.UserId > 0 && x.PostId > 0 );
         }
 
         private bool BeValidReactionType( ReactionType reactionType )
         {
-            var allowedReactions = new[]
+            ReactionType[] allowedReactions = new[]
             {
                 ReactionType.Like,
                 ReactionType.Dislike,
             };
 
             return allowedReactions.Contains( reactionType );
-        }
-
-        private bool BeUniqueReaction( Reaction reaction )
-        {
-            // проверка будет в сервисе с доступом к репозиторию
-            return true;
         }
     }
 }

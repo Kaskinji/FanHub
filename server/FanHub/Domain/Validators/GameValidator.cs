@@ -49,19 +49,23 @@ namespace Domain.Validators
 
         private bool BeValidImageUrl( string url )
         {
-            if ( string.IsNullOrEmpty( url ) ) return false;
-
-            // Проверяем валидный URL
-            if ( !Uri.TryCreate( url, UriKind.Absolute, out var uriResult ) )
+            if ( string.IsNullOrEmpty( url ) )
+            {
                 return false;
+            }
 
-            // Проверяем схему (http/https)
+            if ( !Uri.TryCreate( url, UriKind.Absolute, out Uri? uriResult ) )
+            {
+                return false;
+            }
+
             if ( uriResult.Scheme != Uri.UriSchemeHttp && uriResult.Scheme != Uri.UriSchemeHttps )
+            {
                 return false;
+            }
 
-            // Проверяем допустимые расширения файлов
-            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp", ".gif" };
-            var extension = Path.GetExtension( uriResult.AbsolutePath )?.ToLower();
+            string[] allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp", ".gif" };
+            string? extension = Path.GetExtension( uriResult.AbsolutePath )?.ToLower();
 
             return allowedExtensions.Contains( extension );
         }

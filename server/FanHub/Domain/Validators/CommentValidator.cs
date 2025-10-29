@@ -25,7 +25,6 @@ namespace Domain.Validators
             RuleFor( x => x.UserId )
                 .GreaterThan( 0 ).WithMessage( "ID пользователя должен быть положительным числом" );
 
-            // Валидация навигационных свойств (при создании через API)
             RuleFor( x => x.Post )
                 .NotNull().When( x => x.PostId == 0 ).WithMessage( "Пост должен быть указан" );
 
@@ -35,12 +34,16 @@ namespace Domain.Validators
 
         private bool BeReasonableContent( string content )
         {
-            if ( string.IsNullOrEmpty( content ) ) return true;
+            if ( string.IsNullOrEmpty( content ) )
+            {
+                return true;
+            }
 
-            // Проверка на запрещенные слова (можно вынести в конфиг)
-            var forbiddenWords = new[] { "спам", "реклама", "http://", "https://" };
+            string[] forbiddenWords = new[] { "спам", "реклама", "http://", "https://" };
             if ( forbiddenWords.Any( word => content.ToLower().Contains( word ) ) )
+            {
                 return false;
+            }
 
             return true;
         }

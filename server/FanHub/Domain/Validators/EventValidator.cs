@@ -29,21 +29,6 @@ namespace Domain.Validators
             RuleFor( x => x.Status )
                 .IsInEnum().WithMessage( "Некорректный статус события" );
 
-            RuleFor( x => x )
-                .Must( HaveValidOrganizer ).WithMessage( "Организатор должен быть участником фандома" )
-                .Must( HaveReasonableEventDuration ).WithMessage( "Событие не может длиться более n дней" );
-        }
-
-        private bool HaveValidOrganizer( Event eventEntity )
-        {
-            //организатор должен быть участником фандома
-            return eventEntity.OrganizerId > 0 && eventEntity.FandomId > 0;
-        }
-
-        private bool HaveReasonableEventDuration( Event eventEntity )
-        {
-            //Событие не может длиться более n дней
-            return true;
         }
     }
 }
