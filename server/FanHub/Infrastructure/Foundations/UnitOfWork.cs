@@ -1,7 +1,17 @@
 ﻿namespace Infrastructure.Foundations
 {
-    public interface IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
-        public Task CommitAsync();
+        WebApiDbContext _dbContext;
+
+        public UnitOfWork( WebApi dbContext )
+        {
+            _dbContext = dbContext;
+        }
+
+        public async Task CommitAsync()
+        {
+            _ = await _dbContext.SaveChangesAsync();
+        }
     }
 }

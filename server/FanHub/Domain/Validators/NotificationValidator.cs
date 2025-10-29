@@ -31,7 +31,6 @@ namespace Domain.Validators
             RuleFor( x => x )
                 .Must( HaveAtLeastOneReference )
                 .WithMessage( "Уведомление должно ссылаться на пост или событие" );
-
         }
 
         private bool HaveAtLeastOneReference( Notification notification )

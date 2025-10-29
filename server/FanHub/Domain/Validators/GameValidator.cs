@@ -38,36 +38,13 @@ namespace Domain.Validators
             RuleFor( x => x.CoverImage )
                 .NotEmpty().WithMessage( "Обложка игры обязательна" )
                 .MaximumLength( 500 ).WithMessage( "Путь к обложке не может превышать 500 символов" )
-                .Must( BeValidImageUrl ).WithMessage( "Некорректный URL обложки" )
+                .Must( UrlValidator.ValidateImageUrl ).WithMessage( "Некорректный URL обложки" )
                 .When( x => !string.IsNullOrEmpty( x.CoverImage ) );
 
             RuleFor( x => x.Genre )
                 .NotEmpty().WithMessage( "Жанр обязателен" )
                 .Length( 1, 50 ).WithMessage( "Жанр должен быть от 1 до 50 символов" )
                 .Matches( "^[a-zA-Zа-яА-Я\\s\\-/]+$" ).WithMessage( "Жанр содержит недопустимые символы" );
-        }
-
-        private bool BeValidImageUrl( string url )
-        {
-            if ( string.IsNullOrEmpty( url ) )
-            {
-                return false;
-            }
-
-            if ( !Uri.TryCreate( url, UriKind.Absolute, out Uri? uriResult ) )
-            {
-                return false;
-            }
-
-            if ( uriResult.Scheme != Uri.UriSchemeHttp && uriResult.Scheme != Uri.UriSchemeHttps )
-            {
-                return false;
-            }
-
-            string[] allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp", ".gif" };
-            string? extension = Path.GetExtension( uriResult.AbsolutePath )?.ToLower();
-
-            return allowedExtensions.Contains( extension );
         }
     }
 }

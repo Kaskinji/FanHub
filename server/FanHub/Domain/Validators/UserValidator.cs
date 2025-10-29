@@ -34,7 +34,7 @@ namespace Domain.Validators
 
             RuleFor( x => x.Avatar )
                 .MaximumLength( 500 ).WithMessage( "URL аватара не может превышать 500 символов" )
-                .Must( BeValidImageUrl ).WithMessage( "Некорректный URL аватара" )
+                .Must( UrlValidator.ValidateImageUrl ).WithMessage( "Некорректный URL аватара" )
                 .When( x => !string.IsNullOrEmpty( x.Avatar ) );
 
             RuleFor( x => x.RegistrationDate )
@@ -54,7 +54,6 @@ namespace Domain.Validators
                 return false;
             }
 
-            // мин 8 символов, 1 заглавная, 1 цифра, 1 специальный символ
             Regex hasUpperCase = new Regex( @"[A-Z]" );
             Regex hasLowerCase = new Regex( @"[a-z]" );
             Regex hasDigit = new Regex( @"[0-9]" );
@@ -64,29 +63,6 @@ namespace Domain.Validators
                    hasLowerCase.IsMatch( password ) &&
                    hasDigit.IsMatch( password ) &&
                    hasSpecialChar.IsMatch( password );
-        }
-
-        private bool BeValidImageUrl( string url )
-        {
-            if ( string.IsNullOrEmpty( url ) )
-            {
-                return true;
-            }
-
-            if ( !Uri.TryCreate( url, UriKind.Absolute, out Uri? uriResult ) )
-            {
-                return false;
-            }
-
-            if ( uriResult.Scheme != Uri.UriSchemeHttp && uriResult.Scheme != Uri.UriSchemeHttps )
-            {
-                return false;
-            }
-
-            string[] allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp" };
-            string? extension = Path.GetExtension( uriResult.AbsolutePath )?.ToLower();
-
-            return allowedExtensions.Contains( extension );
         }
     }
 }

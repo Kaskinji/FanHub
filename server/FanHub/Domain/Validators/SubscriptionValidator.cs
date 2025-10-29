@@ -8,12 +8,10 @@ namespace Domain.Validators
         public SubscriptionValidator()
         {
             RuleFor( x => x.UserId )
-                .GreaterThan( 0 ).WithMessage( "User ID должен быть положительным числом" )
-                .LessThan( 1000000 ).WithMessage( "User ID слишком большой" );
+                .GreaterThan( 0 ).WithMessage( "User ID должен быть положительным числом" );
 
             RuleFor( x => x.FandomId )
-                .GreaterThan( 0 ).WithMessage( "Fandom ID должен быть положительным числом" )
-                .LessThan( 1000000 ).WithMessage( "Fandom ID слишком большой" );
+                .GreaterThan( 0 ).WithMessage( "Fandom ID должен быть положительным числом" );
 
             RuleFor( x => x.Date )
                 .NotEmpty().WithMessage( "Дата подписки обязательна" )

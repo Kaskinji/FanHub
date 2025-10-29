@@ -27,7 +27,7 @@ namespace Domain.Validators
 
         private bool BeValidReactionType( ReactionType reactionType )
         {
-            ReactionType[] allowedReactions = new[]
+            ReactionType[] allowedReactions =
             {
                 ReactionType.Like,
                 ReactionType.Dislike,

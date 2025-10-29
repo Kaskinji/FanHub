@@ -28,7 +28,6 @@ namespace Domain.Validators
 
             RuleFor( x => x.Status )
                 .IsInEnum().WithMessage( "Некорректный статус события" );
-
         }
     }
 }
