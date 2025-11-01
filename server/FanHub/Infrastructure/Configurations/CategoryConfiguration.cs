@@ -12,11 +12,11 @@ namespace Infrastructure.Configurations
 
             builder.Property( c => c.Name )
                 .IsRequired()
-                .HasMaxLength( 256 );
+                .HasMaxLength( 128 );
 
             builder.Property( c => c.Icon )
                 .IsRequired()
-                .HasMaxLength( 256 );
+                .HasMaxLength( 1000 );
         }
     }
 }

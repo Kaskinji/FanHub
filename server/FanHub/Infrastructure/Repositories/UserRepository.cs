@@ -7,6 +7,7 @@ namespace Infrastructure.Repositories
     {
         public UserRepository( FanHubDbContext fanhubDbContext ) : base( fanhubDbContext )
         {
+
         }
     }
 }

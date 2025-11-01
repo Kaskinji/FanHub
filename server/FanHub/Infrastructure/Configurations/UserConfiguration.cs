@@ -12,18 +12,18 @@ namespace Infrastructure.Configurations
 
             builder.Property( u => u.Username )
                 .IsRequired()
-                .HasMaxLength( 256 );
+                .HasMaxLength( 64 );
 
-            builder.Property( u => u.Email )
+            builder.Property( u => u.Login )
                 .IsRequired()
-                .HasMaxLength( 256 );
+                .HasMaxLength( 128 );
 
-            builder.Property( u => u.PasswordHash )
+            builder.Property( u => u.Password )
                 .IsRequired()
                 .HasMaxLength( 256 );
 
             builder.Property( u => u.Avatar )
-                .HasMaxLength( 256 );
+                .HasMaxLength( 1000 );
 
             builder.Property( u => u.RegistrationDate )
                 .IsRequired();

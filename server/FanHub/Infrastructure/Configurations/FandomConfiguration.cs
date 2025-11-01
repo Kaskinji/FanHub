@@ -15,7 +15,7 @@ namespace Infrastructure.Configurations
 
             builder.Property( f => f.Name )
                 .IsRequired()
-                .HasMaxLength( 256 );
+                .HasMaxLength( 128 );
 
             builder.Property( f => f.Description )
                 .IsRequired();

@@ -18,7 +18,7 @@ namespace Infrastructure.Configurations
 
             builder.Property( c => c.Content )
                 .IsRequired()
-                .HasMaxLength( 256 );
+                .HasMaxLength( 2000 );
 
             builder.Property( c => c.CommentDate )
                 .IsRequired();
