@@ -10,7 +10,7 @@ namespace Domain.Validators
             RuleFor( x => x.Content )
                 .NotEmpty().WithMessage( "Текст комментария не может быть пустым" )
                 .MinimumLength( 1 ).WithMessage( "Комментарий должен содержать хотя бы 1 символ" )
-                .MaximumLength( 500 ).WithMessage( "Комментарий не может превышать 500 символов" )
+                .MaximumLength( 2000 ).WithMessage( "Комментарий не может превышать 2000 символов" )
                 .Must( content => !string.IsNullOrWhiteSpace( content ) ).WithMessage( "Комментарий не может состоять только из пробелов" );
 
             RuleFor( x => x.CommentDate )

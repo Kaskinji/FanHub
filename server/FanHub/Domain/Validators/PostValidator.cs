@@ -18,13 +18,11 @@ namespace Domain.Validators
 
             RuleFor( x => x.Content )
                 .NotEmpty().WithMessage( "Содержимое поста обязательно" )
-                .MinimumLength( 10 ).WithMessage( "Содержимое должно быть не менее 10 символов" )
-                .MaximumLength( 5000 ).WithMessage( "Содержимое не может превышать 5000 символов" );
+                .Length( 10, 5000 ).WithMessage( "Содержимое должно быть от 10 до 5000 символов" );
 
             RuleFor( x => x.MediaContent )
-                .MaximumLength( 500 ).WithMessage( "Ссылка на медиа-контент не может превышать 500 символов" )
-                .Must( UrlValidator.ValidateMediaWithVideoUrl ).WithMessage( "Некорректная ссылка на медиа-контент" )
-                .When( x => !string.IsNullOrEmpty( x.MediaContent ) );
+                .MaximumLength( 1000 ).WithMessage( "Ссылка на медиа-контент не может превышать 1000 символов" )
+                .Must( UrlValidator.ValidateMediaWithVideoUrl ).WithMessage( "Некорректная ссылка на медиа-контент" );
 
             RuleFor( x => x.PostDate )
                 .LessThanOrEqualTo( DateTime.Now ).WithMessage( "Дата публикации не может быть в будущем" )

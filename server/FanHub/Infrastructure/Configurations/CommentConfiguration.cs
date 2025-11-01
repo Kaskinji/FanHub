@@ -17,7 +17,8 @@ namespace Infrastructure.Configurations
                 .IsRequired();
 
             builder.Property( c => c.Content )
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength( 2000 );
 
             builder.Property( c => c.CommentDate )
                 .IsRequired();

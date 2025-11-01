@@ -37,13 +37,13 @@ namespace Domain.Validators
 
             RuleFor( x => x.CoverImage )
                 .NotEmpty().WithMessage( "Обложка игры обязательна" )
-                .MaximumLength( 500 ).WithMessage( "Путь к обложке не может превышать 500 символов" )
+                .MaximumLength( 1000 ).WithMessage( "Путь к обложке не может превышать 1000 символов" )
                 .Must( UrlValidator.ValidateImageUrl ).WithMessage( "Некорректный URL обложки" )
                 .When( x => !string.IsNullOrEmpty( x.CoverImage ) );
 
             RuleFor( x => x.Genre )
                 .NotEmpty().WithMessage( "Жанр обязателен" )
-                .Length( 1, 50 ).WithMessage( "Жанр должен быть от 1 до 50 символов" )
+                .Length( 1, 128 ).WithMessage( "Жанр должен быть от 1 до 128 символов" )
                 .Matches( "^[a-zA-Zа-яА-Я\\s\\-/]+$" ).WithMessage( "Жанр содержит недопустимые символы" );
         }
     }

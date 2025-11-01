@@ -30,11 +30,11 @@ namespace Infrastructure.Configurations
 
             builder.Property( g => g.CoverImage )
                 .IsRequired()
-                .HasMaxLength( 500 );
+                .HasMaxLength( 1000 );
 
             builder.Property( g => g.Genre )
                 .IsRequired()
-                .HasMaxLength( 50 );
+                .HasMaxLength( 128 );
         }
     }
 }
