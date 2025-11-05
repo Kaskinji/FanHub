@@ -1,4 +1,6 @@
-﻿using Domain.Repositories;
+﻿using Domain.Foundations;
+using Domain.Repositories;
+using Infrastructure.Foundations;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -6,17 +8,19 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure
 {
-    public static class InfrastructureInitializer
+    public static class InfrastructureBinding
     {
         public static IServiceCollection AddInfrastructure(
             this IServiceCollection services,
             IConfiguration configuration )
         {
-            string connectionString = configuration.GetConnectionString( "DefaultConnection" )
-                ?? throw new ArgumentNullException( "Connection string 'DefaultConnection' not found" );
+            //string connectionString = configuration.GetConnectionString( "DefaultConnection" )
+            //    ?? throw new ArgumentNullException( "Connection string 'DefaultConnection' not found" );
 
             services.AddDbContext<FanHubDbContext>( op =>
-                op.UseSqlServer( connectionString ) );
+                op.UseInMemoryDatabase( databaseName: "FanHub" ) );
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();

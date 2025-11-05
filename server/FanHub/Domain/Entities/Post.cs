@@ -12,9 +12,9 @@ public class Post
 
     public int CategoryId { get; set; }
 
-    public required string Title { get; set; }
+    public string Title { get; set; }
 
-    public required string Content { get; set; }
+    public string Content { get; set; }
 
     public DateTime PostDate { get; set; }
 
@@ -22,7 +22,7 @@ public class Post
 
     public PostStatus Status { get; set; }
 
-    public required User User { get; set; }
-    public required Fandom Fandom { get; set; }
-    public required Category Category { get; set; }
+    //public required User User { get; set; }
+    //public required Fandom Fandom { get; set; }
+    //public required Category Category { get; set; }
 }

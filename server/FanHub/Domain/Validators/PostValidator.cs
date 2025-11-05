@@ -1,12 +1,11 @@
 ﻿using Domain.Entities;
-using Domain.Enums;
 using FluentValidation;
 
 namespace Domain.Validators
 {
-    public class BasePostValidator : AbstractValidator<Post>
+    public class PostValidator : AbstractValidator<Post>
     {
-        public BasePostValidator()
+        public PostValidator()
         {
             RuleFor( x => x.Title )
                 .NotEmpty().WithMessage( "Заголовок поста обязателен" )

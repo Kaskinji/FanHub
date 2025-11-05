@@ -36,17 +36,17 @@ namespace Infrastructure.Configurations
                 .IsRequired()
                 .HasConversion<byte>();
 
-            builder.HasOne( p => p.User )
-                .WithMany()
-                .HasForeignKey( p => p.UserId );
+            //builder.HasOne( p => p.User )
+            //    .WithMany()
+            //    .HasForeignKey( p => p.UserId );
 
-            builder.HasOne( p => p.Fandom )
-                .WithMany()
-                .HasForeignKey( p => p.FandomId );
+            //builder.HasOne( p => p.Fandom )
+            //    .WithMany()
+            //    .HasForeignKey( p => p.FandomId );
 
-            builder.HasOne( p => p.Category )
-                .WithMany()
-                .HasForeignKey( p => p.CategoryId );
+            //builder.HasOne( p => p.Category )
+            //    .WithMany()
+            //    .HasForeignKey( p => p.CategoryId );
         }
     }
 }

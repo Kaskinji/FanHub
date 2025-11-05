@@ -9,7 +9,7 @@
         {
             string? extension = GetMediaExtension( url );
 
-            return _allowedImageExtensions.Contains( url );
+            return _allowedImageExtensions.Contains( extension );
         }
 
         public static bool ValidateMediaWithVideoUrl( string url )
@@ -33,7 +33,7 @@
 
             string? extension = Path.GetExtension( uriResult.AbsolutePath )?.ToLower();
 
-            return null;
+            return extension;
         }
     }
 }

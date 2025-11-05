@@ -17,6 +17,4 @@ public class Game
     public string CoverImage { get; set; } = string.Empty;
 
     public string Genre { get; set; } = string.Empty;
-
-    public List<Fandom> Fandoms { get; set; } = new();
 }

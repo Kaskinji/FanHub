@@ -20,10 +20,10 @@ namespace Domain.Validators
 
             RuleFor( x => x.Login )
                 .NotEmpty().WithMessage( "Логин обязателен" )
-                .MaximumLength( 256 ).WithMessage( "Логин не может превышать 128 символов" )
+                .MaximumLength( 256 ).WithMessage( "Логин не может превышать 256 символов" )
                 .Matches( "^[a-zA-Z0-9_]+$" ).WithMessage( "Логин может содержать только буквы, цифры и подчеркивания" );
 
-            RuleFor( x => x.Password )
+            RuleFor( x => x.PasswordHash )
                 .NotEmpty().WithMessage( "Пароль обязателен" )
                 .MinimumLength( 8 ).WithMessage( "Пароль должен быть не менее 8 символов" )
                 .MaximumLength( 256 ).WithMessage( "Пароль слишком длинный" )

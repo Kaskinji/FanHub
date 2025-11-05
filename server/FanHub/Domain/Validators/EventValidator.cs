@@ -1,6 +1,4 @@
-﻿using Domain;
-using Domain.Entities;
-using Domain.Enums;
+﻿using Domain.Entities;
 using FluentValidation;
 
 namespace Domain.Validators
