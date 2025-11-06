@@ -41,11 +41,11 @@ public class GameController : ControllerBase
 
         await _unitOfWork.CommitAsync();
 
-        return Ok();
+        return Created();
     }
 
     [HttpPut( "{id}" )]
-    public async Task<IActionResult> UpdateGame( int id, [FromBody] GameUpdateDto dto )
+    public async Task<IActionResult> UpdateGame( int id, [FromBody] GameUpdateDto dto ) // todo: поменять dto(убрать опциональные поля)
     {
         await _gameService.Update( id, dto );
 

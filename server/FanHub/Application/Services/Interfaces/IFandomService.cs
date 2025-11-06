@@ -1,13 +1,9 @@
 ﻿using Application.Dto.FandomDto;
+using Domain.Entities;
 
 namespace Application.Services.Interfaces
 {
-    public interface IFandomService
+    public interface IFandomService : IBaseService<Fandom, FandomCreateDto, FandomReadDto, FandomUpdateDto>
     {
-        public Task<int> Create( FandomCreateDto dto );
-        public Task Update( int id, FandomUpdateDto dto );
-        public Task<FandomReadDto> GetById( int id );
-        public Task<List<FandomReadDto>> GetAll();
-        public Task Delete( int id );
     }
 }

@@ -2,7 +2,7 @@
 {
     public class FandomUpdateDto
     {
-        public int? GameId { get; set; }
+        public int GameId { get; set; }
 
         public string? Name { get; set; } = string.Empty;
 

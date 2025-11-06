@@ -1,13 +1,9 @@
 ﻿using Application.Dto.GameDto;
+using Domain.Entities;
 
 namespace Application.Services.Interfaces
 {
-    public interface IGameService
+    public interface IGameService : IBaseService<Game, GameCreateDto, GameReadDto, GameUpdateDto>
     {
-        public Task<int> Create( GameCreateDto game );
-        public Task Update( int id, GameUpdateDto game );
-        public Task<GameReadDto> GetById( int id );
-        public Task<List<GameReadDto>> GetAll();
-        public Task Delete( int id );
     }
 }

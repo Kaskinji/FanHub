@@ -25,10 +25,6 @@ namespace Infrastructure.Configurations
 
             builder.Property( f => f.Rules )
                 .IsRequired();
-
-            builder.HasOne( f => f.Game )
-                .WithMany()
-                .HasForeignKey( f => f.GameId );
         }
     }
 }

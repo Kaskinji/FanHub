@@ -9,7 +9,7 @@ namespace Domain.Validators
     {
         public UserValidator()
         {
-            RuleFor( x => x.UserId )
+            RuleFor( x => x.Id )
                 .GreaterThanOrEqualTo( 0 ).WithMessage( "ID пользователя должен быть неотрицательным" );
 
             RuleFor( x => x.Username )

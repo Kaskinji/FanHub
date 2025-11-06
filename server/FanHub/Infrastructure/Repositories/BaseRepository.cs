@@ -5,7 +5,7 @@ namespace Infrastructure.Repositories
 {
     public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
     {
-        private readonly DbSet<TEntity> _entities;
+        protected readonly DbSet<TEntity> _entities;
 
         public BaseRepository( FanHubDbContext fanhubDbContext )
         {

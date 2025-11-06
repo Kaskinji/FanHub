@@ -1,13 +1,9 @@
 ﻿using Application.Dto.PostDto;
+using Domain.Entities;
 
 namespace Application.Services.Interfaces
 {
-    public interface IPostService
+    public interface IPostService : IBaseService<Post, PostCreateDto, PostReadDto, PostUpdateDto>
     {
-        public Task<int> Create( PostCreateDto post );
-        public Task Update( int id, PostUpdateDto post );
-        public Task<PostReadDto> GetById( int id );
-        public Task<List<PostReadDto>> GetAll();
-        public Task Delete( int id );
     }
 }

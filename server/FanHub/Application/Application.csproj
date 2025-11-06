@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <None Include="Dto\FandomDto\FandomReadDto.cs" />
+    <None Include="Dto\UserDto\UserReadDto.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,11 +19,6 @@
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Dto\CategoryDto\" />
-    <Folder Include="Dto\UserDto\" />
   </ItemGroup>
 
 </Project>

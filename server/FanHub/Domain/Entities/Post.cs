@@ -2,10 +2,8 @@
 
 namespace Domain.Entities;
 
-public class Post
+public class Post : Entity
 {
-    public int Id { get; set; }
-
     public int UserId { get; set; }
 
     public int FandomId { get; set; }
@@ -21,8 +19,4 @@ public class Post
     public string MediaContent { get; set; } = string.Empty;
 
     public PostStatus Status { get; set; }
-
-    //public required User User { get; set; }
-    //public required Fandom Fandom { get; set; }
-    //public required Category Category { get; set; }
 }

@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Application
 {
-    public static class ServiceBindings
+    public static class ApplicationBindings
     {
         public static IServiceCollection AddApplication(
             this IServiceCollection services )
@@ -15,6 +15,7 @@ namespace Application
             services.AddScoped<IGameService, GameService>();
 
             services.AddValidatorsFromAssemblyContaining<GameValidator>();
+
             services.AddValidatorsFromAssemblyContaining<PostValidator>();
 
             services.AddAutoMapper( typeof( GameProfile ).Assembly );

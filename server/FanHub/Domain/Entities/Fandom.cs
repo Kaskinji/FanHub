@@ -1,9 +1,7 @@
 ﻿namespace Domain.Entities;
 
-public class Fandom
+public class Fandom : Entity
 {
-    public int Id { get; set; }
-
     public int GameId { get; set; }
 
     public string Name { get; set; } = string.Empty;
@@ -13,6 +11,4 @@ public class Fandom
     public DateTime CreationDate { get; set; }
 
     public string Rules { get; set; } = string.Empty;
-
-    public required Game Game { get; set; }
 }

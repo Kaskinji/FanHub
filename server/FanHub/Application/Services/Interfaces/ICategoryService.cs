@@ -1,5 +1,8 @@
-﻿namespace Application.Services.Interfaces;
+﻿using Application.Dto.CategoryDto;
+using Domain.Entities;
 
-public interface ICategoryService
+namespace Application.Services.Interfaces;
+
+public interface ICategoryService : IBaseService<Category, CategoryCreateDto, CategoryReadDto, CategoryUpdateDto>
 {
 }

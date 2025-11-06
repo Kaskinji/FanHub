@@ -10,36 +10,30 @@ using FluentValidation;
 
 namespace Application.Services
 {
-    public class PostService : IPostService
+    public class PostService : BaseService<Post, PostCreateDto, PostReadDto, PostUpdateDto>, IPostService
     {
-        private IMapper _mapper;
-        private IValidator<Post> _validator;
-
+        private IPostRepository _postRepository;
         private IFandomService _fandomService;
         private ICategoryService _categoryService;
         private IUserService _userService;
-
-        private IPostRepository _repository;
 
         public PostService( IPostRepository repository,
             IFandomService fandomService,
             ICategoryService categoryService,
             IUserService userService,
             IMapper mapper,
-            IValidator<Post> validator )
+            IValidator<Post> validator ) : base( repository, mapper, validator )
         {
-            _repository = repository;
+            _postRepository = repository;
             _fandomService = fandomService;
             _categoryService = categoryService;
             _userService = userService;
-            _mapper = mapper;
-            _validator = validator;
         }
 
-        public async Task<int> Create( PostCreateDto dto )
+        public override async Task<int> Create( PostCreateDto dto )
         {
-            await _fandomService.GetById( dto.FandomId );
-
+            await ExistPostItems( dto.FandomId, dto.UserId, dto.CategoryId );
+            // todo: добавить notifications
             Post post = new();
             post.Id = IdGenerator.GenerateId();
 
@@ -52,38 +46,38 @@ namespace Application.Services
             return post.Id;
         }
 
-        public async Task Delete( int id )
+        public async Task<List<PostReadDto>> GetByCategoryId( int categoryId )
         {
-            Post post = await _repository.GetByIdAsyncThrow( id );
-
-            _repository.Delete( post );
-        }
-
-        public async Task<List<PostReadDto>> GetAll()
-        {
-            List<Post> posts = await _repository.GetAllAsync();
+            List<Post> posts = await _postRepository.GetAllByCategoryId( categoryId );
 
             return _mapper.Map<List<PostReadDto>>( posts );
         }
 
-        public async Task<PostReadDto> GetById( int id )
+        public async Task<List<PostReadDto>> GetByUserId( int userId )
         {
-            Post post = await _repository.GetByIdAsyncThrow( id );
+            List<Post> posts = await _postRepository.GetAllByUserId( userId );
 
-            PostReadDto postReadDto = new();
-            _mapper.Map( post, postReadDto );
-
-            return postReadDto;
+            return _mapper.Map<List<PostReadDto>>( posts );
         }
 
-        public async Task Update( int id, PostUpdateDto dto )
+        public override async Task Update( int id, PostUpdateDto dto )
         {
             Post post = await _repository.GetByIdAsyncThrow( id );
 
             _mapper.Map( dto, post );
+
+            await ExistPostItems( post.FandomId, post.UserId, post.CategoryId );
+
             await _validator.ValidateAndThrowAsync( post );
 
             _repository.Update( post );
+        }
+
+        private async Task ExistPostItems( int fandomId, int userId, int categoryId )
+        {
+            await _fandomService.GetById( fandomId );
+            await _userService.GetById( userId );
+            await _categoryService.GetById( categoryId );
         }
     }
 }
