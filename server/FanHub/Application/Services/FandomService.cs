@@ -1,5 +1,4 @@
 ﻿using Application.Dto.FandomDto;
-using Application.Extensions;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
@@ -21,37 +20,9 @@ namespace Application.Services
             _gameRepository = gameRepository;
         }
 
-        public override async Task<int> Create( FandomCreateDto dto )
+        protected override async Task ExistEntities( Fandom fandom )
         {
-            Fandom fandom = new Fandom();
-
-            fandom.Id = IdGenerator.GenerateId();
-            _mapper.Map( dto, fandom );
-
-            ExistGame( dto.GameId );
-
-            await _validator.ValidateAndThrowAsync( fandom );
-
-            await _repository.CreateAsync( fandom );
-
-            return fandom.Id;
-        }
-
-        public override async Task Update( int id, FandomUpdateDto dto )
-        {
-            Fandom fandom = await _repository.GetByIdAsyncThrow( id );
-
-            ExistGame( dto.GameId );
-
-            _mapper.Map( dto, fandom );
-            await _validator.ValidateAndThrowAsync( fandom );
-
-            _repository.Update( fandom );
-        }
-
-        private async void ExistGame( int gameId )
-        {
-            await _gameRepository.GetByIdAsyncThrow( gameId );
+            await _gameRepository.GetByIdAsyncThrow( fandom.GameId );
         }
     }
 }

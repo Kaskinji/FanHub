@@ -1,9 +1,7 @@
 ﻿using Application.Dto.CategoryDto;
-using Application.Extensions;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
-using Domain.Extensions;
 using Domain.Repositories;
 using FluentValidation;
 

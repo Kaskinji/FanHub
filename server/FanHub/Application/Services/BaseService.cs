@@ -1,5 +1,4 @@
-﻿using Application.Dto.GameDto;
-using Application.Extensions;
+﻿using Application.Extensions;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
@@ -9,7 +8,9 @@ using FluentValidation;
 
 namespace Application.Services
 {
-    public class BaseService<TEntity, TCreateDto, TReadDto, TUpdateDto> : IBaseService<TEntity, TCreateDto, TReadDto, TUpdateDto> where TReadDto : class, new()
+    public abstract class BaseService<TEntity, TCreateDto, TReadDto, TUpdateDto>
+        : IBaseService<TEntity, TCreateDto, TReadDto, TUpdateDto>
+        where TReadDto : class, new()
         where TEntity : Entity, new()
     {
         protected IBaseRepository<TEntity> _repository;
@@ -29,6 +30,8 @@ namespace Application.Services
             entity.Id = IdGenerator.GenerateId();
 
             _mapper.Map( dto, entity );
+
+            await ExistEntities( entity );
 
             await _validator.ValidateAndThrowAsync( entity );
 
@@ -66,9 +69,17 @@ namespace Application.Services
             TEntity entity = await _repository.GetByIdAsyncThrow( id );
 
             _mapper.Map( dto, entity );
+
+            await ExistEntities( entity );
+
             await _validator.ValidateAndThrowAsync( entity );
 
             _repository.Update( entity );
+        }
+
+        protected virtual Task ExistEntities( TEntity entity )
+        {
+            return Task.CompletedTask;
         }
     }
 }
