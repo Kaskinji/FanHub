@@ -12,5 +12,8 @@
         public DateTime CreationDate { get; set; }
 
         public string Rules { get; set; } = string.Empty;
+
+        public int MemberCount { get; set; }
+        public int PostCount { get; set; }
     }
 }

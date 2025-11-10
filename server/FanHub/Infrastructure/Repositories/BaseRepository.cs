@@ -1,4 +1,5 @@
-﻿using Domain.Repositories;
+﻿using System.Linq.Expressions;
+using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
@@ -35,6 +36,16 @@ namespace Infrastructure.Repositories
         public void Delete( TEntity entity )
         {
             _entities.Remove( entity );
+        }
+
+        public async Task<TEntity?> FindAsync( Expression<Func<TEntity, bool>> predicate )
+        {
+            return await _entities.FirstOrDefaultAsync( predicate );
+        }
+
+        public async Task<List<TEntity>> FindAllAsync( Expression<Func<TEntity, bool>> predicate )
+        {
+            return await _entities.Where( predicate ).ToListAsync();
         }
     }
 }

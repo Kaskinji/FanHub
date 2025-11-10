@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
@@ -7,6 +8,29 @@ namespace Infrastructure.Repositories
     {
         public FandomRepository( FanHubDbContext fanhubDbContext ) : base( fanhubDbContext )
         {
+        }
+
+        public async Task<List<Fandom>> GetFandomsByGameAsync( int gameId )
+        {
+            return await _entities
+                .Where( f => f.GameId == gameId )
+                .ToListAsync();
+        }
+
+        public async Task<List<Fandom>> SearchByNameAsync( string searchTerm )
+        {
+            return await _entities
+                .Where( f => f.Name.Contains( searchTerm ) )
+                .ToListAsync();
+        }
+
+        public async Task<List<Fandom>> GetPopularFandomsAsync( int limit )
+        {
+            return await _entities
+                .Include( f => f.Posts )
+                .OrderByDescending( f => f.Posts.Count )
+                .Take( limit )
+                .ToListAsync();
         }
     }
 }

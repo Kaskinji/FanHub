@@ -2,10 +2,8 @@
 
 namespace Domain.Entities;
 
-public class Notification
+public class Notification : Entity
 {
-    public int Id { get; set; }
-
     public int UserId { get; set; }
 
     public int? PostId { get; set; }

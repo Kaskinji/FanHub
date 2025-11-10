@@ -1,9 +1,7 @@
 ﻿namespace Domain.Entities;
 
-public class Subscription
+public class Subscription : Entity
 {
-    public int SubscriptionId { get; set; }
-
     public int UserId { get; set; }
 
     public int FandomId { get; set; }
