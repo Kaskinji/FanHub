@@ -57,7 +57,7 @@ public class FandomController : ControllerBase
     [HttpDelete( "{id}" )]
     public async Task<IActionResult> DeleteFandom( int id )
     {
-        await _fandomService.Delete( id );
+        await _fandomService.DeleteAsync( id );
 
         await _unitOfWork.CommitAsync();
 

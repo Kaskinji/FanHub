@@ -10,6 +10,10 @@ namespace Application.Services
 {
     public class FandomService : BaseService<Fandom, FandomCreateDto, FandomReadDto, FandomUpdateDto>, IFandomService
     {
+        private IGameRepository _gameRepository;
+        private readonly IPostRepository _postRepository;
+        private readonly ISubscriptionRepository _subscriptionRepository;
+
         public FandomService( IFandomRepository fandomRepository,
             IGameRepository gameRepository,
             IPostRepository postRepository,
@@ -71,9 +75,5 @@ namespace Application.Services
         {
             await _gameRepository.GetByIdAsyncThrow( fandom.GameId );
         }
-
-        private IGameRepository _gameRepository;
-        private readonly IPostRepository _postRepository;
-        private readonly ISubscriptionRepository _subscriptionRepository;
     }
 }

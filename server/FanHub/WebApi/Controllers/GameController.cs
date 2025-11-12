@@ -57,7 +57,7 @@ public class GameController : ControllerBase
     [HttpDelete( "{id}" )]
     public async Task<IActionResult> DeleteGame( int id )
     {
-        await _gameService.Delete( id );
+        await _gameService.DeleteAsync( id );
 
         await _unitOfWork.CommitAsync();
 

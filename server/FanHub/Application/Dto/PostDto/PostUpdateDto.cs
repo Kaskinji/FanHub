@@ -1,6 +1,4 @@
-﻿using Domain.Enums;
-
-namespace Application.Dto.PostDto
+﻿namespace Application.Dto.PostDto
 {
     public class PostUpdateDto
     {
@@ -17,7 +15,5 @@ namespace Application.Dto.PostDto
         public DateTime? PostDate { get; set; }
 
         public string? MediaContent { get; set; }
-
-        public PostStatus? Status { get; set; }
     }
 }

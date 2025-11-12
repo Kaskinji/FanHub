@@ -31,22 +31,6 @@ namespace Infrastructure.Configurations
 
             builder.Property( p => p.MediaContent )
                 .HasMaxLength( 1000 );
-
-            builder.Property( p => p.Status )
-                .IsRequired()
-                .HasConversion<byte>();
-
-            //builder.HasOne( p => p.User )
-            //    .WithMany()
-            //    .HasForeignKey( p => p.UserId );
-
-            //builder.HasOne( p => p.Fandom )
-            //    .WithMany()
-            //    .HasForeignKey( p => p.FandomId );
-
-            //builder.HasOne( p => p.Category )
-            //    .WithMany()
-            //    .HasForeignKey( p => p.CategoryId );
         }
     }
 }

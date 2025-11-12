@@ -1,6 +1,4 @@
-﻿using Application.Dto.CategoryDto;
-using Application.Dto.FandomDto;
-using Application.Dto.GameDto;
+﻿using Application.Dto.GameDto;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;

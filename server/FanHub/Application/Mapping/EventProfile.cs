@@ -1,7 +1,4 @@
-﻿using Application.Dto.EventDto;
-using AutoMapper;
-using Domain.Entities;
-using Domain.Enums;
+﻿using AutoMapper;
 
 public class EventProfile : Profile
 {

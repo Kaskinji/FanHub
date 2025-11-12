@@ -18,12 +18,12 @@ namespace Infrastructure.Repositories
             await _entities.AddAsync( entity );
         }
 
-        public async Task<List<TEntity>> GetAllAsync()
+        public virtual async Task<List<TEntity>> GetAllAsync()
         {
             return await _entities.ToListAsync();
         }
 
-        public async Task<TEntity?> GetByIdAsync( int id )
+        public virtual async Task<TEntity?> GetByIdAsync( int id )
         {
             return await _entities.FindAsync( id );
         }

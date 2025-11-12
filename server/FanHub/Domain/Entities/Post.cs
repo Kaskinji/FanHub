@@ -1,6 +1,4 @@
-﻿using Domain.Enums;
-
-namespace Domain.Entities;
+﻿namespace Domain.Entities;
 
 public class Post : Entity
 {
@@ -18,5 +16,4 @@ public class Post : Entity
 
     public string MediaContent { get; set; } = string.Empty;
 
-    public PostStatus Status { get; set; }
 }

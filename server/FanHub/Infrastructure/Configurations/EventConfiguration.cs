@@ -23,14 +23,6 @@ namespace Infrastructure.Configurations
             builder.Property( e => e.Description )
                 .IsRequired()
                 .HasMaxLength( 500 );
-
-            builder.Property( e => e.Status )
-                .IsRequired()
-                .HasConversion<byte>();
-
-            builder.HasOne( e => e.Fandom )
-                .WithMany()
-                .HasForeignKey( e => e.FandomId );
         }
     }
 }

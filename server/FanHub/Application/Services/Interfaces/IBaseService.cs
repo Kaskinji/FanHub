@@ -6,6 +6,6 @@
         public Task Update( int id, TUpdateDto dto );
         public Task<TReadDto> GetById( int id );
         public Task<List<TReadDto>> GetAll();
-        public Task Delete( int id );
+        public Task DeleteAsync( int id );
     }
 }

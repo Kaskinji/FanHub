@@ -40,7 +40,7 @@ namespace Application.Services
             return entity.Id;
         }
 
-        public virtual async Task Delete( int id )
+        public virtual async Task DeleteAsync( int id )
         {
             TEntity entity = await _repository.GetByIdAsyncThrow( id );
 

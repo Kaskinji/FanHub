@@ -1,9 +1,6 @@
 ﻿using Application.Dto.EventDto;
-using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
-using Domain.Repositories;
-using FluentValidation;
 
 namespace Application.Services.Interfaces
 {

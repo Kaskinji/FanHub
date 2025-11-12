@@ -81,7 +81,7 @@ namespace Application.Services
             _repository.Update( existingUser );
         }
 
-        public async Task<bool> IsLoginlUniqueAsync( string login, int? excludeId = null )
+        public async Task<bool> IsLoginUniqueAsync( string login, int? excludeId = null )
         {
             var existing = await _repository.FindAsync( u =>
                 u.Login == login &&

@@ -1,9 +1,8 @@
 ﻿using Application.Dto.PostDto;
+using Application.Extensions;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
-using Domain.Enums;
-using Domain.Extensions;
 using Domain.Repositories;
 using FluentValidation;
 
@@ -29,47 +28,20 @@ namespace Application.Services
 
         public override async Task<int> Create( PostCreateDto dto )
         {
-            bool isUserInFandom = await IsUserInFandomAsync( dto.UserId, dto.FandomId );
-            if ( !isUserInFandom )
-            {
-                throw new ValidationException( "Пользователь не является участником фандома" );
-            }
+            Post entity = new();
 
-            int postId = await base.Create( dto );
+            entity.Id = IdGenerator.GenerateId();
+            entity.PostDate = DateTime.UtcNow;
 
-            Post? createdPost = await _repository.GetByIdAsync( postId );
-            createdPost.PostDate = DateTime.UtcNow;
-            createdPost.Status = PostStatus.Created;
-            _repository.Update( createdPost );
+            _mapper.Map( dto, entity );
 
-            return postId;
-        }
+            await ExistEntities( entity );
 
-        public override async Task Update( int id, PostUpdateDto dto )
-        {
-            var existingPost = await _repository.GetByIdAsyncThrow( id );
+            await _validator.ValidateAndThrowAsync( entity );
 
-            if ( !await CanUserEditPostAsync( dto.UserId, id ) )
-            {
-                throw new ValidationException( "Недостаточно прав для редактирования поста" );
-            }
+            await _repository.CreateAsync( entity );
 
-            await base.Update( id, dto );
-
-            var updatedPost = await _repository.GetByIdAsync( id );
-            updatedPost.PostDate = DateTime.UtcNow;
-            _repository.Update( updatedPost );
-        }
-
-        public override async Task Delete( int id )
-        {
-            Post post = await _repository.GetByIdAsyncThrow( id );
-
-            if ( !await CanUserDeletePostAsync( UserId, id ) )
-            {
-                throw new ValidationException( "Недостаточно прав для удаления поста" );
-            }
-            await base.Delete( id );
+            return entity.Id;
         }
 
         protected override async Task ExistEntities( Post post )

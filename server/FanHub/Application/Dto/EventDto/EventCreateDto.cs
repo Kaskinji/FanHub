@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Domain.Entities;
-using Domain.Enums;
+﻿using Domain.Enums;
 
 namespace Application.Dto.EventDto
 {
@@ -18,7 +12,6 @@ namespace Application.Dto.EventDto
         public EventStatus Status { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public int MaxParticipants { get; set; } // 0 = без ограничений
 
         public string ImageUrl { get; set; } = string.Empty;
     }
