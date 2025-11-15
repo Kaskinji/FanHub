@@ -8,6 +8,6 @@ public class Subscription : Entity
 
     public DateTime Date { get; set; }
 
-    public required User User { get; set; }
-    public required Fandom Fandom { get; set; }
+    public virtual User User { get; set; }
+    public virtual Fandom Fandom { get; set; }
 }

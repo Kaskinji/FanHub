@@ -12,7 +12,5 @@ namespace Application.Services.Interfaces
 
         Task<List<Event>> GetEventsByOrganizerAsync( int organizerId );
         Task<List<Event>> SearchEventsAsync( string searchTerm );
-
-        Task<List<Event>> GetEventsByStatusAsync( EventStatus status );
     }
 }

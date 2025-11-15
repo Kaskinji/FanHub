@@ -1,4 +1,5 @@
 ﻿using Application.Dto.UserDto;
+using Application.Extensions;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
@@ -11,79 +12,67 @@ namespace Application.Services
 {
     public class UserService : BaseService<User, UserCreateDto, UserReadDto, UserUpdateDto>, IUserService
     {
+        private readonly IUserRepository _userRepository;
         public UserService( IUserRepository userRepository,
             IMapper mapper,
             IValidator<User> validator ) : base( userRepository, mapper, validator )
         {
+            _userRepository = userRepository;
         }
 
         public override async Task<int> Create( UserCreateDto dto )
         {
-            bool isEmailUnique = await IsLoginUniqueAsync( dto.Login );
-            if ( !isEmailUnique )
-            {
-                throw new ValidationException( "Пользователь с таким Login уже существует" );
-            }
+            await ValidateUserUniqueness( dto.Username, dto.Login );
 
-            bool isUsernameUnique = await IsUsernameUniqueAsync( dto.Username );
-            if ( !isUsernameUnique )
-            {
-                throw new ValidationException( "Пользователь с таким именем уже существует" );
-            }
+            User entity = new User();
+            entity.Id = IdGenerator.GenerateId();
+            entity.Role = UserRole.User;
+            entity.RegistrationDate = DateTime.UtcNow;
+            //добавить логику хэширования пароля
+            _mapper.Map( dto, entity );
 
-            string passwordHash = HashPassword( dto.PasswordHash );
+            await ExistEntities( entity );
 
-            User user = new User
-            {
-                Username = dto.Username,
-                Login = dto.Login,
-                PasswordHash = passwordHash,
-                RegistrationDate = DateTime.UtcNow,
-                Role = UserRole.User
-            };
+            await _validator.ValidateAndThrowAsync( entity );
 
-            await _validator.ValidateAndThrowAsync( user );
-            await _repository.CreateAsync( user );
+            await _repository.CreateAsync( entity );
 
-            return user.Id;
+            return entity.Id;
         }
 
         public override async Task Update( int id, UserUpdateDto dto )
         {
-            var existingUser = await _repository.GetByIdAsyncThrow( id );
+            User entity = await _repository.GetByIdAsyncThrow( id );
+            //добавить логику хэширования пароля
+            _mapper.Map( dto, entity );
 
-            if ( !string.IsNullOrEmpty( dto.Login ) && dto.Login != existingUser.Login )
+            await ValidateUserUniqueness( dto.Username, dto.Login, id );
+
+            await ExistEntities( entity );
+
+            await _validator.ValidateAndThrowAsync( entity );
+
+            _repository.Update( entity );
+        }
+
+        public async Task ValidateUserUniqueness( string username, string login, int? excludeId = null )
+        {
+            bool isLoginUnique = await IsLoginUniqueAsync( login, excludeId );
+            if ( !isLoginUnique )
             {
-                bool isEmailUnique = await IsLoginUniqueAsync( dto.Login, id );
-                if ( !isEmailUnique )
-                {
-                    throw new ValidationException( "Пользователь с таким email уже существует" );
-                }
+                throw new ValidationException( "Пользователь с таким логином уже существует" );
             }
 
-            if ( !string.IsNullOrEmpty( dto.Username ) && dto.Username != existingUser.Username )
+            bool isUsernameUnique = await IsUsernameUniqueAsync( username, excludeId );
+            if ( !isUsernameUnique )
             {
-                bool isUsernameUnique = await IsUsernameUniqueAsync( dto.Username, id );
-                if ( !isUsernameUnique )
-                {
-                    throw new ValidationException( "Пользователь с таким именем уже существует" );
-                }
+                throw new ValidationException( "Пользователь с таким именем уже существует" );
             }
-
-            if ( !string.IsNullOrEmpty( dto.PasswordHash ) )
-            {
-                existingUser.PasswordHash = HashPassword( dto.PasswordHash );
-            }
-
-            _mapper.Map( dto, existingUser );
-
-            await _validator.ValidateAndThrowAsync( existingUser );
-            _repository.Update( existingUser );
         }
 
         public async Task<bool> IsLoginUniqueAsync( string login, int? excludeId = null )
         {
-            var existing = await _repository.FindAsync( u =>
+            User? existing = await _repository.FindAsync( u =>
                 u.Login == login &&
                 ( excludeId == null || u.Id != excludeId.Value ) );
             return existing == null;
@@ -95,11 +84,6 @@ namespace Application.Services
                 u.Username == username &&
                 ( excludeId == null || u.Id != excludeId.Value ) );
             return existing == null;
-        }
-
-        private string HashPassword( string password )
-        {
-            return Convert.ToBase64String( System.Text.Encoding.UTF8.GetBytes( password ) );
         }
     }
 }

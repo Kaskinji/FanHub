@@ -23,9 +23,6 @@ namespace Domain.Validators
 
             RuleFor( x => x.OrganizerId )
                 .GreaterThan( 0 ).WithMessage( "ID организатора должен быть положительным числом" );
-
-            RuleFor( x => x.Status )
-                .IsInEnum().WithMessage( "Некорректный статус события" );
         }
     }
 }

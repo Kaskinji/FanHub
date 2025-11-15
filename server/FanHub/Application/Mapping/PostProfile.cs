@@ -22,8 +22,7 @@ namespace Application.Mapping
                 .ForMember( dest => dest.Content, opt => opt.Condition( src => src.Content != null ) )
                 .ForMember( dest => dest.PostDate, opt => opt.Condition( src =>
                     src.PostDate.HasValue && src.PostDate.Value != default ) )
-                .ForMember( dest => dest.MediaContent, opt => opt.Condition( src => src.MediaContent != null ) )
-                .ForMember( dest => dest.Status, opt => opt.Condition( src => src.Status.HasValue ) );
+                .ForMember( dest => dest.MediaContent, opt => opt.Condition( src => src.MediaContent != null ) );
         }
     }
 }

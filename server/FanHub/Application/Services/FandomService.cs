@@ -1,4 +1,5 @@
 ﻿using Application.Dto.FandomDto;
+using Application.Extensions;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
@@ -10,7 +11,8 @@ namespace Application.Services
 {
     public class FandomService : BaseService<Fandom, FandomCreateDto, FandomReadDto, FandomUpdateDto>, IFandomService
     {
-        private IGameRepository _gameRepository;
+        private readonly IFandomRepository _fandomRepository;
+        private readonly IGameRepository _gameRepository;
         private readonly IPostRepository _postRepository;
         private readonly ISubscriptionRepository _subscriptionRepository;
 
@@ -24,56 +26,72 @@ namespace Application.Services
             _gameRepository = gameRepository;
             _postRepository = postRepository;
             _subscriptionRepository = subscriptionRepository;
+            _fandomRepository = fandomRepository;
         }
 
         public override async Task<int> Create( FandomCreateDto dto )
         {
-            int fandomId = await base.Create( dto );
-            Fandom? createdFandom = await _repository.GetByIdAsync( fandomId );
-            createdFandom.CreationDate = DateTime.UtcNow;
+            Fandom entity = new Fandom();
+            entity.Id = IdGenerator.GenerateId();
+            entity.CreationDate = DateTime.UtcNow;
 
-            bool isUnique = await IsNameUniqueAsync( dto.Name, createdFandom.Id );
-            if ( !isUnique )
-            {
-                throw new ValidationException( "Фандом с таким названием уже существует" );
-            }
+            _mapper.Map( dto, entity );
 
-            _repository.Update( createdFandom );
+            await IsFandomNameUnique( entity );
 
-            return fandomId;
+            await ExistEntities( entity );
+
+            await _validator.ValidateAndThrowAsync( entity );
+
+            await _repository.CreateAsync( entity );
+
+            return entity.Id;
         }
 
         public override async Task Update( int id, FandomUpdateDto dto )
         {
+            Fandom entity = await _repository.GetByIdAsyncThrow( id );
+
+            _mapper.Map( dto, entity );
+
             if ( !string.IsNullOrEmpty( dto.Name ) )
             {
-                bool isUnique = await IsNameUniqueAsync( dto.Name, id );
-                if ( !isUnique )
-                {
-                    throw new ValidationException( "Фандом с таким названием уже существует" );
-                }
+                await IsFandomNameUnique( entity );
             }
 
-            await base.Update( id, dto );
+            await ExistEntities( entity );
+
+            await _validator.ValidateAndThrowAsync( entity );
+
+            _repository.Update( entity );
         }
 
         public async Task<bool> IsNameUniqueAsync( string name, int? excludeId = null )
         {
-            var existing = await _repository.FindAsync( f =>
+            Fandom? existing = await _fandomRepository.FindAsync( f =>
                 f.Name == name && ( excludeId == null || f.Id != excludeId.Value ) );
             return existing == null;
         }
 
         public async Task<List<FandomReadDto>> SearchByNameAsync( string searchTerm )
         {
-            var fandoms = await _repository.FindAllAsync( f =>
+            var fandoms = await _fandomRepository.FindAllAsync( f =>
                 f.Name.Contains( searchTerm ) );
             return _mapper.Map<List<FandomReadDto>>( fandoms );
         }
 
-        protected override async Task ExistEntities( Fandom fandom )
+        protected override async Task ExistEntities( Fandom entity )
         {
-            await _gameRepository.GetByIdAsyncThrow( fandom.GameId );
+            await _gameRepository.GetByIdAsyncThrow( entity.GameId );
+        }
+
+        public async Task IsFandomNameUnique( Fandom entity )
+        {
+            bool isUnique = await IsNameUniqueAsync( entity.Name, entity.Id );
+            if ( !isUnique )
+            {
+                throw new ValidationException( "Фандом с таким названием уже существует" );
+            }
         }
     }
 }

@@ -11,12 +11,16 @@ namespace Application.Mapping
             CreateMap<User, UserReadDto>();
 
             CreateMap<UserCreateDto, User>()
-            .ForMember( dest => dest.Id, opt => opt.Ignore() );
+                .ForMember( dest => dest.Id, opt => opt.Ignore() )
+                .ForMember( dest => dest.PasswordHash, opt => opt.Ignore() )
+                .ForMember( dest => dest.RegistrationDate, opt => opt.MapFrom( src => DateTime.UtcNow ) )
+                .ForMember( dest => dest.Role, opt => opt.Ignore() );
+
 
             CreateMap<UserUpdateDto, User>()
                 .ForMember( dest => dest.Id, opt => opt.Ignore() )
-
-                .ForMember( dest => dest.RegistrationDate, opt => opt.Condition( src => src.RegistrationDate != default ) );
+                .ForMember( dest => dest.PasswordHash, opt => opt.Ignore() )
+                .ForMember( dest => dest.RegistrationDate, opt => opt.Ignore() );
         }
     }
 }

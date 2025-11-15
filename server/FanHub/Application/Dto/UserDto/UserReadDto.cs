@@ -10,8 +10,6 @@ namespace Application.Dto.UserDto
 
         public string Login { get; set; } = string.Empty;
 
-        public string PasswordHash { get; set; } = string.Empty;
-
         public string? Avatar { get; set; }
 
         public DateTime RegistrationDate { get; set; }

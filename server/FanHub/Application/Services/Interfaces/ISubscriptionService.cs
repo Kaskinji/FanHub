@@ -1,6 +1,10 @@
-﻿namespace Application.Services.Interfaces
+﻿using Application.Dto.SubscriptionDto;
+using Domain.Entities;
+
+namespace Application.Services.Interfaces
 {
-    interface ISubscriptionService
+    public interface ISubscriptionService : IBaseService<Subscription, SubscriptionCreateDto, SubscriptionReadDto, SubscriptionUpdateDto>
     {
+        Task IsUserAlreadySubscribed( SubscriptionCreateDto subscription );
     }
 }

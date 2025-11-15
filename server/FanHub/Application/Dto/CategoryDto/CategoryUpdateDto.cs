@@ -2,8 +2,8 @@
 {
     public class CategoryUpdateDto
     {
-        public string? Name { get; set; } = null;
+        public string? Name { get; set; }
 
-        public string? Icon { get; set; } = null;
+        public string? Icon { get; set; }
     }
 }

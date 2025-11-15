@@ -1,6 +1,6 @@
 ﻿namespace Domain.Validators
 {
-    public static class UrlValidator
+    public class UrlValidator
     {
         private static readonly IReadOnlyList<string> _allowedImageExtensions = [ ".webp", ".png", ".jpg", ".jpeg", ".svg", ".gif", ".ico" ];
         private static readonly IReadOnlyList<string> _allowedVideoExtensions = [ ".mp4", ".webm", ".youtube.com", "youtu.be" ];

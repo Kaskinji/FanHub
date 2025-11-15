@@ -12,6 +12,6 @@ public class Reaction : Entity
 
     public ReactionType Type { get; set; }
 
-    public required User User { get; set; }
-    public required Post Post { get; set; }
+    public virtual User User { get; set; }
+    public virtual Post Post { get; set; }
 }
