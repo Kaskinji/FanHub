@@ -57,20 +57,20 @@ namespace Application.Services
 
         public async Task ValidateUserUniqueness( string username, string login, int? excludeId = null )
         {
-            bool isLoginUnique = await IsLoginUniqueAsync( login, excludeId );
+            bool isLoginUnique = await CheckLoginUniqueAsync( login, excludeId );
             if ( !isLoginUnique )
             {
                 throw new ValidationException( "Пользователь с таким логином уже существует" );
             }
 
-            bool isUsernameUnique = await IsUsernameUniqueAsync( username, excludeId );
+            bool isUsernameUnique = await CheckUsernameUniqueAsync( username, excludeId );
             if ( !isUsernameUnique )
             {
                 throw new ValidationException( "Пользователь с таким именем уже существует" );
             }
         }
 
-        public async Task<bool> IsLoginUniqueAsync( string login, int? excludeId = null )
+        public async Task<bool> CheckLoginUniqueAsync( string login, int? excludeId = null )
         {
             User? existing = await _repository.FindAsync( u =>
                 u.Login == login &&
@@ -78,9 +78,9 @@ namespace Application.Services
             return existing == null;
         }
 
-        public async Task<bool> IsUsernameUniqueAsync( string username, int? excludeId = null )
+        public async Task<bool> CheckUsernameUniqueAsync( string username, int? excludeId = null )
         {
-            var existing = await _repository.FindAsync( u =>
+            User? existing = await _repository.FindAsync( u =>
                 u.Username == username &&
                 ( excludeId == null || u.Id != excludeId.Value ) );
             return existing == null;

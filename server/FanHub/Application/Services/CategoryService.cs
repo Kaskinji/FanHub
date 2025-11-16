@@ -25,7 +25,7 @@ namespace Application.Services
 
             _mapper.Map( dto, entity );
 
-            await IsCategoryNameUnique( entity );
+            await CheckCategoryNameUnique( entity );
 
             await ExistEntities( entity );
 
@@ -42,7 +42,7 @@ namespace Application.Services
 
             _mapper.Map( dto, entity );
 
-            await IsCategoryNameUnique( entity );
+            await CheckCategoryNameUnique( entity );
 
             await ExistEntities( entity );
 
@@ -51,16 +51,16 @@ namespace Application.Services
             _repository.Update( entity );
         }
 
-        public async Task IsCategoryNameUnique( Category entity )
+        public async Task CheckCategoryNameUnique( Category entity )
         {
-            bool existingCategory = await IsNameUniqueAsync( entity.Name, entity.Id );
+            bool existingCategory = await CheckNameUniqueAsync( entity.Name, entity.Id );
             if ( existingCategory )
             {
                 throw new ValidationException( "Категория с таким названием уже существует" );
             }
         }
 
-        public async Task<bool> IsNameUniqueAsync( string name, int? excludeId = null )
+        public async Task<bool> CheckNameUniqueAsync( string name, int? excludeId = null )
         {
             Category? existing = await _categoryRepository.FindAsync( f =>
                 f.Name == name && ( excludeId == null || f.Id != excludeId.Value ) );

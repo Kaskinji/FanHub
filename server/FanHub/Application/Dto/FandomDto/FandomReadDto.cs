@@ -3,7 +3,6 @@
     public class FandomReadDto
     {
         public int Id { get; set; }
-
         public int MemberCount { get; set; }
         public int PostCount { get; set; }
         public int GameId { get; set; }

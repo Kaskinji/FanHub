@@ -54,14 +54,14 @@ namespace Application.Services
 
         public async Task ValidateGame( Game entity )
         {
-            bool isUnique = await IsNameUniqueAsync( entity.Title, entity.Id );
+            bool isUnique = await CheckNameUniqueAsync( entity.Title, entity.Id );
             if ( !isUnique )
             {
                 throw new ValidationException( "Игра с таким названием уже существует" );
             }
         }
 
-        public async Task<bool> IsNameUniqueAsync( string name, int? excludeId = null )
+        public async Task<bool> CheckNameUniqueAsync( string name, int? excludeId = null )
         {
             Game? existing = await _repository.FindAsync( f =>
                 f.Title == name && ( excludeId == null || f.Id != excludeId.Value ) );

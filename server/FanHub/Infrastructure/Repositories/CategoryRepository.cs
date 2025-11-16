@@ -21,14 +21,5 @@ namespace Infrastructure.Repositories
                 .Where( c => c.Name.Contains( searchTerm ) )
                 .ToListAsync();
         }
-
-        public async Task<List<Category>> GetPopularCategoriesAsync( int limit )
-        {
-            return await _entities
-                .Include( c => c.Posts )  //нужно связать Posts с Category
-                .OrderByDescending( c => c.Posts.Count )
-                .Take( limit )
-                .ToListAsync();
-        }
     }
 }

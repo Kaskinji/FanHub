@@ -1,8 +1,4 @@
-﻿using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Application.Dto.ReactionDto;
-using Application.Dto.UserDto;
+﻿using Application.Dto.ReactionDto;
 using AutoMapper;
 using Domain.Entities;
 namespace Application.Mapping

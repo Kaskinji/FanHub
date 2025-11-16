@@ -4,7 +4,6 @@ using AutoMapper;
 using Domain.Entities;
 using Domain.Repositories;
 using FluentValidation;
-using Domain.Enums;
 using Domain.Extensions;
 
 namespace Application.Services

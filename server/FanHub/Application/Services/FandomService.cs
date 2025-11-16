@@ -37,7 +37,7 @@ namespace Application.Services
 
             _mapper.Map( dto, entity );
 
-            await IsFandomNameUnique( entity );
+            await CheckFandomNameUnique( entity );
 
             await ExistEntities( entity );
 
@@ -56,7 +56,7 @@ namespace Application.Services
 
             if ( !string.IsNullOrEmpty( dto.Name ) )
             {
-                await IsFandomNameUnique( entity );
+                await CheckFandomNameUnique( entity );
             }
 
             await ExistEntities( entity );
@@ -66,7 +66,7 @@ namespace Application.Services
             _repository.Update( entity );
         }
 
-        public async Task<bool> IsNameUniqueAsync( string name, int? excludeId = null )
+        public async Task<bool> CheckNameUniqueAsync( string name, int? excludeId = null )
         {
             Fandom? existing = await _fandomRepository.FindAsync( f =>
                 f.Name == name && ( excludeId == null || f.Id != excludeId.Value ) );
@@ -75,7 +75,7 @@ namespace Application.Services
 
         public async Task<List<FandomReadDto>> SearchByNameAsync( string searchTerm )
         {
-            var fandoms = await _fandomRepository.FindAllAsync( f =>
+            List<Fandom>? fandoms = await _fandomRepository.FindAllAsync( f =>
                 f.Name.Contains( searchTerm ) );
             return _mapper.Map<List<FandomReadDto>>( fandoms );
         }
@@ -85,9 +85,9 @@ namespace Application.Services
             await _gameRepository.GetByIdAsyncThrow( entity.GameId );
         }
 
-        public async Task IsFandomNameUnique( Fandom entity )
+        public async Task CheckFandomNameUnique( Fandom entity )
         {
-            bool isUnique = await IsNameUniqueAsync( entity.Name, entity.Id );
+            bool isUnique = await CheckNameUniqueAsync( entity.Name, entity.Id );
             if ( !isUnique )
             {
                 throw new ValidationException( "Фандом с таким названием уже существует" );

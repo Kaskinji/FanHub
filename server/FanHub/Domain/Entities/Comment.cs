@@ -9,6 +9,4 @@ public class Comment : Entity
     public string Content { get; set; } = string.Empty;
 
     public DateTime CommentDate { get; set; }
-    public virtual Post Post { get; set; }
-    public virtual User User { get; set; }
 }

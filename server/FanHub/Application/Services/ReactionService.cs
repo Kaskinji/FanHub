@@ -49,8 +49,6 @@ namespace Application.Services
         {
             Reaction entity = await _repository.GetByIdAsyncThrow( id );
 
-            await CanUserEditReaction( id, entity.UserId );
-
             _mapper.Map( dto, entity );
 
             await ExistEntities( entity );
@@ -58,14 +56,6 @@ namespace Application.Services
             await _validator.ValidateAndThrowAsync( entity );
 
             _repository.Update( entity );
-        }
-        public async Task CanUserEditReaction( int ReactionId, int? userId )
-        {
-            Reaction? Reaction = await _repository.GetByIdAsyncThrow( ReactionId );
-            if ( Reaction.UserId != userId )
-            {
-                throw new UnauthorizedAccessException( "Пользователь может редактировать только свои реакции" );
-            }
         }
 
         protected override async Task ExistEntities( Reaction Reaction )

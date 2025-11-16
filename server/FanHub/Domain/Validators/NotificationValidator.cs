@@ -19,22 +19,22 @@ namespace Domain.Validators
             RuleFor( x => x.Type )
                 .IsInEnum().WithMessage( "Некорректный тип уведомления" );
 
-            //RuleFor( x => x.PostId )
-            //    .GreaterThan( 0 ).WithMessage( "PostId должен быть положительным числом" )
-            //    .When( x => x.PostId.HasValue );
+            RuleFor( x => x.PostId )
+                .GreaterThan( 0 ).WithMessage( "PostId должен быть положительным числом" )
+                .When( x => x.PostId != 0 );
 
-            //RuleFor( x => x.EventId )
-            //    .GreaterThan( 0 ).WithMessage( "EventId должен быть положительным числом" )
-            //    .When( x => x.EventId.HasValue );
+            RuleFor( x => x.EventId )
+                .GreaterThan( 0 ).WithMessage( "EventId должен быть положительным числом" )
+                .When( x => x.EventId != 0 );
 
-            //RuleFor( x => x )
-            //    .Must( HaveAtLeastOneReference )
-            //    .WithMessage( "Уведомление должно ссылаться на пост или событие" );
+            RuleFor( x => x )
+                .Must( HaveAtLeastOneReference )
+                .WithMessage( "Уведомление должно ссылаться на пост или событие" );
         }
 
-        //private bool HaveAtLeastOneReference( Notification notification )
-        //{
-        //    return notification.PostId.HasValue || notification.EventId.HasValue;
-        //}
+        private bool HaveAtLeastOneReference( Notification notification )
+        {
+            return notification.PostId != 0 || notification.EventId != 0;
+        }
     }
 }
