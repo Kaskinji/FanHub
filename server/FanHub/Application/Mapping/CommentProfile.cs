@@ -10,11 +10,9 @@ namespace Application.Mapping
         {
             CreateMap<Category, CategoryReadDto>();
 
-            CreateMap<CategoryCreateDto, Category>()
-            .ForMember( dest => dest.Id, opt => opt.Ignore() );
+            CreateMap<CategoryCreateDto, Category>();
 
-            CreateMap<CategoryUpdateDto, Category>()
-                .ForMember( dest => dest.Id, opt => opt.Ignore() );
+            CreateMap<CategoryUpdateDto, Category>();
         }
     }
 }

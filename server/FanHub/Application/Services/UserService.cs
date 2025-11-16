@@ -4,7 +4,6 @@ using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
-using Domain.Extensions;
 using Domain.Repositories;
 using FluentValidation;
 
@@ -12,78 +11,39 @@ namespace Application.Services
 {
     public class UserService : BaseService<User, UserCreateDto, UserReadDto, UserUpdateDto>, IUserService
     {
-        private readonly IUserRepository _userRepository;
         public UserService( IUserRepository userRepository,
             IMapper mapper,
             IValidator<User> validator ) : base( userRepository, mapper, validator )
         {
-            _userRepository = userRepository;
         }
 
-        public override async Task<int> Create( UserCreateDto dto )
+        protected override User InitializeEntity()
         {
-            await ValidateUserUniqueness( dto.Username, dto.Login );
-
             User entity = new User();
             entity.Id = IdGenerator.GenerateId();
             entity.Role = UserRole.User;
             entity.RegistrationDate = DateTime.UtcNow;
-            //добавить логику хэширования пароля
-            _mapper.Map( dto, entity );
 
-            await ExistEntities( entity );
-
-            await _validator.ValidateAndThrowAsync( entity );
-
-            await _repository.CreateAsync( entity );
-
-            return entity.Id;
+            return entity;
         }
 
-        public override async Task Update( int id, UserUpdateDto dto )
+        protected override async Task CheckUnique( User entity )
         {
-            User entity = await _repository.GetByIdAsyncThrow( id );
-            //добавить логику хэширования пароля
-            _mapper.Map( dto, entity );
+            User? existing = await _repository.FindAsync( u =>
+                u.Login == entity.Login );
 
-            await ValidateUserUniqueness( dto.Username, dto.Login, id );
-
-            await ExistEntities( entity );
-
-            await _validator.ValidateAndThrowAsync( entity );
-
-            _repository.Update( entity );
-        }
-
-        public async Task ValidateUserUniqueness( string username, string login, int? excludeId = null )
-        {
-            bool isLoginUnique = await CheckLoginUniqueAsync( login, excludeId );
-            if ( !isLoginUnique )
+            if ( existing is not null )
             {
                 throw new ValidationException( "Пользователь с таким логином уже существует" );
             }
 
-            bool isUsernameUnique = await CheckUsernameUniqueAsync( username, excludeId );
-            if ( !isUsernameUnique )
+            User? existingUser = await _repository.FindAsync( u =>
+                u.Username == entity.Username );
+
+            if ( existingUser is not null )
             {
                 throw new ValidationException( "Пользователь с таким именем уже существует" );
             }
-        }
-
-        public async Task<bool> CheckLoginUniqueAsync( string login, int? excludeId = null )
-        {
-            User? existing = await _repository.FindAsync( u =>
-                u.Login == login &&
-                ( excludeId == null || u.Id != excludeId.Value ) );
-            return existing == null;
-        }
-
-        public async Task<bool> CheckUsernameUniqueAsync( string username, int? excludeId = null )
-        {
-            User? existing = await _repository.FindAsync( u =>
-                u.Username == username &&
-                ( excludeId == null || u.Id != excludeId.Value ) );
-            return existing == null;
         }
     }
 }

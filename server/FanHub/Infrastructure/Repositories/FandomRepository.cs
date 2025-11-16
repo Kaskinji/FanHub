@@ -23,14 +23,5 @@ namespace Infrastructure.Repositories
                 .Where( f => f.Name.Contains( searchTerm ) )
                 .ToListAsync();
         }
-
-        public async Task<List<Fandom>> GetPopularFandomsAsync( int limit )
-        {
-            return await _entities
-                .Include( f => f.Posts )
-                .OrderByDescending( f => f.Posts.Count )
-                .Take( limit )
-                .ToListAsync();
-        }
     }
 }

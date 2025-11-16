@@ -2,6 +2,7 @@
 {
     public class SubscriptionUpdateDto
     {
-        public DateTime Date { get; set; }
+        public int UserId { get; set; }
+        public int FandomId { get; set; }
     }
 }

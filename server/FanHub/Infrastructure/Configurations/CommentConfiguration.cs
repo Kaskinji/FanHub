@@ -22,14 +22,6 @@ namespace Infrastructure.Configurations
 
             builder.Property( c => c.CommentDate )
                 .IsRequired();
-
-            builder.HasOne( c => c.Post )
-                .WithMany()
-                .HasForeignKey( c => c.PostId );
-
-            builder.HasOne( c => c.User )
-                .WithMany()
-                .HasForeignKey( c => c.UserId );
         }
     }
 }

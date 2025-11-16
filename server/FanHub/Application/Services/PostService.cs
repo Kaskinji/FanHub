@@ -27,39 +27,17 @@ namespace Application.Services
             _userRepository = userRepository;
         }
 
-        public override async Task<int> Create( PostCreateDto dto )
+        protected override Post InitializeEntity()
         {
             Post entity = new();
 
             entity.Id = IdGenerator.GenerateId();
             entity.PostDate = DateTime.UtcNow;
 
-            _mapper.Map( dto, entity );
-
-            await ExistEntities( entity );
-
-            await _validator.ValidateAndThrowAsync( entity );
-
-            await _repository.CreateAsync( entity );
-
-            return entity.Id;
+            return entity;
         }
 
-        public override async Task Update( int id, PostUpdateDto dto )
-        {
-            await CanUserEditPost( id, dto.UserId );
-            await base.Update( id, dto );
-        }
-        public async Task CanUserEditPost( int postId, int? userId )
-        {
-            Post? post = await _repository.GetByIdAsyncThrow( postId );
-            if ( post.UserId == userId )
-            {
-                throw new UnauthorizedAccessException( "Пользователь может редактировать только свои посты" );
-            }
-        }
-
-        protected override async Task ExistEntities( Post post )
+        protected override async Task CheckUnique( Post post )
         {
             await _fandomRepository.GetByIdAsyncThrow( post.FandomId );
             await _userRepository.GetByIdAsyncThrow( post.UserId );

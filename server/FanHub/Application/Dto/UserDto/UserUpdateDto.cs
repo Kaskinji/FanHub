@@ -10,9 +10,8 @@ namespace Application.Dto.UserDto
 
         public string Password { get; set; } = string.Empty;
 
-        public string? Avatar { get; set; }
+        public string? Avatar { get; set; } = null;
 
-        //registr date нельзя менять
         public UserRole Role { get; set; }
     }
 }

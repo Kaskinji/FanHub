@@ -24,18 +24,6 @@ namespace Infrastructure.Configurations
             builder.Property( n => n.Type )
                 .IsRequired()
                 .HasConversion<byte>();
-
-            //builder.HasOne( n => n.User )
-            //    .WithMany()
-            //    .HasForeignKey( n => n.UserId );
-
-            //builder.HasOne( n => n.Post )
-            //    .WithMany()
-            //    .HasForeignKey( n => n.PostId );
-
-            //builder.HasOne( n => n.Event )
-            //    .WithMany()
-            //    .HasForeignKey( n => n.EventId );
         }
     }
 }

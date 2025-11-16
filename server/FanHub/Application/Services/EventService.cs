@@ -25,42 +25,6 @@ namespace Application.Services
             _fandomRepository = fandomRepository;
         }
 
-        public override async Task<int> Create( EventCreateDto dto )
-        {
-            if ( dto.StartDate >= dto.EndDate )
-            {
-                throw new ValidationException( "Дата начала должна быть раньше даты окончания" );
-            }
-
-            if ( dto.StartDate <= DateTime.UtcNow )
-            {
-                throw new ValidationException( "Дата начала должна быть в будущем" );
-            }
-
-            return await base.Create( dto );
-        }
-
-        public override async Task Update( int id, EventUpdateDto dto )
-        {
-            if ( dto.StartDate.HasValue && dto.EndDate.HasValue )
-            {
-                if ( dto.StartDate.Value >= dto.EndDate.Value )
-                {
-                    throw new ValidationException( "Дата начала должна быть раньше даты окончания" );
-                }
-            }
-
-            await base.Update( id, dto );
-        }
-
-        protected override async Task ExistEntities( Event eventEntity )
-        {
-            await _fandomRepository.GetByIdAsyncThrow( eventEntity.FandomId );
-
-            await _userRepository.GetByIdAsyncThrow( eventEntity.OrganizerId );
-        }
-        //можно ли удалять активное событие?
-
         public async Task<List<Event>> GetUpcomingEventsAsync( int daysAhead = 30 )
         {
             return await _eventRepository.FindAllAsync( e =>
@@ -82,6 +46,13 @@ namespace Application.Services
         {
             return await _eventRepository.FindAllAsync( e =>
                 e.Title.Contains( searchTerm ) || e.Description.Contains( searchTerm ) );
+        }
+
+        protected override async Task ExistEntities( Event eventEntity )
+        {
+            await _fandomRepository.GetByIdAsyncThrow( eventEntity.FandomId );
+
+            await _userRepository.GetByIdAsyncThrow( eventEntity.OrganizerId );
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Domain.Extensions
             TEntity? entity = await repository.GetByIdAsync( id );
             if ( entity is null )
             {
-                throw new KeyNotFoundException( $"Entity with id {id} is not found" );
+                throw new KeyNotFoundException( $"{typeof( TEntity ).Name} with id {id} is not found" );
             }
 
             return entity;

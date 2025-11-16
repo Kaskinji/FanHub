@@ -1,7 +1,4 @@
-﻿
-using Domain.Entities;
-
-namespace Application.Dto.CommentDto
+﻿namespace Application.Dto.CommentDto
 {
     public class CommentCreateDto
     {

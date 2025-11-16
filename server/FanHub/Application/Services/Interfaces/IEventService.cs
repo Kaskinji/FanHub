@@ -1,6 +1,5 @@
 ﻿using Application.Dto.EventDto;
 using Domain.Entities;
-using Domain.Enums;
 
 namespace Application.Services.Interfaces
 {

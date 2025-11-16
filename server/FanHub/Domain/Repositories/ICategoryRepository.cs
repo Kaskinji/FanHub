@@ -6,7 +6,5 @@ namespace Domain.Repositories
     {
         Task<Category?> GetByNameAsync( string name );
         Task<List<Category>> SearchByNameAsync( string searchTerm );
-        Task<List<Category>> GetPopularCategoriesAsync( int limit );
-
     }
 }

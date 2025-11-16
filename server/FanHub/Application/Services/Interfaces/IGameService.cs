@@ -5,8 +5,6 @@ namespace Application.Services.Interfaces
 {
     public interface IGameService : IBaseService<Game, GameCreateDto, GameReadDto, GameUpdateDto>
     {
-        Task ValidateGame( Game entity );
-        Task<bool> CheckNameUniqueAsync( string name, int? excludeId = null );
         Task<List<GameReadDto>> GetGamesByDeveloperAsync( string developer );
         Task<List<GameReadDto>> GetGamesByGenreAsync( string genre );
         Task<List<GameReadDto>> SearchGamesAsync( string searchTerm );

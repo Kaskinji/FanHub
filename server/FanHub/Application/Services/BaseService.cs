@@ -26,10 +26,11 @@ namespace Application.Services
 
         public virtual async Task<int> Create( TCreateDto dto )
         {
-            TEntity entity = new TEntity();
-            entity.Id = IdGenerator.GenerateId();
+            TEntity entity = InitializeEntity();
 
             _mapper.Map( dto, entity );
+
+            await CheckUnique( entity );
 
             await ExistEntities( entity );
 
@@ -70,11 +71,26 @@ namespace Application.Services
 
             _mapper.Map( dto, entity );
 
+            await CheckUnique( entity );
+
             await ExistEntities( entity );
 
             await _validator.ValidateAndThrowAsync( entity );
 
             _repository.Update( entity );
+        }
+
+        protected virtual TEntity InitializeEntity()
+        {
+            TEntity entity = new TEntity();
+            entity.Id = IdGenerator.GenerateId();
+
+            return entity;
+        }
+
+        protected virtual Task CheckUnique( TEntity entity )
+        {
+            return Task.CompletedTask;
         }
 
         protected virtual Task ExistEntities( TEntity entity )

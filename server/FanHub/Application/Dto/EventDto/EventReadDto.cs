@@ -1,6 +1,4 @@
-﻿using Domain.Enums;
-
-namespace Application.Dto.EventDto
+﻿namespace Application.Dto.EventDto
 {
     public class EventReadDto
     {

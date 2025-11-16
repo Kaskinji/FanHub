@@ -13,12 +13,7 @@ namespace Application.Mapping
             CreateMap<FandomCreateDto, Fandom>()
             .ForMember( dest => dest.Id, opt => opt.Ignore() );
 
-            CreateMap<FandomUpdateDto, Fandom>()
-                .ForMember( dest => dest.Id, opt => opt.Ignore() )
-                .ForMember( dest => dest.Name, opt => opt.Condition( src => src.Name != null ) )
-                .ForMember( dest => dest.GameId, opt => opt.Condition( src => src.GameId != null ) )
-                .ForMember( dest => dest.Rules, opt => opt.Condition( src => src.Rules != null ) )
-                .ForMember( dest => dest.Description, opt => opt.Condition( src => src.Description != null ) );
+            CreateMap<FandomUpdateDto, Fandom>();
         }
     }
 }

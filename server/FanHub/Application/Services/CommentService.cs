@@ -10,7 +10,6 @@ namespace Application.Services
 {
     public class CommentService : BaseService<Comment, CommentCreateDto, CommentReadDto, CommentUpdateDto>, ICommentService
     {
-        private readonly ICommentRepository _CommentRepository;
         private readonly IUserRepository _userRepository;
         private readonly IPostRepository _postRepository;
         public CommentService( ICommentRepository repository,
@@ -20,11 +19,11 @@ namespace Application.Services
             IValidator<Comment> validator )
         : base( repository, mapper, validator )
         {
-            _CommentRepository = repository;
             _userRepository = userRepository;
             _postRepository = postRepository;
         }
-        protected override async Task ExistEntities( Comment entity )
+
+        protected override async Task CheckUnique( Comment entity )
         {
             await _postRepository.GetByIdAsyncThrow( entity.Id );
 

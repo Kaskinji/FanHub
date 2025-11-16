@@ -27,23 +27,17 @@ namespace Application.Services
             _fandomRepository = fandomRepository;
         }
 
-        public override async Task<int> Create( SubscriptionCreateDto dto )
-        {
-            await IsUserAlreadySubscribed( dto );
-
-            return await base.Create( dto );
-        }
-
-        public async Task IsUserAlreadySubscribed( SubscriptionCreateDto subscription )
+        public async Task CheckEntities( Subscription subscription )
         {
             Subscription? existingSubscription = await _subscriptionRepository.FindAsync( s =>
                 s.UserId == subscription.UserId && s.FandomId == subscription.FandomId );
 
-            if ( existingSubscription != null )
+            if ( existingSubscription is not null )
             {
-                throw new ValidationException( "Пользователь уже подписан на этот фандом" );
+                throw new ArgumentException( "Пользователь уже подписан на этот фандом" );
             }
         }
+
         protected override async Task ExistEntities( Subscription subscription )
         {
             await _userRepository.GetByIdAsyncThrow( subscription.UserId );

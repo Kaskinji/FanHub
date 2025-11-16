@@ -5,6 +5,5 @@ namespace Application.Services.Interfaces
 {
     public interface ISubscriptionService : IBaseService<Subscription, SubscriptionCreateDto, SubscriptionReadDto, SubscriptionUpdateDto>
     {
-        Task IsUserAlreadySubscribed( SubscriptionCreateDto subscription );
     }
 }

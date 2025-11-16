@@ -35,13 +35,13 @@ public class GameController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateGame( [FromBody] GameCreateDto dto )
+    public async Task<ActionResult<int>> CreateGame( [FromBody] GameCreateDto dto )
     {
-        await _gameService.Create( dto );
+        int id = await _gameService.Create( dto );
 
         await _unitOfWork.CommitAsync();
 
-        return Created();
+        return Ok( id );
     }
 
     [HttpPut( "{id}" )]

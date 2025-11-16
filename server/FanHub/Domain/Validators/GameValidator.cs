@@ -32,14 +32,12 @@ namespace Domain.Validators
             RuleFor( x => x.Publisher )
                 .NotEmpty().WithMessage( "Издатель обязателен" )
                 .Length( 1, 128 ).WithMessage( "Название издателя должно быть от 1 до 128 символов" )
-                .Matches( "^[a-zA-Zа-яА-Я0-9\\s\\-\\.&]+$" ).WithMessage( "Название издателя содержит недопустимые символы" )
-                .When( x => !string.IsNullOrEmpty( x.Publisher ) );
+                .Matches( "^[a-zA-Zа-яА-Я0-9\\s\\-\\.&]+$" ).WithMessage( "Название издателя содержит недопустимые символы" );
 
             RuleFor( x => x.CoverImage )
                 .NotEmpty().WithMessage( "Обложка игры обязательна" )
-                .MaximumLength( 1000 ).WithMessage( "Путь к обложке не может превышать 1000 символов" )
-                .Must( UrlValidator.ValidateImageUrl ).WithMessage( "Некорректный URL обложки" )
-                .When( x => !string.IsNullOrEmpty( x.CoverImage ) );
+                .MaximumLength( 1000 ).WithMessage( "Путь к обложке не может превышать 1000 символов" );
+            //.Must( UrlValidator.ValidateImageUrl ).WithMessage( "Некорректный URL обложки" )
 
             RuleFor( x => x.Genre )
                 .NotEmpty().WithMessage( "Жанр обязателен" )

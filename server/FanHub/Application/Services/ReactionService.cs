@@ -12,53 +12,29 @@ namespace Application.Services
     public class ReactionService : BaseService<Reaction, ReactionCreateDto, ReactionReadDto, ReactionUpdateDto>, IReactionService
     {
         private IPostRepository _postRepository;
-        private ICategoryRepository _categoryRepository;
         private IUserRepository _userRepository;
 
         public ReactionService( IReactionRepository repository,
             IPostRepository postRepository,
-            ICategoryRepository categoryRepository,
             IUserRepository userRepository,
             IMapper mapper,
             IValidator<Reaction> validator ) : base( repository, mapper, validator )
         {
             _postRepository = postRepository;
-            _categoryRepository = categoryRepository;
             _userRepository = userRepository;
         }
 
-        public override async Task<int> Create( ReactionCreateDto dto )
+        protected override Reaction InitializeEntity()
         {
             Reaction entity = new();
 
             entity.Id = IdGenerator.GenerateId();
             entity.Date = DateTime.UtcNow;
 
-            _mapper.Map( dto, entity );
-
-            await ExistEntities( entity );
-
-            await _validator.ValidateAndThrowAsync( entity );
-
-            await _repository.CreateAsync( entity );
-
-            return entity.Id;
+            return entity;
         }
 
-        public override async Task Update( int id, ReactionUpdateDto dto )
-        {
-            Reaction entity = await _repository.GetByIdAsyncThrow( id );
-
-            _mapper.Map( dto, entity );
-
-            await ExistEntities( entity );
-
-            await _validator.ValidateAndThrowAsync( entity );
-
-            _repository.Update( entity );
-        }
-
-        protected override async Task ExistEntities( Reaction Reaction )
+        protected override async Task CheckUnique( Reaction Reaction )
         {
             await _userRepository.GetByIdAsyncThrow( Reaction.UserId );
             await _postRepository.GetByIdAsyncThrow( Reaction.PostId );

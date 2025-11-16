@@ -35,13 +35,13 @@ public class FandomController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateFandom( [FromBody] FandomCreateDto dto )
+    public async Task<ActionResult<int>> CreateFandom( [FromBody] FandomCreateDto dto )
     {
-        await _fandomService.Create( dto );
+        int id = await _fandomService.Create( dto );
 
         await _unitOfWork.CommitAsync();
 
-        return Created();
+        return Ok( id );
     }
 
     [HttpPut( "{id}" )]
