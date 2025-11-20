@@ -24,7 +24,7 @@ namespace Application.Services
             _userRepository = userRepository;
         }
 
-        protected override Reaction InitializeEntity()
+        protected override Reaction InitializeEntity( ReactionCreateDto dto )
         {
             Reaction entity = new();
 

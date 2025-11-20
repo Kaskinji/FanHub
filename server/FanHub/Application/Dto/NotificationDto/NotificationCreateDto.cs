@@ -1,6 +1,4 @@
-﻿using Domain.Enums;
-
-namespace Application.Dto.NotificationDto
+﻿namespace Application.Dto.NotificationDto
 {
     public class NotificationCreateDto
     {
@@ -8,7 +6,5 @@ namespace Application.Dto.NotificationDto
         public int? PostId { get; set; }
         public int? EventId { get; set; }
         public string Content { get; set; } = string.Empty;
-        public NotificationType Type { get; set; }
-
     }
 }

@@ -16,4 +16,9 @@ public class Post : Entity
 
     public string MediaContent { get; set; } = string.Empty;
 
+    public User User { get; set; } = null!;
+    public Fandom Fandom { get; set; } = null!;
+    public Category Category { get; set; } = null!;
+    public ICollection<Reaction> Reactions { get; set; } = new List<Reaction>();
+    public ICollection<Comment> Comments { get; set; } = new List<Comment>();
 }

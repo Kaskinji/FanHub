@@ -1,6 +1,7 @@
 using Application;
 using FanHub.Middlewares;
 using Infrastructure;
+using WebApi.Bindings;
 
 public class Program
 {
@@ -13,8 +14,8 @@ public class Program
         builder.Services.AddControllers();
 
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
 
+        builder.Services.AddJwtAuthAndSwagger( builder.Configuration );
 
         WebApplication app = builder.Build();
 
@@ -26,6 +27,8 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+
+        app.UseAuthentication();
 
         app.UseAuthorization();
 

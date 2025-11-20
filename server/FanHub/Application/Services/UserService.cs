@@ -1,9 +1,9 @@
 ﻿using Application.Dto.UserDto;
 using Application.Extensions;
+using Application.PasswordHasher;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
-using Domain.Enums;
 using Domain.Repositories;
 using FluentValidation;
 
@@ -11,18 +11,34 @@ namespace Application.Services
 {
     public class UserService : BaseService<User, UserCreateDto, UserReadDto, UserUpdateDto>, IUserService
     {
+        private IPasswordHasher _hasher;
+
         public UserService( IUserRepository userRepository,
             IMapper mapper,
-            IValidator<User> validator ) : base( userRepository, mapper, validator )
+            IValidator<User> validator,
+            IPasswordHasher hasher
+           ) : base( userRepository, mapper, validator )
         {
+            _hasher = hasher;
         }
 
-        protected override User InitializeEntity()
+        public async Task<int?> GetUserIdByCredentialsAsync( string login, string password )
+        {
+            User? user = await _repository.FindAsync( e => e.Login == login );
+            if ( user is null || !_hasher.VerifyPassword( password, user.PasswordHash ) )
+            {
+                return null;
+            }
+
+            return user.Id;
+        }
+
+        protected override User InitializeEntity( UserCreateDto dto )
         {
             User entity = new User();
             entity.Id = IdGenerator.GenerateId();
-            entity.Role = UserRole.User;
             entity.RegistrationDate = DateTime.UtcNow;
+            entity.PasswordHash = _hasher.GeneratePasswordHash( dto.Password );
 
             return entity;
         }
@@ -34,7 +50,7 @@ namespace Application.Services
 
             if ( existing is not null )
             {
-                throw new ValidationException( "Пользователь с таким логином уже существует" );
+                throw new ArgumentException( "Пользователь с таким логином уже существует" );
             }
 
             User? existingUser = await _repository.FindAsync( u =>
@@ -42,7 +58,7 @@ namespace Application.Services
 
             if ( existingUser is not null )
             {
-                throw new ValidationException( "Пользователь с таким именем уже существует" );
+                throw new ArgumentException( "Пользователь с таким именем уже существует" );
             }
         }
     }

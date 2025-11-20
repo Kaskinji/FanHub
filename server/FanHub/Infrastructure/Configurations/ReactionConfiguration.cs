@@ -22,6 +22,21 @@ namespace Infrastructure.Configurations
             builder.Property( r => r.Type )
                 .IsRequired()
                 .HasConversion<byte>();
+
+            builder.HasOne( r => r.User )
+                .WithMany( u => u.Reactions )
+                .HasForeignKey( r => r.UserId )
+                .OnDelete( DeleteBehavior.Cascade );
+
+            builder.HasOne( r => r.Post )
+                .WithMany( p => p.Reactions )
+                .HasForeignKey( r => r.PostId )
+                .OnDelete( DeleteBehavior.Cascade );
+
+            builder.HasIndex( r => r.UserId );
+            builder.HasIndex( r => r.PostId );
+            builder.HasIndex( r => r.Date );
+            builder.HasIndex( r => new { r.UserId, r.PostId } ).IsUnique();
         }
     }
 }

@@ -15,4 +15,6 @@ public class Game : Entity
     public string CoverImage { get; set; } = string.Empty;
 
     public string Genre { get; set; } = string.Empty;
+
+    public ICollection<Fandom> Fandoms { get; set; } = new List<Fandom>();
 }

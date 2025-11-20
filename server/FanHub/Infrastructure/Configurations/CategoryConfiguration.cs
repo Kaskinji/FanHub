@@ -17,6 +17,12 @@ namespace Infrastructure.Configurations
             builder.Property( c => c.Icon )
                 .IsRequired()
                 .HasMaxLength( 1000 );
+
+            builder.HasMany( c => c.Posts )
+                .WithOne( pc => pc.Category )
+                .HasForeignKey( pc => pc.CategoryId );
+
+            builder.HasIndex( c => c.Name );
         }
     }
 }

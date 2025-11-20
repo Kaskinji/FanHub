@@ -1,7 +1,9 @@
 ﻿using Application.Dto.GameDto;
 using Application.Services.Interfaces;
 using Domain.Foundations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Controllers.Attributes;
 
 namespace FanHub.Controllers;
 
@@ -34,6 +36,7 @@ public class GameController : ControllerBase
         return Ok( game );
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<int>> CreateGame( [FromBody] GameCreateDto dto )
     {
@@ -44,8 +47,9 @@ public class GameController : ControllerBase
         return Ok( id );
     }
 
+    [Authorize]
     [HttpPut( "{id}" )]
-    public async Task<IActionResult> UpdateGame( int id, [FromBody] GameUpdateDto dto ) // todo: поменять dto(убрать опциональные поля)
+    public async Task<IActionResult> UpdateGame( int id, [FromBody] GameUpdateDto dto )
     {
         await _gameService.Update( id, dto );
 
@@ -54,6 +58,7 @@ public class GameController : ControllerBase
         return Ok();
     }
 
+    [Authorize]
     [HttpDelete( "{id}" )]
     public async Task<IActionResult> DeleteGame( int id )
     {

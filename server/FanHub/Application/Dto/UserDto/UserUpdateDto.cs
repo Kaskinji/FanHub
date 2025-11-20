@@ -11,7 +11,5 @@ namespace Application.Dto.UserDto
         public string Password { get; set; } = string.Empty;
 
         public string? Avatar { get; set; } = null;
-
-        public UserRole Role { get; set; }
     }
 }

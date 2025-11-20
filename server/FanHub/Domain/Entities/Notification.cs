@@ -1,6 +1,4 @@
-﻿using Domain.Enums;
-
-namespace Domain.Entities;
+﻿namespace Domain.Entities;
 
 public class Notification : Entity
 {
@@ -12,5 +10,7 @@ public class Notification : Entity
 
     public string Content { get; set; } = string.Empty;
 
-    public NotificationType Type { get; set; }
+    public User User { get; set; } = null!;
+    public Post? Post { get; set; }
+    public Event? Event { get; set; }
 }

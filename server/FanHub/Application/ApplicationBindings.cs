@@ -1,5 +1,6 @@
 ﻿using Application.Mapping;
 using Application.Services;
+using Application.Services.Auth;
 using Application.Services.Interfaces;
 using Domain.Validators;
 using FluentValidation;
@@ -22,7 +23,7 @@ namespace Application
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IReactionService, ReactionService>();
             services.AddScoped<ISubscriptionService, SubscriptionService>();
-
+            services.AddScoped<IAuthService, AuthService>();
 
             services.AddValidatorsFromAssemblyContaining<CategoryValidator>();
             services.AddValidatorsFromAssemblyContaining<FandomValidator>();

@@ -11,4 +11,8 @@ public class Reaction : Entity
     public DateTime Date { get; set; }
 
     public ReactionType Type { get; set; }
+
+    public User User { get; set; } = null!;
+
+    public Post Post { get; set; } = null!;
 }

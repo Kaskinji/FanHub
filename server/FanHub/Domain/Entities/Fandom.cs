@@ -11,4 +11,10 @@ public class Fandom : Entity
     public DateTime CreationDate { get; set; }
 
     public string Rules { get; set; } = string.Empty;
+
+    public Game Game { get; set; } = null!;
+
+    public ICollection<Post> Posts { get; set; } = new List<Post>();
+    public ICollection<Event> Events { get; set; } = new List<Event>();
+    public ICollection<Subscription> Subscriptions { get; set; } = new List<Subscription>();
 }

@@ -42,7 +42,8 @@ namespace Application.Services
                 throw new ArgumentException( "Фандом с таким названием уже существует" );
             }
         }
-        protected override Fandom InitializeEntity()
+
+        protected override Fandom InitializeEntity( FandomCreateDto dto )
         {
             Fandom entity = new Fandom();
             entity.Id = IdGenerator.GenerateId();

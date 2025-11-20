@@ -26,7 +26,7 @@ namespace Application.Services
 
         public virtual async Task<int> Create( TCreateDto dto )
         {
-            TEntity entity = InitializeEntity();
+            TEntity entity = InitializeEntity( dto );
 
             _mapper.Map( dto, entity );
 
@@ -80,7 +80,7 @@ namespace Application.Services
             _repository.Update( entity );
         }
 
-        protected virtual TEntity InitializeEntity()
+        protected virtual TEntity InitializeEntity( TCreateDto createDto )
         {
             TEntity entity = new TEntity();
             entity.Id = IdGenerator.GenerateId();

@@ -1,7 +1,9 @@
 ﻿using Application.Dto.FandomDto;
 using Application.Services.Interfaces;
 using Domain.Foundations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Controllers.Attributes;
 
 namespace FanHub.Controllers;
 
@@ -17,7 +19,7 @@ public class FandomController : ControllerBase
         _fandomService = fandomService;
         _unitOfWork = unitOfWork;
     }
-
+    // todo: добавить метод для получения подписок
     [HttpGet]
     public async Task<ActionResult<List<FandomReadDto>>> GetFandoms()
     {
@@ -34,6 +36,7 @@ public class FandomController : ControllerBase
         return Ok( Fandom );
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<int>> CreateFandom( [FromBody] FandomCreateDto dto )
     {
@@ -44,8 +47,9 @@ public class FandomController : ControllerBase
         return Ok( id );
     }
 
+    [Authorize]
     [HttpPut( "{id}" )]
-    public async Task<IActionResult> UpdateFandom( int id, [FromBody] FandomUpdateDto dto ) // todo: поменять dto(убрать опциональные поля)
+    public async Task<IActionResult> UpdateFandom( int id, [FromBody] FandomUpdateDto dto )
     {
         await _fandomService.Update( id, dto );
 
@@ -54,6 +58,7 @@ public class FandomController : ControllerBase
         return Ok();
     }
 
+    [Authorize]
     [HttpDelete( "{id}" )]
     public async Task<IActionResult> DeleteFandom( int id )
     {

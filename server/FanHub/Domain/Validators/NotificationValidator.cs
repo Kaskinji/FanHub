@@ -16,9 +16,6 @@ namespace Domain.Validators
                 .Must( content => !string.IsNullOrWhiteSpace( content ) )
                 .WithMessage( "Содержание не может состоять только из пробелов" );
 
-            RuleFor( x => x.Type )
-                .IsInEnum().WithMessage( "Некорректный тип уведомления" );
-
             RuleFor( x => x.PostId )
                 .GreaterThan( 0 ).WithMessage( "PostId должен быть положительным числом" )
                 .When( x => x.PostId != 0 );
@@ -28,13 +25,24 @@ namespace Domain.Validators
                 .When( x => x.EventId != 0 );
 
             RuleFor( x => x )
-                .Must( HaveAtLeastOneReference )
+                .Must( CheckReferences )
                 .WithMessage( "Уведомление должно ссылаться на пост или событие" );
         }
 
-        private bool HaveAtLeastOneReference( Notification notification )
+        private bool CheckReferences( Notification notification )
         {
-            return notification.PostId != 0 || notification.EventId != 0;
+            int? postId = notification.PostId;
+            int? eventId = notification.EventId;
+
+            bool empty = postId is null && eventId is null;
+            bool overflow = postId is not null && eventId is not null;
+
+            if ( !empty && !overflow )
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

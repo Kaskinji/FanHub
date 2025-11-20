@@ -1,6 +1,8 @@
-﻿using Domain.Foundations;
+﻿using Application.PasswordHasher;
+using Domain.Foundations;
 using Domain.Repositories;
 using Infrastructure.Foundations;
+using Infrastructure.PasswordHashers;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +23,8 @@ namespace Infrastructure
                 op.UseInMemoryDatabase( databaseName: "FanHub" ) );
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddScoped<IPasswordHasher, PasswordHasher>();
 
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();

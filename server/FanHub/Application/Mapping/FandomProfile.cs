@@ -10,8 +10,7 @@ namespace Application.Mapping
         {
             CreateMap<Fandom, FandomReadDto>();
 
-            CreateMap<FandomCreateDto, Fandom>()
-            .ForMember( dest => dest.Id, opt => opt.Ignore() );
+            CreateMap<FandomCreateDto, Fandom>();
 
             CreateMap<FandomUpdateDto, Fandom>();
         }

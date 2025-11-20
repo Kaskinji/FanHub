@@ -23,6 +23,10 @@ namespace Infrastructure.Configurations
             builder.Property( e => e.Description )
                 .IsRequired()
                 .HasMaxLength( 500 );
+
+            builder.HasOne( e => e.Fandom )
+                .WithMany( f => f.Events )
+                .HasForeignKey( e => e.FandomId );
         }
     }
 }

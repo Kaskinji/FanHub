@@ -35,6 +35,14 @@ namespace Infrastructure.Configurations
             builder.Property( g => g.Genre )
                 .IsRequired()
                 .HasMaxLength( 128 );
+
+            builder.HasMany( g => g.Fandoms )
+                   .WithOne( f => f.Game )
+                   .HasForeignKey( f => f.GameId )
+                   .OnDelete( DeleteBehavior.ClientNoAction );
+
+            builder.HasIndex( g => g.Title );
+            builder.HasIndex( g => g.Genre );
         }
     }
 }

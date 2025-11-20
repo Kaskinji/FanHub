@@ -27,7 +27,7 @@ namespace Application.Services
             _userRepository = userRepository;
         }
 
-        protected override Post InitializeEntity()
+        protected override Post InitializeEntity( PostCreateDto dto )
         {
             Post entity = new();
 
