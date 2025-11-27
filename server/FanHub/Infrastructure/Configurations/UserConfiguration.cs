@@ -28,6 +28,10 @@ namespace Infrastructure.Configurations
             builder.Property( u => u.RegistrationDate )
                 .IsRequired();
 
+            builder.Property( u => u.Role )
+                .HasConversion<byte>()
+                .IsRequired();
+
             builder.HasMany( u => u.Reactions )
                 .WithOne( r => r.User )
                 .HasForeignKey( r => r.UserId )

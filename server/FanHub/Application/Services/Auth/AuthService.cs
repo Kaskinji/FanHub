@@ -5,6 +5,7 @@ using System.Text;
 using Application.Dto.UserDto;
 using Application.Options;
 using Application.Services.Interfaces;
+using Domain.Enums;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -25,7 +26,8 @@ namespace Application.Services.Auth
         {
             int id = await _userService.Create( dto );
 
-            Token token = GenerateToken( id );
+            UserReadDto user = await _userService.GetById( id );
+            Token token = GenerateToken( id, user.Role );
 
             return new UserAuthDto()
             {
@@ -42,7 +44,8 @@ namespace Application.Services.Auth
                 throw new UnauthorizedAccessException( "Invalid credentials" );
             }
 
-            Token token = GenerateToken( userId.Value );
+            UserReadDto user = await _userService.GetById( userId.Value );
+            Token token = GenerateToken( userId.Value, user.Role );
 
             return new UserAuthDto()
             {
@@ -51,11 +54,13 @@ namespace Application.Services.Auth
             };
         }
 
-        private Token GenerateToken( int userId )
+        private Token GenerateToken( int userId, UserRole role )
         {
             List<Claim> claims = new List<Claim>()
             {
-                new Claim( nameof(userId), userId.ToString())
+                new Claim( nameof(userId), userId.ToString() ),
+                new Claim( ClaimTypes.Role, role.ToString() ),
+                new Claim( "role", role.ToString() )
             };
 
             SigningCredentials signingCredentials = new SigningCredentials(
@@ -70,24 +75,6 @@ namespace Application.Services.Auth
             string tokenString = new JwtSecurityTokenHandler().WriteToken( token );
 
             return new Token( tokenString, expireDate );
-        }
-
-        private bool VerifyToken( string token )
-        {
-            string[] parts = token.Split( ".".ToCharArray() );
-            string header = parts[ 0 ];
-            string payload = parts[ 1 ];
-            string signature = parts[ 2 ];
-
-            byte[] bytesToSign = Encoding.UTF8.GetBytes( string.Join( ".", header, payload ) );
-            byte[] bytesToSecret = Encoding.UTF8.GetBytes( _options.Value.Secret );
-
-            HMACSHA256 alg = new HMACSHA256( bytesToSecret );
-            byte[] hash = alg.ComputeHash( bytesToSign );
-
-            string computedSignature = Base64UrlEncoder.Encode( hash );
-
-            return signature == computedSignature;
         }
     }
 }

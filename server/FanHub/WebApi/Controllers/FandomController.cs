@@ -3,7 +3,6 @@ using Application.Services.Interfaces;
 using Domain.Foundations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Controllers.Attributes;
 
 namespace FanHub.Controllers;
 
@@ -19,6 +18,7 @@ public class FandomController : ControllerBase
         _fandomService = fandomService;
         _unitOfWork = unitOfWork;
     }
+
     // todo: добавить метод для получения подписок
     [HttpGet]
     public async Task<ActionResult<List<FandomReadDto>>> GetFandoms()

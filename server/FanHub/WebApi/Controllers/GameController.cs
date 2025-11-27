@@ -1,9 +1,9 @@
 ﻿using Application.Dto.GameDto;
 using Application.Services.Interfaces;
+using Domain.Enums;
 using Domain.Foundations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Controllers.Attributes;
 
 namespace FanHub.Controllers;
 
@@ -36,7 +36,7 @@ public class GameController : ControllerBase
         return Ok( game );
     }
 
-    [Authorize]
+    [Authorize( Roles = nameof( UserRole.Admin ) )]
     [HttpPost]
     public async Task<ActionResult<int>> CreateGame( [FromBody] GameCreateDto dto )
     {
@@ -47,7 +47,7 @@ public class GameController : ControllerBase
         return Ok( id );
     }
 
-    [Authorize]
+    [Authorize( Roles = nameof( UserRole.Admin ) )]
     [HttpPut( "{id}" )]
     public async Task<IActionResult> UpdateGame( int id, [FromBody] GameUpdateDto dto )
     {
@@ -58,7 +58,7 @@ public class GameController : ControllerBase
         return Ok();
     }
 
-    [Authorize]
+    [Authorize( Roles = nameof( UserRole.Admin ) )]
     [HttpDelete( "{id}" )]
     public async Task<IActionResult> DeleteGame( int id )
     {

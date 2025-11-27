@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Application.Options;
+using Domain.Enums;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -10,8 +11,6 @@ namespace WebApi.Bindings
     {
         public static IServiceCollection AddJwtAuthAndSwagger( this IServiceCollection services, IConfiguration configuration )
         {
-            services.Configure<JwtOptions>( configuration.GetSection( "JwtOptions" ) );
-
             services.AddAuthentication( JwtBearerDefaults.AuthenticationScheme )
                 .AddJwtBearer( options =>
                 {
@@ -22,9 +21,19 @@ namespace WebApi.Bindings
                             Encoding.UTF8.GetBytes( configuration[ "JwtOptions:Secret" ] ?? "" ) ),
                         ValidateIssuer = false,
                         ValidateAudience = false,
-                        ValidateLifetime = true
+                        ValidateLifetime = true,
+                        RoleClaimType = "role",
                     };
                 } );
+
+            services.AddAuthorization( options =>
+            {
+                options.AddPolicy( "AdminOnly", policy =>
+                    policy.RequireRole( nameof( UserRole.Admin ) ) );
+
+                options.AddPolicy( "UserOnly", policy =>
+                    policy.RequireRole( nameof( UserRole.User ) ) );
+            } );
 
             services.AddSwaggerGen( options =>
             {

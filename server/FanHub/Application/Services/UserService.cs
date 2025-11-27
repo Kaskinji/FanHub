@@ -4,6 +4,7 @@ using Application.PasswordHasher;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Repositories;
 using FluentValidation;
 
@@ -39,6 +40,7 @@ namespace Application.Services
             entity.Id = IdGenerator.GenerateId();
             entity.RegistrationDate = DateTime.UtcNow;
             entity.PasswordHash = _hasher.GeneratePasswordHash( dto.Password );
+            entity.Role = UserRole.User;
 
             return entity;
         }

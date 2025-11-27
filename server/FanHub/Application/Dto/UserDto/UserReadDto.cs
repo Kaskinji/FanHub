@@ -1,4 +1,6 @@
-﻿namespace Application.Dto.UserDto
+﻿using Domain.Enums;
+
+namespace Application.Dto.UserDto
 {
     public class UserReadDto
     {
@@ -10,6 +12,8 @@
         public string PasswordHash { get; set; } = string.Empty;
 
         public string? Avatar { get; set; }
+
+        public UserRole Role { get; set; }
 
         public DateTime RegistrationDate { get; set; }
     }

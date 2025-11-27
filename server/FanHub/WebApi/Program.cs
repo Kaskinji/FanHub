@@ -1,6 +1,8 @@
 using Application;
+using Application.Options;
 using FanHub.Middlewares;
 using Infrastructure;
+using Microsoft.Extensions.Configuration;
 using WebApi.Bindings;
 
 public class Program
@@ -15,6 +17,8 @@ public class Program
 
         builder.Services.AddEndpointsApiExplorer();
 
+        builder.Services.Configure<JwtOptions>( builder.Configuration.GetSection( "JwtOptions" ) );
+        builder.Services.Configure<FileToolsOptions>( builder.Configuration.GetSection( "FileToolsOptions" ) );
         builder.Services.AddJwtAuthAndSwagger( builder.Configuration );
 
         WebApplication app = builder.Build();

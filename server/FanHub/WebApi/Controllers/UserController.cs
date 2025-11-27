@@ -4,7 +4,6 @@ using Application.Services.Interfaces;
 using Domain.Foundations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Controllers.Attributes;
 
 namespace WebApi.Controllers
 {
@@ -24,7 +23,6 @@ namespace WebApi.Controllers
         }
 
 
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<UserReadDto>>> GetUsers()
         {
