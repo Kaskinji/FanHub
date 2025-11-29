@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Domain.Enums;
 using FluentValidation;
 

@@ -24,12 +24,17 @@ namespace Infrastructure.Configurations
                 .HasConversion<byte>();
 
             builder.HasOne( r => r.User )
-                .WithMany()
+                .WithMany( u => u.Reactions )
                 .HasForeignKey( r => r.UserId );
 
             builder.HasOne( r => r.Post )
-                .WithMany()
+                .WithMany( p => p.Reactions )
                 .HasForeignKey( r => r.PostId );
+
+            builder.HasIndex( r => r.UserId );
+            builder.HasIndex( r => r.PostId );
+            builder.HasIndex( r => r.Date );
+            builder.HasIndex( r => new { r.UserId, r.PostId } ).IsUnique();
         }
     }
 }

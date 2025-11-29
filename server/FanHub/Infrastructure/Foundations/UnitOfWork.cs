@@ -1,10 +1,12 @@
-﻿namespace Infrastructure.Foundations
+﻿using Domain.Foundations;
+
+namespace Infrastructure.Foundations
 {
     public class UnitOfWork : IUnitOfWork
     {
-        WebApiDbContext _dbContext;
+        FanHubDbContext _dbContext;
 
-        public UnitOfWork( WebApi dbContext )
+        public UnitOfWork( FanHubDbContext dbContext )
         {
             _dbContext = dbContext;
         }

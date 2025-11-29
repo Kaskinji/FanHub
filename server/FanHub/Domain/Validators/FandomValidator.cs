@@ -16,12 +16,12 @@ namespace Domain.Validators
 
             RuleFor( x => x.Description )
                 .NotEmpty().WithMessage( "Описание фандома обязательно" )
-                .Length( 20, 2000 ).WithMessage( "Описание должно быть от 20 до 2000 символов" )
+                .Length( 5, 2000 ).WithMessage( "Описание должно быть от 5 до 2000 символов" )
                 .Must( desc => !string.IsNullOrWhiteSpace( desc ) ).WithMessage( "Описание не может состоять только из пробелов" );
 
             RuleFor( x => x.Rules )
                 .NotEmpty().WithMessage( "Правила фандома обязательны" )
-                .Length( 10, 5000 ).WithMessage( "Правила должны быть от 10 до 5000 символов" )
+                .Length( 5, 5000 ).WithMessage( "Правила должны быть от 5 до 5000 символов" )
                 .Must( rules => !string.IsNullOrWhiteSpace( rules ) ).WithMessage( "Правила не могут состоять только из пробелов" );
 
             RuleFor( x => x.GameId )

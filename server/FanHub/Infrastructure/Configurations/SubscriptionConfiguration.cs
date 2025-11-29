@@ -8,7 +8,7 @@ namespace Infrastructure.Configurations
     {
         public void Configure( EntityTypeBuilder<Subscription> builder )
         {
-            builder.HasKey( s => s.SubscriptionId );
+            builder.HasKey( s => s.Id );
 
             builder.Property( s => s.UserId )
                 .IsRequired();
@@ -20,12 +20,17 @@ namespace Infrastructure.Configurations
                 .IsRequired();
 
             builder.HasOne( s => s.User )
-                .WithMany()
+                .WithMany( u => u.Subscriptions )
                 .HasForeignKey( s => s.UserId );
 
             builder.HasOne( s => s.Fandom )
-                .WithMany()
+                .WithMany( f => f.Subscriptions )
                 .HasForeignKey( s => s.FandomId );
+
+            builder.HasIndex( s => s.UserId );
+            builder.HasIndex( s => s.FandomId );
+            builder.HasIndex( s => s.Date );
+            builder.HasIndex( s => new { s.UserId, s.FandomId } ).IsUnique();
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Domain.Validators
 {
-    public static class UrlValidator
+    public class UrlValidator
     {
         private static readonly IReadOnlyList<string> _allowedImageExtensions = [ ".webp", ".png", ".jpg", ".jpeg", ".svg", ".gif", ".ico" ];
         private static readonly IReadOnlyList<string> _allowedVideoExtensions = [ ".mp4", ".webm", ".youtube.com", "youtu.be" ];
@@ -9,7 +9,7 @@
         {
             string? extension = GetMediaExtension( url );
 
-            return _allowedImageExtensions.Contains( url );
+            return _allowedImageExtensions.Contains( extension );
         }
 
         public static bool ValidateMediaWithVideoUrl( string url )
@@ -33,7 +33,7 @@
 
             string? extension = Path.GetExtension( uriResult.AbsolutePath )?.ToLower();
 
-            return null;
+            return extension;
         }
     }
 }

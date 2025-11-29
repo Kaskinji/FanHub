@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+  webapi:
+    image: ${DOCKER_REGISTRY-}fanhubwebapi
+    build:
+      context: .
+      dockerfile: WebApi/Dockerfile
+    ports:
+      - "8080:5000"
+    environment:
+    - ConnectionStrings__DefaultConnection=Server=mssql,1433;Database=FanHubDb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=true;
+    depends_on:
+      - mssql
+    restart: unless-stopped
+    volumes:
+      - fanhub_storage:/app/Infrastructure/Storage
+    command: ["sh", "-c", "sleep 30 && dotnet WebApi.dll"]
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: mssql
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong@Passw0rd 
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+    restart: unless-stopped
+    
+volumes:
+  mssql_data:
+  fanhub_storage:

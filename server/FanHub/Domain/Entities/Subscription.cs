@@ -1,15 +1,13 @@
 ﻿namespace Domain.Entities;
 
-public class Subscription
+public class Subscription : Entity
 {
-    public int SubscriptionId { get; set; }
-
     public int UserId { get; set; }
 
     public int FandomId { get; set; }
 
     public DateTime Date { get; set; }
 
-    public required User User { get; set; }
-    public required Fandom Fandom { get; set; }
+    public User User { get; set; } = null!;
+    public Fandom Fandom { get; set; } = null!;
 }

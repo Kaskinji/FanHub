@@ -1,9 +1,7 @@
 ﻿namespace Domain.Entities;
 
-public class Comment
+public class Comment : Entity
 {
-    public int Id { get; set; }
-
     public int PostId { get; set; }
 
     public int UserId { get; set; }
@@ -12,6 +10,6 @@ public class Comment
 
     public DateTime CommentDate { get; set; }
 
-    public required Post Post { get; set; }
-    public required User User { get; set; }
+    public User User { get; set; } = null!;
+    public Post Post { get; set; } = null!;
 }

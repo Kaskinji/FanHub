@@ -1,12 +1,11 @@
 ﻿using Domain.Entities;
-using Domain.Enums;
 using FluentValidation;
 
 namespace Domain.Validators
 {
-    public class BasePostValidator : AbstractValidator<Post>
+    public class PostValidator : AbstractValidator<Post>
     {
-        public BasePostValidator()
+        public PostValidator()
         {
             RuleFor( x => x.Title )
                 .NotEmpty().WithMessage( "Заголовок поста обязателен" )
@@ -27,9 +26,6 @@ namespace Domain.Validators
             RuleFor( x => x.PostDate )
                 .LessThanOrEqualTo( DateTime.Now ).WithMessage( "Дата публикации не может быть в будущем" )
                 .GreaterThanOrEqualTo( DateTime.Now.AddYears( -1 ) ).WithMessage( "Дата публикации не может быть старше 1 года" );
-
-            RuleFor( x => x.Status )
-                .IsInEnum().WithMessage( "Некорректный статус поста" );
 
             RuleFor( x => x.UserId )
                 .GreaterThan( 0 ).WithMessage( "ID пользователя должен быть больше 0" );

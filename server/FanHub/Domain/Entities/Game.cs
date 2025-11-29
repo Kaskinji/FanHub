@@ -1,9 +1,7 @@
 ﻿namespace Domain.Entities;
 
-public class Game
+public class Game : Entity
 {
-    public int Id { get; set; }
-
     public string Title { get; set; } = string.Empty;
 
     public string Description { get; set; } = string.Empty;
@@ -18,5 +16,5 @@ public class Game
 
     public string Genre { get; set; } = string.Empty;
 
-    public List<Fandom> Fandoms { get; set; } = new();
+    public ICollection<Fandom> Fandoms { get; set; } = new List<Fandom>();
 }

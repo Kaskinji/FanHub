@@ -8,7 +8,7 @@ namespace Infrastructure.Configurations
     {
         public void Configure( EntityTypeBuilder<User> builder )
         {
-            builder.HasKey( u => u.UserId );
+            builder.HasKey( u => u.Id );
 
             builder.Property( u => u.Username )
                 .IsRequired()
@@ -18,7 +18,7 @@ namespace Infrastructure.Configurations
                 .IsRequired()
                 .HasMaxLength( 128 );
 
-            builder.Property( u => u.Password )
+            builder.Property( u => u.PasswordHash )
                 .IsRequired()
                 .HasMaxLength( 256 );
 
@@ -29,8 +29,36 @@ namespace Infrastructure.Configurations
                 .IsRequired();
 
             builder.Property( u => u.Role )
-                .IsRequired()
-                .HasConversion<byte>();
+                .HasConversion<byte>()
+                .IsRequired();
+
+            builder.HasMany( u => u.Reactions )
+                .WithOne( r => r.User )
+                .HasForeignKey( r => r.UserId );
+
+            builder.HasMany( u => u.Events )
+                .WithOne( e => e.Organizer )
+                .HasForeignKey( e => e.OrganizerId );
+
+            builder.HasMany( u => u.Comments )
+                .WithOne( c => c.User )
+                .HasForeignKey( c => c.UserId );
+
+            builder.HasMany( u => u.Notifications )
+                .WithOne( n => n.User )
+                .HasForeignKey( n => n.UserId );
+
+            builder.HasMany( u => u.Subscriptions )
+                .WithOne( s => s.User )
+                .HasForeignKey( s => s.UserId );
+
+            builder.HasMany( u => u.Posts )
+                .WithOne( p => p.User )
+                .HasForeignKey( p => p.UserId );
+
+            builder.HasIndex( u => u.Username );
+            builder.HasIndex( u => u.Login ).IsUnique();
+            builder.HasIndex( u => u.RegistrationDate );
         }
     }
 }

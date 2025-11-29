@@ -1,0 +1,47 @@
+﻿using Application.Dto.PostDto;
+using Application.Extensions;
+using Application.Services.Interfaces;
+using AutoMapper;
+using Domain.Entities;
+using Domain.Extensions;
+using Domain.Repositories;
+using FluentValidation;
+
+namespace Application.Services
+{
+    public class PostService : BaseService<Post, PostCreateDto, PostReadDto, PostUpdateDto>, IPostService
+    {
+        private readonly IFandomRepository _fandomRepository;
+        private readonly ICategoryRepository _categoryRepository;
+        private readonly IUserRepository _userRepository;
+
+        public PostService( IPostRepository repository,
+            IFandomRepository fandomRepository,
+            ICategoryRepository categoryRepository,
+            IUserRepository userRepository,
+            IMapper mapper,
+            IValidator<Post> validator ) : base( repository, mapper, validator )
+        {
+            _fandomRepository = fandomRepository;
+            _categoryRepository = categoryRepository;
+            _userRepository = userRepository;
+        }
+
+        protected override Post InitializeEntity( PostCreateDto dto )
+        {
+            Post entity = new();
+
+            entity.Id = IdGenerator.GenerateId();
+            entity.PostDate = DateTime.UtcNow;
+
+            return entity;
+        }
+
+        protected override async Task CheckUnique( Post post )
+        {
+            await _fandomRepository.GetByIdAsyncThrow( post.FandomId );
+            await _userRepository.GetByIdAsyncThrow( post.UserId );
+            await _categoryRepository.GetByIdAsyncThrow( post.CategoryId );
+        }
+    }
+}

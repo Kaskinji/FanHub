@@ -21,13 +21,10 @@ namespace Infrastructure.Configurations
                 .IsRequired()
                 .HasMaxLength( 500 );
 
-            builder.Property( n => n.Type )
-                .IsRequired()
-                .HasConversion<byte>();
-
             builder.HasOne( n => n.User )
-                .WithMany()
-                .HasForeignKey( n => n.UserId );
+                .WithMany( u => u.Notifications )
+                .HasForeignKey( n => n.UserId )
+                .OnDelete( DeleteBehavior.Restrict );
 
             builder.HasOne( n => n.Post )
                 .WithMany()
@@ -36,6 +33,10 @@ namespace Infrastructure.Configurations
             builder.HasOne( n => n.Event )
                 .WithMany()
                 .HasForeignKey( n => n.EventId );
+
+            builder.HasIndex( n => n.UserId );
+            builder.HasIndex( n => n.PostId );
+            builder.HasIndex( n => n.EventId );
         }
     }
 }

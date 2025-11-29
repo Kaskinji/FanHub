@@ -1,11 +1,12 @@
-﻿using Domain.Repositories;
+﻿using System.Linq.Expressions;
+using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
     public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
     {
-        private readonly DbSet<TEntity> _entities;
+        protected readonly DbSet<TEntity> _entities;
 
         public BaseRepository( FanHubDbContext fanhubDbContext )
         {
@@ -35,6 +36,16 @@ namespace Infrastructure.Repositories
         public void Delete( TEntity entity )
         {
             _entities.Remove( entity );
+        }
+
+        public async Task<TEntity?> FindAsync( Expression<Func<TEntity, bool>> predicate )
+        {
+            return await _entities.FirstOrDefaultAsync( predicate );
+        }
+
+        public async Task<List<TEntity>> FindAllAsync( Expression<Func<TEntity, bool>> predicate )
+        {
+            return await _entities.Where( predicate ).ToListAsync();
         }
     }
 }

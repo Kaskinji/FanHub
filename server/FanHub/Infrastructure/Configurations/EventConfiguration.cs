@@ -24,12 +24,12 @@ namespace Infrastructure.Configurations
                 .IsRequired()
                 .HasMaxLength( 500 );
 
-            builder.Property( e => e.Status )
-                .IsRequired()
-                .HasConversion<byte>();
+            builder.HasOne( e => e.Organizer )
+                .WithMany( o => o.Events )
+                .HasForeignKey( e => e.OrganizerId );
 
             builder.HasOne( e => e.Fandom )
-                .WithMany()
+                .WithMany( f => f.Events )
                 .HasForeignKey( e => e.FandomId );
         }
     }

@@ -4,5 +4,7 @@ namespace Domain.Repositories
 {
     public interface IFandomRepository : IBaseRepository<Fandom>
     {
+        Task<List<Fandom>> GetFandomsByGameAsync( int gameId );
+        Task<List<Fandom>> SearchByNameAsync( string searchTerm );
     }
 }
