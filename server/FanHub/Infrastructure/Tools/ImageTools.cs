@@ -30,7 +30,7 @@ namespace Infrastructure.Tools
                     await file.OpenReadStream().CopyToAsync( stream );
                 }
 
-                return filePath;
+                return fileName;
             }
             catch ( Exception )
             {

@@ -1,4 +1,6 @@
-﻿using Domain.Entities;
+﻿using Application.PasswordHasher;
+using Domain.Entities;
+using Domain.Enums;
 using Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,10 +8,13 @@ namespace Infrastructure;
 
 public class FanHubDbContext : DbContext
 {
-    public FanHubDbContext( DbContextOptions<FanHubDbContext> options )
+    public FanHubDbContext( DbContextOptions<FanHubDbContext> options, IPasswordHasher hasher )
         : base( options )
     {
+        _hasher = hasher;
     }
+
+    private IPasswordHasher _hasher;
 
     public DbSet<User> Users { get; set; }
     public DbSet<Game> Games { get; set; }
@@ -36,5 +41,22 @@ public class FanHubDbContext : DbContext
         modelBuilder.ApplyConfiguration( new SubscriptionConfiguration() );
         modelBuilder.ApplyConfiguration( new NotificationConfiguration() );
         modelBuilder.ApplyConfiguration( new CategoryConfiguration() );
+    }
+
+    public void Seed()
+    {
+        if ( !Users.Any( u => u.Role == UserRole.Admin ) )
+        {
+            Users.Add( new User
+            {
+                Username = "admin",
+                Login = "admin222",
+                PasswordHash = _hasher.Hash( "admin123" ),
+                Role = UserRole.Admin,
+                RegistrationDate = DateTime.UtcNow
+            } );
+
+            SaveChanges();
+        }
     }
 }

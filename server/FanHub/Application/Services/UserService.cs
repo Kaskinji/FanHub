@@ -39,7 +39,7 @@ namespace Application.Services
             User entity = new User();
             entity.Id = IdGenerator.GenerateId();
             entity.RegistrationDate = DateTime.UtcNow;
-            entity.PasswordHash = _hasher.GeneratePasswordHash( dto.Password );
+            entity.PasswordHash = _hasher.Hash( dto.Password );
             entity.Role = UserRole.User;
 
             return entity;

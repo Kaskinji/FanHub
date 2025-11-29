@@ -34,35 +34,29 @@ namespace Infrastructure.Configurations
 
             builder.HasMany( u => u.Reactions )
                 .WithOne( r => r.User )
-                .HasForeignKey( r => r.UserId )
-                .OnDelete( DeleteBehavior.Cascade );
+                .HasForeignKey( r => r.UserId );
 
             builder.HasMany( u => u.Events )
                 .WithOne( e => e.Organizer )
-                .HasForeignKey( e => e.OrganizerId )
-                .OnDelete( DeleteBehavior.Cascade );
+                .HasForeignKey( e => e.OrganizerId );
 
             builder.HasMany( u => u.Comments )
                 .WithOne( c => c.User )
-                .HasForeignKey( c => c.UserId )
-                .OnDelete( DeleteBehavior.Cascade );
+                .HasForeignKey( c => c.UserId );
 
             builder.HasMany( u => u.Notifications )
                 .WithOne( n => n.User )
-                .HasForeignKey( n => n.UserId )
-                .OnDelete( DeleteBehavior.Cascade );
+                .HasForeignKey( n => n.UserId );
 
             builder.HasMany( u => u.Subscriptions )
                 .WithOne( s => s.User )
-                .HasForeignKey( s => s.UserId )
-                .OnDelete( DeleteBehavior.Cascade );
+                .HasForeignKey( s => s.UserId );
 
             builder.HasMany( u => u.Posts )
                 .WithOne( p => p.User )
-                .HasForeignKey( p => p.UserId )
-                .OnDelete( DeleteBehavior.Cascade );
+                .HasForeignKey( p => p.UserId );
 
-            builder.HasIndex( u => u.Username ).IsUnique();
+            builder.HasIndex( u => u.Username );
             builder.HasIndex( u => u.Login ).IsUnique();
             builder.HasIndex( u => u.RegistrationDate );
         }

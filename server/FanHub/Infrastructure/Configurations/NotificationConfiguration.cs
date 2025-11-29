@@ -10,27 +10,29 @@ namespace Infrastructure.Configurations
         {
             builder.HasKey( n => n.Id );
 
-            builder.Property( n => n.UserId ).IsRequired();
+            builder.Property( n => n.UserId )
+                .IsRequired();
+
             builder.Property( n => n.PostId );
+
             builder.Property( n => n.EventId );
+
             builder.Property( n => n.Content )
                 .IsRequired()
                 .HasMaxLength( 500 );
 
             builder.HasOne( n => n.User )
-                .WithMany()
+                .WithMany( u => u.Notifications )
                 .HasForeignKey( n => n.UserId )
                 .OnDelete( DeleteBehavior.Restrict );
 
             builder.HasOne( n => n.Post )
                 .WithMany()
-                .HasForeignKey( n => n.PostId )
-                .OnDelete( DeleteBehavior.SetNull );
+                .HasForeignKey( n => n.PostId );
 
             builder.HasOne( n => n.Event )
                 .WithMany()
-                .HasForeignKey( n => n.EventId )
-                .OnDelete( DeleteBehavior.SetNull );
+                .HasForeignKey( n => n.EventId );
 
             builder.HasIndex( n => n.UserId );
             builder.HasIndex( n => n.PostId );

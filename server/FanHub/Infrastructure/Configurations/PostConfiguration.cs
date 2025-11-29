@@ -33,28 +33,25 @@ public class PostConfiguration : IEntityTypeConfiguration<Post>
 
         builder.HasOne( p => p.User )
             .WithMany( u => u.Posts )
-            .HasForeignKey( p => p.UserId )
-            .OnDelete( DeleteBehavior.Restrict );
+            .HasForeignKey( p => p.UserId );
 
         builder.HasOne( p => p.Fandom )
             .WithMany( f => f.Posts )
-            .HasForeignKey( p => p.FandomId )
-            .OnDelete( DeleteBehavior.Restrict );
+            .HasForeignKey( p => p.FandomId );
 
         builder.HasOne( p => p.Category )
             .WithMany( c => c.Posts )
-            .HasForeignKey( p => p.CategoryId )
-            .OnDelete( DeleteBehavior.Restrict );
+            .HasForeignKey( p => p.CategoryId );
 
         builder.HasMany( p => p.Comments )
             .WithOne( c => c.Post )
             .HasForeignKey( c => c.PostId )
-            .OnDelete( DeleteBehavior.Cascade );
+            .OnDelete( DeleteBehavior.Restrict );
 
         builder.HasMany( p => p.Reactions )
             .WithOne( c => c.Post )
             .HasForeignKey( c => c.PostId )
-            .OnDelete( DeleteBehavior.Cascade );
+            .OnDelete( DeleteBehavior.Restrict );
 
         builder.HasIndex( p => p.UserId );
         builder.HasIndex( p => p.FandomId );

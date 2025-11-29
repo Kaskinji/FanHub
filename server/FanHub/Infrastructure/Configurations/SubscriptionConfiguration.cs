@@ -21,13 +21,11 @@ namespace Infrastructure.Configurations
 
             builder.HasOne( s => s.User )
                 .WithMany( u => u.Subscriptions )
-                .HasForeignKey( s => s.UserId )
-                .OnDelete( DeleteBehavior.Cascade );
+                .HasForeignKey( s => s.UserId );
 
             builder.HasOne( s => s.Fandom )
                 .WithMany( f => f.Subscriptions )
-                .HasForeignKey( s => s.FandomId )
-                .OnDelete( DeleteBehavior.Cascade );
+                .HasForeignKey( s => s.FandomId );
 
             builder.HasIndex( s => s.UserId );
             builder.HasIndex( s => s.FandomId );

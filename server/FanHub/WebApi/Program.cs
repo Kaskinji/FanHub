@@ -1,13 +1,12 @@
-using Application;
+﻿using Application;
 using Application.Options;
 using FanHub.Middlewares;
 using Infrastructure;
-using Microsoft.Extensions.Configuration;
 using WebApi.Bindings;
 
 public class Program
 {
-    private static void Main()
+    public static async Task Main()
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder();
 
@@ -23,7 +22,6 @@ public class Program
 
         WebApplication app = builder.Build();
 
-
         if ( app.Environment.IsDevelopment() )
         {
             app.UseSwagger();
@@ -31,6 +29,13 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+        using ( IServiceScope scope = app.Services.CreateScope() )
+        {
+            DataSeeder seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
+            await seeder.SeedAsync();
+        }
+
+        app.UseRouting();
 
         app.UseAuthentication();
 

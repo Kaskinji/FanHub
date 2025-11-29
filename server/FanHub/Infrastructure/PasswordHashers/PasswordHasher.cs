@@ -4,7 +4,7 @@ namespace Infrastructure.PasswordHashers
 {
     public class PasswordHasher : IPasswordHasher
     {
-        public string GeneratePasswordHash( string password )
+        public string Hash( string password )
         {
             return BCrypt.Net.BCrypt.EnhancedHashPassword( password );
         }

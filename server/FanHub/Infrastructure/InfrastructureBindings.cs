@@ -19,8 +19,8 @@ namespace Infrastructure
             this IServiceCollection services,
             IConfiguration configuration )
         {
-            services.AddDbContext<FanHubDbContext>( op =>
-                op.UseInMemoryDatabase( databaseName: "FanHub" ) );
+            services.AddDbContext<FanHubDbContext>( options =>
+                options.UseSqlServer( configuration.GetConnectionString( "DefaultConnection" ) ) );
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -36,6 +36,8 @@ namespace Infrastructure
             services.AddScoped<IReactionRepository, ReactionRepository>();
             services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+
+            services.AddScoped<DataSeeder>();
 
             return services;
         }
