@@ -7,6 +7,7 @@ using Domain.Entities;
 using Domain.Enums;
 using Domain.Repositories;
 using FluentValidation;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Services
 {
@@ -17,8 +18,9 @@ namespace Application.Services
         public UserService( IUserRepository userRepository,
             IMapper mapper,
             IValidator<User> validator,
-            IPasswordHasher hasher
-           ) : base( userRepository, mapper, validator )
+            IPasswordHasher hasher,
+            ILogger<UserService> logger
+           ) : base( userRepository, mapper, validator, logger )
         {
             _hasher = hasher;
         }

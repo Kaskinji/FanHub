@@ -6,6 +6,7 @@ using Domain.Entities;
 using Domain.Extensions;
 using Domain.Repositories;
 using FluentValidation;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Services
 {
@@ -18,7 +19,8 @@ namespace Application.Services
             IGameRepository gameRepository,
             IPostRepository postRepository,
             IMapper mapper,
-            IValidator<Fandom> validator ) : base( fandomRepository, mapper, validator )
+            IValidator<Fandom> validator,
+            ILogger<FandomService> logger ) : base( fandomRepository, mapper, validator, logger )
         {
             _fandomRepository = fandomRepository;
             _gameRepository = gameRepository;

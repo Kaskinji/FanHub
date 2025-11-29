@@ -1,6 +1,8 @@
-﻿namespace Application.Tools
+﻿using Application.Tools;
+
+namespace Application.Services.Interfaces
 {
-    public interface IImageTools
+    public interface IImageService
     {
         Task<string> SaveImageAsync( IFile image );
         byte[] GetImage( string imageName );

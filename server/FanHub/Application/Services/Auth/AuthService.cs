@@ -6,6 +6,7 @@ using Application.Dto.UserDto;
 using Application.Options;
 using Application.Services.Interfaces;
 using Domain.Enums;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -15,11 +16,13 @@ namespace Application.Services.Auth
     {
         private IOptions<JwtOptions> _options;
         private IUserService _userService;
+        private ILogger<AuthService> _logger;
 
-        public AuthService( IOptions<JwtOptions> options, IUserService userService )
+        public AuthService( IOptions<JwtOptions> options, IUserService userService, ILogger<AuthService> logger )
         {
             _options = options;
             _userService = userService;
+            _logger = logger;
         }
 
         public async Task<UserAuthDto> RegisterUserAsync( UserCreateDto dto )
@@ -41,6 +44,7 @@ namespace Application.Services.Auth
             int? userId = await _userService.GetUserIdByCredentialsAsync( login, password );
             if ( userId is null )
             {
+                _logger.LogWarning("Invalid Credentials.");
                 throw new UnauthorizedAccessException( "Invalid credentials" );
             }
 

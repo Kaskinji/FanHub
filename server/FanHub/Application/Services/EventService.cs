@@ -5,6 +5,7 @@ using Domain.Entities;
 using Domain.Repositories;
 using FluentValidation;
 using Domain.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Services
 {
@@ -17,8 +18,9 @@ namespace Application.Services
             IUserRepository userRepository,
             IFandomRepository fandomRepository,
             IMapper mapper,
-            IValidator<Event> validator )
-        : base( repository, mapper, validator )
+            IValidator<Event> validator,
+            ILogger<EventService> logger )
+        : base( repository, mapper, validator, logger )
         {
             _eventRepository = repository;
             _userRepository = userRepository;

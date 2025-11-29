@@ -5,6 +5,7 @@ using Domain.Entities;
 using Domain.Extensions;
 using Domain.Repositories;
 using FluentValidation;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Services
 {
@@ -16,12 +17,17 @@ namespace Application.Services
         protected IBaseRepository<TEntity> _repository;
         protected IMapper _mapper;
         protected IValidator<TEntity> _validator;
+        protected ILogger<BaseService<TEntity, TCreateDto, TReadDto, TUpdateDto>> _logger;
 
-        public BaseService( IBaseRepository<TEntity> repository, IMapper mapper, IValidator<TEntity> validator )
+        public BaseService( IBaseRepository<TEntity> repository,
+            IMapper mapper,
+            IValidator<TEntity> validator,
+            ILogger<BaseService<TEntity, TCreateDto, TReadDto, TUpdateDto>> logger )
         {
             _repository = repository;
             _mapper = mapper;
             _validator = validator;
+            _logger = logger;
         }
 
         public virtual async Task<int> Create( TCreateDto dto )
@@ -38,12 +44,16 @@ namespace Application.Services
 
             await _repository.CreateAsync( entity );
 
+            _logger.LogTrace( $"{typeof( TEntity )} was created." );
+
             return entity.Id;
         }
 
         public virtual async Task DeleteAsync( int id )
         {
             TEntity entity = await _repository.GetByIdAsyncThrow( id );
+
+            _logger.LogTrace( $"{typeof( TEntity ).Name} with id '{id}' was deleted." );
 
             _repository.Delete( entity );
         }
@@ -76,6 +86,8 @@ namespace Application.Services
             await ExistEntities( entity );
 
             await _validator.ValidateAndThrowAsync( entity );
+
+            _logger.LogTrace( $"{typeof( TEntity ).Name} with id '{id}' was updated." );
 
             _repository.Update( entity );
         }

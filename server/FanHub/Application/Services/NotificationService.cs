@@ -5,6 +5,7 @@ using Domain.Entities;
 using Domain.Extensions;
 using Domain.Repositories;
 using FluentValidation;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Services
 {
@@ -19,7 +20,7 @@ namespace Application.Services
             IPostRepository PostRepository,
             IEventRepository eventRepository,
             IMapper mapper,
-            IValidator<Notification> validator ) : base( NotificationRepository, mapper, validator )
+            IValidator<Notification> validator, ILogger<NotificationService> logger ) : base( NotificationRepository, mapper, validator, logger )
         {
             _userRepository = UserRepository;
             _postRepository = PostRepository;

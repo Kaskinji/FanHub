@@ -2,7 +2,10 @@
 using Application.Options;
 using FanHub.Middlewares;
 using Infrastructure;
+using Serilog;
+using Serilog.Events;
 using WebApi.Bindings;
+using WebApi.Extensions;
 
 public class Program
 {
@@ -15,6 +18,16 @@ public class Program
         builder.Services.AddControllers();
 
         builder.Services.AddEndpointsApiExplorer();
+
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration( builder.Configuration )
+            .Enrich.FromLogContext()
+            .WriteTo.Console( outputTemplate: LoggerConfig.LogFormat )
+            .WriteTo.File( "logs/errors/log-.txt", outputTemplate: LoggerConfig.LogFormat, restrictedToMinimumLevel: LogEventLevel.Warning, rollingInterval: RollingInterval.Day )
+            .WriteTo.File( "logs/info/log-.txt", outputTemplate: LoggerConfig.LogFormat, rollingInterval: RollingInterval.Day )
+            .CreateLogger();
+
+        builder.Host.UseSerilog();
 
         builder.Services.Configure<JwtOptions>( builder.Configuration.GetSection( "JwtOptions" ) );
         builder.Services.Configure<FileToolsOptions>( builder.Configuration.GetSection( "FileToolsOptions" ) );

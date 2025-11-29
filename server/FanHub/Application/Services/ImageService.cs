@@ -1,10 +1,11 @@
 ﻿using Application.Options;
+using Application.Services.Interfaces;
 using Application.Tools;
 using Microsoft.Extensions.Options;
 
-namespace Infrastructure.Tools
+namespace Application.Services
 {
-    public class ImageTools( IOptions<FileToolsOptions> fileToolsOptions ) : IImageTools
+    public class ImageService( IOptions<FileToolsOptions> fileToolsOptions ) : IImageService
     {
         public async Task<string> SaveImageAsync( IFile file )
         {
