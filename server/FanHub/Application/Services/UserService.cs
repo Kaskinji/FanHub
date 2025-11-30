@@ -5,6 +5,7 @@ using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
+using Domain.Foundations;
 using Domain.Repositories;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
@@ -19,8 +20,9 @@ namespace Application.Services
             IMapper mapper,
             IValidator<User> validator,
             IPasswordHasher hasher,
-            ILogger<UserService> logger
-           ) : base( userRepository, mapper, validator, logger )
+            ILogger<UserService> logger,
+            IUnitOfWork unitOfWork
+           ) : base( userRepository, mapper, validator, logger, unitOfWork )
         {
             _hasher = hasher;
         }

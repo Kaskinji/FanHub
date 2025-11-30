@@ -11,12 +11,10 @@ namespace WebApi.Controllers
     public class EventController : ControllerBase
     {
         private IEventService _eventService;
-        private IUnitOfWork _unitOfWork;
 
-        public EventController( IEventService EventService, IUnitOfWork unitOfWork )
+        public EventController( IEventService EventService )
         {
             _eventService = EventService;
-            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
@@ -40,8 +38,6 @@ namespace WebApi.Controllers
         {
             int id = await _eventService.Create( dto );
 
-            await _unitOfWork.CommitAsync();
-
             return Ok( id );
         }
 
@@ -51,8 +47,6 @@ namespace WebApi.Controllers
         {
             await _eventService.Update( id, dto );
 
-            await _unitOfWork.CommitAsync();
-
             return Ok();
         }
 
@@ -61,8 +55,6 @@ namespace WebApi.Controllers
         public async Task<IActionResult> DeleteEvent( int id )
         {
             await _eventService.DeleteAsync( id );
-
-            await _unitOfWork.CommitAsync();
 
             return Ok();
         }

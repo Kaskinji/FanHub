@@ -3,6 +3,7 @@ using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Extensions;
+using Domain.Foundations;
 using Domain.Repositories;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
@@ -18,16 +19,18 @@ namespace Application.Services
         protected IMapper _mapper;
         protected IValidator<TEntity> _validator;
         protected ILogger<BaseService<TEntity, TCreateDto, TReadDto, TUpdateDto>> _logger;
-
+        protected IUnitOfWork _unitOfWork;
         public BaseService( IBaseRepository<TEntity> repository,
             IMapper mapper,
             IValidator<TEntity> validator,
-            ILogger<BaseService<TEntity, TCreateDto, TReadDto, TUpdateDto>> logger )
+            ILogger<BaseService<TEntity, TCreateDto, TReadDto, TUpdateDto>> logger,
+            IUnitOfWork unitOfWork )
         {
             _repository = repository;
             _mapper = mapper;
             _validator = validator;
             _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
         public virtual async Task<int> Create( TCreateDto dto )
@@ -46,6 +49,8 @@ namespace Application.Services
 
             _logger.LogTrace( $"{typeof( TEntity )} was created." );
 
+            await _unitOfWork.CommitAsync();
+
             return entity.Id;
         }
 
@@ -56,6 +61,8 @@ namespace Application.Services
             _logger.LogTrace( $"{typeof( TEntity ).Name} with id '{id}' was deleted." );
 
             _repository.Delete( entity );
+
+            await _unitOfWork.CommitAsync();
         }
 
         public virtual async Task<List<TReadDto>> GetAll()
@@ -90,12 +97,13 @@ namespace Application.Services
             _logger.LogTrace( $"{typeof( TEntity ).Name} with id '{id}' was updated." );
 
             _repository.Update( entity );
+
+            await _unitOfWork.CommitAsync();
         }
 
         protected virtual TEntity InitializeEntity( TCreateDto createDto )
         {
             TEntity entity = new TEntity();
-            entity.Id = IdGenerator.GenerateId();
 
             return entity;
         }

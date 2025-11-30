@@ -3,6 +3,7 @@ using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Extensions;
+using Domain.Foundations;
 using Domain.Repositories;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
@@ -21,8 +22,9 @@ namespace Application.Services
             IFandomRepository fandomRepository,
             IMapper mapper,
             IValidator<Subscription> validator,
-            ILogger<SubscriptionService> logger )
-            : base( repository, mapper, validator, logger )
+            ILogger<SubscriptionService> logger,
+            IUnitOfWork unitOfWork )
+            : base( repository, mapper, validator, logger, unitOfWork )
         {
             _subscriptionRepository = repository;
             _userRepository = userRepository;

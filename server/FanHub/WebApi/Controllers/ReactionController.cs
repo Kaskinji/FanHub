@@ -11,12 +11,10 @@ namespace WebApi.Controllers
     public class ReactionController : ControllerBase
     {
         private IReactionService _reactionService;
-        private IUnitOfWork _unitOfWork;
 
-        public ReactionController( IReactionService reactionService, IUnitOfWork unitOfWork )
+        public ReactionController( IReactionService reactionService )
         {
             _reactionService = reactionService;
-            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
@@ -41,8 +39,6 @@ namespace WebApi.Controllers
         {
             int id = await _reactionService.Create( dto );
 
-            await _unitOfWork.CommitAsync();
-
             return Ok( id );
         }
 
@@ -52,8 +48,6 @@ namespace WebApi.Controllers
         {
             await _reactionService.Update( id, dto );
 
-            await _unitOfWork.CommitAsync();
-
             return Ok();
         }
 
@@ -62,8 +56,6 @@ namespace WebApi.Controllers
         public async Task<IActionResult> DeleteReaction( int id )
         {
             await _reactionService.DeleteAsync( id );
-
-            await _unitOfWork.CommitAsync();
 
             return Ok();
         }

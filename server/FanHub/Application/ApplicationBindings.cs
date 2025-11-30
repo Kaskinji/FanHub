@@ -24,7 +24,6 @@ namespace Application
             services.AddScoped<IReactionService, ReactionService>();
             services.AddScoped<ISubscriptionService, SubscriptionService>();
             services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<IImageService, ImageService>();
 
             services.AddValidatorsFromAssemblyContaining<CategoryValidator>();
             services.AddValidatorsFromAssemblyContaining<FandomValidator>();

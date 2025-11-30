@@ -11,12 +11,9 @@ namespace FanHub.Controllers;
 public class FandomController : ControllerBase
 {
     private IFandomService _fandomService;
-    private IUnitOfWork _unitOfWork;
-
-    public FandomController( IFandomService fandomService, IUnitOfWork unitOfWork )
+    public FandomController( IFandomService fandomService )
     {
         _fandomService = fandomService;
-        _unitOfWork = unitOfWork;
     }
 
     // todo: добавить метод для получения подписок
@@ -42,8 +39,6 @@ public class FandomController : ControllerBase
     {
         int id = await _fandomService.Create( dto );
 
-        await _unitOfWork.CommitAsync();
-
         return Ok( id );
     }
 
@@ -53,8 +48,6 @@ public class FandomController : ControllerBase
     {
         await _fandomService.Update( id, dto );
 
-        await _unitOfWork.CommitAsync();
-
         return Ok();
     }
 
@@ -63,8 +56,6 @@ public class FandomController : ControllerBase
     public async Task<IActionResult> DeleteFandom( int id )
     {
         await _fandomService.DeleteAsync( id );
-
-        await _unitOfWork.CommitAsync();
 
         return Ok();
     }

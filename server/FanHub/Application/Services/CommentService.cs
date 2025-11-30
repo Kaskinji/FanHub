@@ -6,6 +6,7 @@ using Domain.Repositories;
 using FluentValidation;
 using Domain.Extensions;
 using Microsoft.Extensions.Logging;
+using Domain.Foundations;
 
 namespace Application.Services
 {
@@ -18,8 +19,9 @@ namespace Application.Services
             IPostRepository postRepository,
             IMapper mapper,
             IValidator<Comment> validator,
-            ILogger<CommentService> logger )
-        : base( repository, mapper, validator, logger )
+            ILogger<CommentService> logger,
+            IUnitOfWork unitOfWork )
+        : base( repository, mapper, validator, logger, unitOfWork )
         {
             _userRepository = userRepository;
             _postRepository = postRepository;

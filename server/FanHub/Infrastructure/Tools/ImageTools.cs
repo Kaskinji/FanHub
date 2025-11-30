@@ -1,11 +1,11 @@
 ﻿using Application.Options;
-using Application.Services.Interfaces;
 using Application.Tools;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Application.Services
+namespace Infrastructure.Tools
 {
-    public class ImageService( IOptions<FileToolsOptions> fileToolsOptions ) : IImageService
+    public class ImageTools( IOptions<FileToolsOptions> fileToolsOptions, ILogger<ImageTools> logger ) : IImageTools
     {
         public async Task<string> SaveImageAsync( IFile file )
         {
@@ -16,8 +16,7 @@ namespace Application.Services
 
             try
             {
-                string currentDirectory = Directory.GetCurrentDirectory();
-                string folderPath = Path.Combine( currentDirectory, fileToolsOptions.Value.StorageUrl );
+                string folderPath = Path.GetFullPath( fileToolsOptions.Value.StorageUrl );
                 string fileName = Guid.NewGuid() + Path.GetExtension( file.FileName );
                 string filePath = Path.Combine( folderPath, fileName );
 
@@ -26,6 +25,7 @@ namespace Application.Services
                     Directory.CreateDirectory( folderPath );
                 }
 
+                logger.LogInformation( "FOLDER PATH= = = = = = == = = = {folderPath}", filePath );
                 using ( FileStream stream = new FileStream( filePath, FileMode.Create ) )
                 {
                     await file.OpenReadStream().CopyToAsync( stream );
@@ -33,8 +33,9 @@ namespace Application.Services
 
                 return fileName;
             }
-            catch ( Exception )
+            catch ( Exception ex )
             {
+                logger.LogError( ex, "IMAGE UPLOAD FAILED" );
                 throw new ArgumentException( "Failed to upload image" );
             }
         }
@@ -46,8 +47,7 @@ namespace Application.Services
                 throw new ArgumentException( "Image name is empty." );
             }
 
-            string currentDirectory = Directory.GetCurrentDirectory();
-            string folderPath = Path.Combine( currentDirectory, fileToolsOptions.Value.StorageUrl );
+            string folderPath = Path.GetFullPath( fileToolsOptions.Value.StorageUrl );
             string filePath = Path.Combine( folderPath, imageName );
 
             if ( File.Exists( filePath ) )

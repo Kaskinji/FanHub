@@ -1,11 +1,11 @@
-﻿using Application.Options;
-using Application.PasswordHasher;
+﻿using Application.PasswordHasher;
 using Application.Tools;
 using Domain.Foundations;
 using Domain.Repositories;
 using Infrastructure.Foundations;
 using Infrastructure.PasswordHashers;
 using Infrastructure.Repositories;
+using Infrastructure.Tools;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +22,8 @@ namespace Infrastructure
                 options.UseSqlServer( configuration.GetConnectionString( "DefaultConnection" ) ) );
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddScoped<IImageTools, ImageTools>();
 
             services.AddScoped<IPasswordHasher, PasswordHasher>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();

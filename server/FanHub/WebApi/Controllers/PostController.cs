@@ -11,12 +11,10 @@ namespace WebApi.Controllers
     public class PostController : ControllerBase
     {
         private IPostService _postService;
-        private IUnitOfWork _unitOfWork;
 
-        public PostController( IPostService postService, IUnitOfWork unitOfWork )
+        public PostController( IPostService postService )
         {
             _postService = postService;
-            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
@@ -41,8 +39,6 @@ namespace WebApi.Controllers
         {
             int id = await _postService.Create( dto );
 
-            await _unitOfWork.CommitAsync();
-
             return Ok( id );
         }
 
@@ -52,8 +48,6 @@ namespace WebApi.Controllers
         {
             await _postService.Update( id, dto );
 
-            await _unitOfWork.CommitAsync();
-
             return Ok();
         }
 
@@ -62,8 +56,6 @@ namespace WebApi.Controllers
         public async Task<IActionResult> DeletePost( int id )
         {
             await _postService.DeleteAsync( id );
-
-            await _unitOfWork.CommitAsync();
 
             return Ok();
         }

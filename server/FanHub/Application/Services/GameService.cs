@@ -2,6 +2,7 @@
 using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Foundations;
 using Domain.Repositories;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
@@ -12,7 +13,9 @@ namespace Application.Services
     {
         public GameService( IGameRepository gameRepository,
             IMapper mapper,
-            IValidator<Game> validator, ILogger<GameService> logger ) : base( gameRepository, mapper, validator, logger )
+            IValidator<Game> validator,
+            ILogger<GameService> logger,
+            IUnitOfWork unitOfWork ) : base( gameRepository, mapper, validator, logger, unitOfWork )
         {
         }
 

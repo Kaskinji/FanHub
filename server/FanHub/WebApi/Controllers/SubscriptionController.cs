@@ -11,12 +11,10 @@ namespace WebApi.Controllers
     public class SubscriptionController : ControllerBase
     {
         private ISubscriptionService _subscriptionService;
-        private IUnitOfWork _unitOfWork;
 
-        public SubscriptionController( ISubscriptionService subscriptionService, IUnitOfWork unitOfWork )
+        public SubscriptionController( ISubscriptionService subscriptionService )
         {
             _subscriptionService = subscriptionService;
-            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
@@ -41,8 +39,6 @@ namespace WebApi.Controllers
         {
             int id = await _subscriptionService.Create( dto );
 
-            await _unitOfWork.CommitAsync();
-
             return Ok( id );
         }
 
@@ -51,8 +47,6 @@ namespace WebApi.Controllers
         public async Task<IActionResult> DeleteSubscription( int id )
         {
             await _subscriptionService.DeleteAsync( id );
-
-            await _unitOfWork.CommitAsync();
 
             return Ok();
         }

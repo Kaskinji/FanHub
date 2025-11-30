@@ -1,6 +1,5 @@
 ﻿using Application.Dto.NotificationDto;
 using Application.Services.Interfaces;
-using Domain.Foundations;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -10,12 +9,10 @@ namespace WebApi.Controllers
     public class NotificationController : ControllerBase
     {
         private INotificationService _notificationService;
-        private IUnitOfWork _unitOfWork;
 
-        public NotificationController( INotificationService NotificationService, IUnitOfWork unitOfWork )
+        public NotificationController( INotificationService NotificationService )
         {
             _notificationService = NotificationService;
-            _unitOfWork = unitOfWork;
         }
 
         // можно добавить GetNotificationsForUser
@@ -41,8 +38,6 @@ namespace WebApi.Controllers
         {
             int id = await _notificationService.Create( dto );
 
-            await _unitOfWork.CommitAsync();
-
             return Ok( id );
         }
 
@@ -51,8 +46,6 @@ namespace WebApi.Controllers
         {
             await _notificationService.Update( id, dto );
 
-            await _unitOfWork.CommitAsync();
-
             return Ok();
         }
 
@@ -60,8 +53,6 @@ namespace WebApi.Controllers
         public async Task<IActionResult> DeleteNotification( int id )
         {
             await _notificationService.DeleteAsync( id );
-
-            await _unitOfWork.CommitAsync();
 
             return Ok();
         }

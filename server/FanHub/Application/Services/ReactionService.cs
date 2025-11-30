@@ -4,6 +4,7 @@ using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Extensions;
+using Domain.Foundations;
 using Domain.Repositories;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
@@ -19,7 +20,9 @@ namespace Application.Services
             IPostRepository postRepository,
             IUserRepository userRepository,
             IMapper mapper,
-            IValidator<Reaction> validator, ILogger<ReactionService> logger ) : base( repository, mapper, validator, logger )
+            IValidator<Reaction> validator, 
+            ILogger<ReactionService> logger,
+            IUnitOfWork unitOfWork ) : base( repository, mapper, validator, logger, unitOfWork )
         {
             _postRepository = postRepository;
             _userRepository = userRepository;
@@ -29,7 +32,6 @@ namespace Application.Services
         {
             Reaction entity = new();
 
-            entity.Id = IdGenerator.GenerateId();
             entity.Date = DateTime.UtcNow;
 
             return entity;

@@ -11,12 +11,10 @@ namespace WebApi.Controllers
     public class CommentController : ControllerBase
     {
         private ICommentService _commentService;
-        private IUnitOfWork _unitOfWork;
 
-        public CommentController( ICommentService commentService, IUnitOfWork unitOfWork )
+        public CommentController( ICommentService commentService )
         {
             _commentService = commentService;
-            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
@@ -41,8 +39,6 @@ namespace WebApi.Controllers
         {
             int id = await _commentService.Create( dto );
 
-            await _unitOfWork.CommitAsync();
-
             return Ok( id );
         }
 
@@ -52,8 +48,6 @@ namespace WebApi.Controllers
         {
             await _commentService.Update( id, dto );
 
-            await _unitOfWork.CommitAsync();
-
             return Ok();
         }
 
@@ -62,8 +56,6 @@ namespace WebApi.Controllers
         public async Task<IActionResult> DeleteComment( int id )
         {
             await _commentService.DeleteAsync( id );
-
-            await _unitOfWork.CommitAsync();
 
             return Ok();
         }

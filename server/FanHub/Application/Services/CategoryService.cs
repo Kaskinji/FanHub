@@ -2,6 +2,7 @@
 using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Foundations;
 using Domain.Repositories;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
@@ -11,8 +12,8 @@ namespace Application.Services
     public class CategoryService : BaseService<Category, CategoryCreateDto, CategoryReadDto, CategoryUpdateDto>, ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
-        public CategoryService( ICategoryRepository repository, IMapper mapper, IValidator<Category> validator, ILogger<CategoryService> logger )
-        : base( repository, mapper, validator, logger )
+        public CategoryService( ICategoryRepository repository, IMapper mapper, IValidator<Category> validator, ILogger<CategoryService> logger, IUnitOfWork unitOfWork )
+        : base( repository, mapper, validator, logger, unitOfWork )
         {
             _categoryRepository = repository;
         }

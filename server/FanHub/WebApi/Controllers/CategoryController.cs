@@ -11,12 +11,10 @@ namespace WebApi.Controllers
     public class CategoryController : ControllerBase
     {
         private ICategoryService _categoryService;
-        private IUnitOfWork _unitOfWork;
 
-        public CategoryController( ICategoryService categoryService, IUnitOfWork unitOfWork )
+        public CategoryController( ICategoryService categoryService )
         {
             _categoryService = categoryService;
-            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
@@ -41,8 +39,6 @@ namespace WebApi.Controllers
         {
             int id = await _categoryService.Create( dto );
 
-            await _unitOfWork.CommitAsync();
-
             return Ok( id );
         }
 
@@ -52,8 +48,6 @@ namespace WebApi.Controllers
         {
             await _categoryService.Update( id, dto );
 
-            await _unitOfWork.CommitAsync();
-
             return Ok();
         }
 
@@ -62,8 +56,6 @@ namespace WebApi.Controllers
         public async Task<IActionResult> DeleteCategory( int id )
         {
             await _categoryService.DeleteAsync( id );
-
-            await _unitOfWork.CommitAsync();
 
             return Ok();
         }

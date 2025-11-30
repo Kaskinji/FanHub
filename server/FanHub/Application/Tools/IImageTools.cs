@@ -1,8 +1,6 @@
-﻿using Application.Tools;
-
-namespace Application.Services.Interfaces
+﻿namespace Application.Tools
 {
-    public interface IImageService
+    public interface IImageTools
     {
         Task<string> SaveImageAsync( IFile image );
         byte[] GetImage( string imageName );

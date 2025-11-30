@@ -4,6 +4,7 @@ using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Extensions;
+using Domain.Foundations;
 using Domain.Repositories;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
@@ -20,7 +21,8 @@ namespace Application.Services
             IPostRepository postRepository,
             IMapper mapper,
             IValidator<Fandom> validator,
-            ILogger<FandomService> logger ) : base( fandomRepository, mapper, validator, logger )
+            ILogger<FandomService> logger,
+            IUnitOfWork unitOfWork ) : base( fandomRepository, mapper, validator, logger, unitOfWork )
         {
             _fandomRepository = fandomRepository;
             _gameRepository = gameRepository;
@@ -48,7 +50,6 @@ namespace Application.Services
         protected override Fandom InitializeEntity( FandomCreateDto dto )
         {
             Fandom entity = new Fandom();
-            entity.Id = IdGenerator.GenerateId();
             entity.CreationDate = DateTime.UtcNow;
 
             return entity;

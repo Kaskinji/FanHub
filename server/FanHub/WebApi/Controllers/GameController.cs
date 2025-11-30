@@ -12,12 +12,10 @@ namespace FanHub.Controllers;
 public class GameController : ControllerBase
 {
     private IGameService _gameService;
-    private IUnitOfWork _unitOfWork;
 
-    public GameController( IGameService gameService, IUnitOfWork unitOfWork )
+    public GameController( IGameService gameService )
     {
         _gameService = gameService;
-        _unitOfWork = unitOfWork;
     }
 
     [HttpGet]
@@ -42,8 +40,6 @@ public class GameController : ControllerBase
     {
         int id = await _gameService.Create( dto );
 
-        await _unitOfWork.CommitAsync();
-
         return Ok( id );
     }
 
@@ -53,8 +49,6 @@ public class GameController : ControllerBase
     {
         await _gameService.Update( id, dto );
 
-        await _unitOfWork.CommitAsync();
-
         return Ok();
     }
 
@@ -63,8 +57,6 @@ public class GameController : ControllerBase
     public async Task<IActionResult> DeleteGame( int id )
     {
         await _gameService.DeleteAsync( id );
-
-        await _unitOfWork.CommitAsync();
 
         return Ok();
     }

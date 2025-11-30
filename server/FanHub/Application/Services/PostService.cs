@@ -4,6 +4,7 @@ using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Extensions;
+using Domain.Foundations;
 using Domain.Repositories;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
@@ -21,7 +22,9 @@ namespace Application.Services
             ICategoryRepository categoryRepository,
             IUserRepository userRepository,
             IMapper mapper,
-            IValidator<Post> validator, ILogger<PostService> logger ) : base( repository, mapper, validator, logger )
+            IValidator<Post> validator,
+            ILogger<PostService> logger,
+            IUnitOfWork unitOfWork ) : base( repository, mapper, validator, logger, unitOfWork )
         {
             _fandomRepository = fandomRepository;
             _categoryRepository = categoryRepository;
@@ -32,7 +35,6 @@ namespace Application.Services
         {
             Post entity = new();
 
-            entity.Id = IdGenerator.GenerateId();
             entity.PostDate = DateTime.UtcNow;
 
             return entity;

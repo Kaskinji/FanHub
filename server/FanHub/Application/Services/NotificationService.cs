@@ -3,6 +3,7 @@ using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Extensions;
+using Domain.Foundations;
 using Domain.Repositories;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
@@ -20,7 +21,9 @@ namespace Application.Services
             IPostRepository PostRepository,
             IEventRepository eventRepository,
             IMapper mapper,
-            IValidator<Notification> validator, ILogger<NotificationService> logger ) : base( NotificationRepository, mapper, validator, logger )
+            IValidator<Notification> validator,
+            ILogger<NotificationService> logger,
+            IUnitOfWork unitOfWork ) : base( NotificationRepository, mapper, validator, logger, unitOfWork )
         {
             _userRepository = UserRepository;
             _postRepository = PostRepository;

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Application.Services.Interfaces;
 using Application.Tools;
+using Infrastructure.Tools;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Adapters;
@@ -11,9 +11,9 @@ namespace WebApi.Controllers
     [Route( "api/images" )]
     public class ImageController : ControllerBase
     {
-        private IImageService _imageHelperTools;
+        private IImageTools _imageHelperTools;
 
-        public ImageController( IImageService imageHelperTools )
+        public ImageController( IImageTools imageHelperTools )
         {
             _imageHelperTools = imageHelperTools;
         }
