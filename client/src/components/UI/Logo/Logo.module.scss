@@ -1,0 +1,68 @@
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: #aa3bec;
+}
+
+.logoIcon {
+    align-items: center;
+    justify-content: center;
+}
+
+.logoImage {
+    display: block;
+    object-fit: contain;
+}
+
+.logoText {
+    font-family: 'Black Han Sans', sans-serif;
+    font-weight: 700;
+    color: white;
+    margin: 0;
+    line-height: 1;
+}
+// Размеры
+.logo--small {
+    .logoIcon {
+        font-size: 1.5rem;
+    }
+
+    .logoText {
+        font-size: 1.5rem;
+    }
+}
+
+.logo--medium {
+    .logoIcon {
+        font-size: 2.5rem;
+    }
+
+    .logoText {
+        font-size: 2.5rem;
+    }
+}
+
+.logo--large {
+    .logoIcon {
+        font-size: 3.5rem;
+    }
+
+    .logoText {
+        font-size: 3.5rem;
+    }
+}
+
+// Адаптивность
+@media (max-width: 480px) {
+    .logo--large {
+        .logoIcon {
+            font-size: 2.5rem;
+        }
+
+        .logoText {
+            font-size: 2.5rem;
+        }
+    }
+}

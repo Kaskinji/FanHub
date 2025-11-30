@@ -1,0 +1,100 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    background: #2e0338;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.leftSection {
+    flex: 0 0 auto;
+
+    :global(.logo) {
+        transition: transform 0.2s ease;
+
+        &:hover {
+            transform: scale(1.05);
+        }
+    }
+}
+
+.centerSection {
+    flex: 1;
+    max-width: 500px;
+    margin: 0 2rem;
+}
+
+.rightSection {
+    flex: 0 0 auto;
+}
+
+.signInButton {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+
+    &:hover:not(:disabled) {
+        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        border-color: rgba(255, 255, 255, 0.5);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+// Адаптивность
+@media (max-width: 768px) {
+    .header {
+        padding: 1rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .centerSection {
+        order: 3;
+        flex: 1 1 100%;
+        margin: 0;
+        max-width: none;
+    }
+
+    .leftSection,
+    .rightSection {
+        flex: 1;
+    }
+
+    .rightSection {
+        text-align: right;
+    }
+
+    .signInButton {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 0.75rem;
+    }
+
+    .signInButton {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+}

@@ -1,0 +1,144 @@
+.searchForm {
+    width: 100%;
+    position: relative;
+}
+
+.searchIcon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.7);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.searchInput {
+    width: 100%;
+    padding: 0.875rem 1.5rem;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    color: white;
+    font-size: 1rem;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+
+    &::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+    }
+
+    &:hover {
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+}
+
+// Варианты цвета
+.searchInput--head {
+    background: rgba(255, 255, 255, 0.15);
+
+    &:focus {
+        background: rgba(255, 255, 255, 0.25);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+}
+
+.searchInput--secondary {
+    background: #37044a;
+    border-color: rgba(102, 126, 234, 0.3);
+
+    &:focus {
+        background: #ffffffcc;
+        border-color: rgba(102, 126, 234, 0.5);
+    }
+
+    &:hover {
+        background: rgba(102, 126, 234, 0.25);
+    }
+}
+
+// Варианты размеров
+.searchInput--small {
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+
+    &.searchInputWithIcon {
+        padding-left: 2.5rem;
+    }
+
+    & ~ .searchIcon {
+        left: 0.75rem;
+        display: flex;
+        font-size: 0.875rem;
+    }
+}
+
+.searchInput--medium {
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+
+    &.searchInputWithIcon {
+        padding-left: 3rem;
+    }
+
+    & ~ .searchIcon {
+        left: 1rem;
+        font-size: 1rem;
+    }
+}
+
+.searchInput--large {
+    padding: 1.125rem 2rem;
+    font-size: 1.125rem;
+
+    &.searchInputWithIcon {
+        padding-left: 3.5rem;
+    }
+
+    & ~ .searchIcon {
+        left: 1.25rem;
+        font-size: 1.125rem;
+    }
+}
+
+// Вариант с иконкой
+.searchInputWithIcon {
+    position: relative;
+}
+
+// Адаптивность
+@media (max-width: 768px) {
+    .searchInput--medium {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.9rem;
+
+        &.searchInputWithIcon {
+            padding-left: 2.75rem;
+        }
+
+        & ~ .searchIcon {
+            left: 0.875rem;
+        }
+    }
+
+    .searchInput--large {
+        padding: 1rem 1.75rem;
+        font-size: 1rem;
+
+        &.searchInputWithIcon {
+            padding-left: 3.25rem;
+        }
+
+        & ~ .searchIcon {
+            left: 1.125rem;
+        }
+    }
+}
