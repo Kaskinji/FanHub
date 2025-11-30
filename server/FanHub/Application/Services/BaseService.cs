@@ -1,5 +1,4 @@
-﻿using Application.Extensions;
-using Application.Services.Interfaces;
+﻿using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Extensions;

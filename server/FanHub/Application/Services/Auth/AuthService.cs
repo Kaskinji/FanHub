@@ -1,6 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 using Application.Dto.UserDto;
 using Application.Options;
@@ -44,7 +43,7 @@ namespace Application.Services.Auth
             int? userId = await _userService.GetUserIdByCredentialsAsync( login, password );
             if ( userId is null )
             {
-                _logger.LogWarning("Invalid Credentials.");
+                _logger.LogWarning( "Invalid Credentials." );
                 throw new UnauthorizedAccessException( "Invalid credentials" );
             }
 
@@ -63,8 +62,7 @@ namespace Application.Services.Auth
             List<Claim> claims = new List<Claim>()
             {
                 new Claim( nameof(userId), userId.ToString() ),
-                new Claim( ClaimTypes.Role, role.ToString() ),
-                new Claim( "role", role.ToString() )
+                new Claim( ClaimTypes.Role, role.ToString() )
             };
 
             SigningCredentials signingCredentials = new SigningCredentials(

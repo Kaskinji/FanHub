@@ -1,5 +1,6 @@
 ﻿using Application.Dto.NotificationDto;
 using Application.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -17,6 +18,7 @@ namespace WebApi.Controllers
 
         // можно добавить GetNotificationsForUser
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<NotificationReadDto>>> GetNotifications()
         {
@@ -25,6 +27,7 @@ namespace WebApi.Controllers
             return Ok( notifications );
         }
 
+        [Authorize]
         [HttpGet( "{id}" )]
         public async Task<ActionResult<NotificationReadDto>> GetNotificationById( int id )
         {
@@ -33,6 +36,7 @@ namespace WebApi.Controllers
             return Ok( notification );
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<int>> CreateNotification( [FromBody] NotificationCreateDto dto )
         {
@@ -41,6 +45,7 @@ namespace WebApi.Controllers
             return Ok( id );
         }
 
+        [Authorize]
         [HttpPut( "{id}" )]
         public async Task<IActionResult> UpdateNotification( int id, [FromBody] NotificationUpdateDto dto )
         {
@@ -49,6 +54,7 @@ namespace WebApi.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpDelete( "{id}" )]
         public async Task<IActionResult> DeleteNotification( int id )
         {

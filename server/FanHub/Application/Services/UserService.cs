@@ -1,5 +1,4 @@
 ﻿using Application.Dto.UserDto;
-using Application.Extensions;
 using Application.PasswordHasher;
 using Application.Services.Interfaces;
 using AutoMapper;
@@ -41,7 +40,6 @@ namespace Application.Services
         protected override User InitializeEntity( UserCreateDto dto )
         {
             User entity = new User();
-            entity.Id = IdGenerator.GenerateId();
             entity.RegistrationDate = DateTime.UtcNow;
             entity.PasswordHash = _hasher.Hash( dto.Password );
             entity.Role = UserRole.User;

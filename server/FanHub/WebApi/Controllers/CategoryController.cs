@@ -1,6 +1,5 @@
 ﻿using Application.Dto.CategoryDto;
 using Application.Services.Interfaces;
-using Domain.Foundations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,7 +32,7 @@ namespace WebApi.Controllers
             return Ok( category );
         }
 
-        [Authorize]
+        [Authorize( Policy = "AdminOnly" )]
         [HttpPost]
         public async Task<ActionResult<int>> CreateCategory( [FromBody] CategoryCreateDto dto )
         {
@@ -42,7 +41,7 @@ namespace WebApi.Controllers
             return Ok( id );
         }
 
-        [Authorize]
+        [Authorize( Policy = "AdminOnly" )]
         [HttpPut( "{id}" )]
         public async Task<IActionResult> UpdateCategory( int id, [FromBody] CategoryUpdateDto dto )
         {
@@ -51,7 +50,7 @@ namespace WebApi.Controllers
             return Ok();
         }
 
-        [Authorize]
+        [Authorize( Policy = "AdminOnly" )]
         [HttpDelete( "{id}" )]
         public async Task<IActionResult> DeleteCategory( int id )
         {

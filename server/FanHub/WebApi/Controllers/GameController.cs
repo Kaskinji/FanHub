@@ -1,7 +1,5 @@
 ﻿using Application.Dto.GameDto;
 using Application.Services.Interfaces;
-using Domain.Enums;
-using Domain.Foundations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,7 +32,7 @@ public class GameController : ControllerBase
         return Ok( game );
     }
 
-    [Authorize( Roles = nameof( UserRole.Admin ) )]
+    [Authorize( Policy = "AdminOnly" )]
     [HttpPost]
     public async Task<ActionResult<int>> CreateGame( [FromBody] GameCreateDto dto )
     {
@@ -43,7 +41,7 @@ public class GameController : ControllerBase
         return Ok( id );
     }
 
-    [Authorize( Roles = nameof( UserRole.Admin ) )]
+    [Authorize( Policy = "AdminOnly" )]
     [HttpPut( "{id}" )]
     public async Task<IActionResult> UpdateGame( int id, [FromBody] GameUpdateDto dto )
     {
@@ -52,7 +50,7 @@ public class GameController : ControllerBase
         return Ok();
     }
 
-    [Authorize( Roles = nameof( UserRole.Admin ) )]
+    [Authorize( Policy = "AdminOnly" )]
     [HttpDelete( "{id}" )]
     public async Task<IActionResult> DeleteGame( int id )
     {

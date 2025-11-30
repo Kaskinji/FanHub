@@ -1,6 +1,5 @@
 ﻿using Application.Dto.ReactionDto;
 using Application.Services.Interfaces;
-using Domain.Foundations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +16,7 @@ namespace WebApi.Controllers
             _reactionService = reactionService;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<ReactionReadDto>>> GetReactions()
         {
@@ -25,6 +25,7 @@ namespace WebApi.Controllers
             return Ok( reactions );
         }
 
+        [Authorize]
         [HttpGet( "{id}" )]
         public async Task<ActionResult<ReactionReadDto>> GetReactionById( int id )
         {

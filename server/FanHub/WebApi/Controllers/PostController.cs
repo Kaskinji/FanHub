@@ -1,6 +1,5 @@
 ﻿using Application.Dto.PostDto;
 using Application.Services.Interfaces;
-using Domain.Foundations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +16,7 @@ namespace WebApi.Controllers
             _postService = postService;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<PostReadDto>>> GetPosts()
         {
@@ -25,6 +25,7 @@ namespace WebApi.Controllers
             return Ok( posts );
         }
 
+        [Authorize]
         [HttpGet( "{id}" )]
         public async Task<ActionResult<PostReadDto>> GetPostById( int id )
         {

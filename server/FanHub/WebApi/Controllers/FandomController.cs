@@ -1,6 +1,5 @@
 ﻿using Application.Dto.FandomDto;
 using Application.Services.Interfaces;
-using Domain.Foundations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,7 +50,7 @@ public class FandomController : ControllerBase
         return Ok();
     }
 
-    [Authorize]
+    [Authorize( Policy = "AdminOnly" )]
     [HttpDelete( "{id}" )]
     public async Task<IActionResult> DeleteFandom( int id )
     {

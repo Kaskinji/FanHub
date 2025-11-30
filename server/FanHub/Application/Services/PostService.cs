@@ -1,5 +1,4 @@
 ﻿using Application.Dto.PostDto;
-using Application.Extensions;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;

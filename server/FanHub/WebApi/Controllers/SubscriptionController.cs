@@ -1,6 +1,5 @@
 ﻿using Application.Dto.SubscriptionDto;
 using Application.Services.Interfaces;
-using Domain.Foundations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +16,7 @@ namespace WebApi.Controllers
             _subscriptionService = subscriptionService;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<SubscriptionReadDto>>> GetSubscriptions()
         {
@@ -25,6 +25,7 @@ namespace WebApi.Controllers
             return Ok( subscriptions );
         }
 
+        [Authorize]
         [HttpGet( "{id}" )]
         public async Task<ActionResult<SubscriptionReadDto>> GetSubscriptionById( int id )
         {

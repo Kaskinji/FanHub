@@ -1,6 +1,6 @@
-﻿using System.Text;
-using Application.Options;
-using Domain.Enums;
+﻿using System.Security.Claims;
+using System.Text;
+using Domain.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -22,17 +22,17 @@ namespace WebApi.Bindings
                         ValidateIssuer = false,
                         ValidateAudience = false,
                         ValidateLifetime = true,
-                        RoleClaimType = "role",
+                        RoleClaimType = ClaimTypes.Role,
                     };
                 } );
 
             services.AddAuthorization( options =>
             {
                 options.AddPolicy( "AdminOnly", policy =>
-                    policy.RequireRole( nameof( UserRole.Admin ) ) );
+                    policy.RequireRole( UserRoleString.Admin ) );
 
                 options.AddPolicy( "UserOnly", policy =>
-                    policy.RequireRole( nameof( UserRole.User ) ) );
+                    policy.RequireRole( UserRoleString.User ) );
             } );
 
             services.AddSwaggerGen( options =>

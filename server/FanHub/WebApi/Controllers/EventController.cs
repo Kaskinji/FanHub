@@ -1,6 +1,5 @@
 ﻿using Application.Dto.EventDto;
 using Application.Services.Interfaces;
-using Domain.Foundations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +16,7 @@ namespace WebApi.Controllers
             _eventService = EventService;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<EventReadDto>>> GetEvents()
         {
@@ -24,7 +24,8 @@ namespace WebApi.Controllers
 
             return Ok( events );
         }
-
+        [Authorize]
+        [Authorize]
         [HttpGet( "{id}" )]
         public async Task<ActionResult<EventReadDto>> GetEventById( int id )
         {

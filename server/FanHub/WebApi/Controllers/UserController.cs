@@ -19,6 +19,7 @@ namespace WebApi.Controllers
             _userService = UserService;
         }
 
+        [Authorize( Policy = "AdminOnly" )]
         [HttpGet]
         public async Task<ActionResult<List<UserReadDto>>> GetUsers()
         {

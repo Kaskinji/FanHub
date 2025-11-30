@@ -1,6 +1,5 @@
 ﻿using Application.Dto.CommentDto;
 using Application.Services.Interfaces;
-using Domain.Foundations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +16,7 @@ namespace WebApi.Controllers
             _commentService = commentService;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<CommentReadDto>>> GetComments()
         {
@@ -25,6 +25,7 @@ namespace WebApi.Controllers
             return Ok( comments );
         }
 
+        [Authorize]
         [HttpGet( "{id}" )]
         public async Task<ActionResult<CommentReadDto>> GetCommentById( int id )
         {
