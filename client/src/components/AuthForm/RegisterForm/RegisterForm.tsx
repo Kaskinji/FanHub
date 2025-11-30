@@ -1,0 +1,156 @@
+import { useState, type FC } from "react";
+import { useForm } from "react-hook-form";
+import Input from "../../../components/UI/Input/Input";
+import Button from "../../UI/Button/Button";
+import styles from "../RegisterForm/RegisterForm.module.scss";
+import type { RegisterFormData } from "../../../types/Auth";
+import Logo from "../../UI/Logo/Logo"
+interface RegisterFormProps {
+    onRegister?: (data: RegisterFormData) => void;
+    isLoading?: boolean;
+}
+
+const RegisterForm: FC<RegisterFormProps> = ({
+    onRegister,
+    isLoading = false
+}) => {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors },
+        setError
+    } = useForm<RegisterFormData>();
+
+    const password = watch("password");
+
+    const onSubmit = async (data: RegisterFormData) => {
+        setIsSubmitting(true);
+
+        try {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            if (onRegister) {
+                await onRegister(data);
+            } else {
+                console.log("Register data:", data);
+            }
+        } catch (error) {
+            setError("root", {
+                type: "manual",
+                message: "Ошибка при регистрации. Проверьте данные."
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const loading = isLoading || isSubmitting;
+
+    return (
+        <div className={styles.registerForm}>
+            <div className={styles.header}>
+                <Logo size="large" className={styles.logo} />
+                <p className={styles.subtitle}>Create account</p>
+            </div>
+
+            <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+
+                <div className={styles.inputGroup}>
+
+                    <Input
+                        type="Login"
+                        placeholder="Your Login"
+                        {...register("login", {
+                            required: "login is required"
+                        })}
+                        className={errors.login ? styles.inputError : ""}
+                    />
+
+                    {errors.login && (
+                        <span className={styles.errorMessage}>
+                            {errors.login.message}
+                        </span>
+                    )}
+                </div>
+
+                <div className={styles.inputGroup}>
+
+                    <Input
+                        type="username"
+                        placeholder="Your username"
+                        {...register("username", {
+                            required: "username is required",
+                        })}
+                        className={errors.username ? styles.inputError : ""}
+                    />
+
+                    {errors.username && (
+                        <span className={styles.errorMessage}>
+                            {errors.username.message}
+                        </span>
+                    )}
+                </div>
+
+                <div className={styles.inputGroup}>
+
+                    <Input
+                        type="password"
+                        placeholder="Your password"
+                        {...register("password", {
+                            required: "password is required",
+                            minLength: {
+                                value: 6,
+                                message: "The password must be at least 6 characters long"
+                            }
+                        })}
+                        className={errors.password ? styles.inputError : ""}
+                    />
+
+                    {errors.password && (
+                        <span className={styles.errorMessage}>
+                            {errors.password.message}
+                        </span>
+                    )}
+                </div>
+
+                <div className={styles.inputGroup}>
+
+                    <Input
+                        type="password"
+                        placeholder="Confirm password"
+                        {...register("confirmPassword", {
+                            required: "Please confirm your password",
+                            validate: (value) =>
+                                value === password || "Passwords do not match"
+                        })}
+                        className={errors.password ? styles.inputError : ""}
+                    />
+
+                    {errors.password && (
+                        <span className={styles.errorMessage}>
+                            {errors.password.message}
+                        </span>
+                    )}
+                </div>
+                {errors.root && (
+                    <div className={styles.rootError}>
+                        {errors.root.message}
+                    </div>
+                )}
+
+                <Button
+                    type="submit"
+                    disabled={loading}
+                    className={styles.submitButton}
+                >
+                    {loading ? "Register..." : "Register"}
+                </Button>
+            </form>
+        </div>
+    );
+};
+
+export default RegisterForm;
