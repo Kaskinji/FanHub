@@ -1,4 +1,6 @@
-﻿using Application.Dto.PostDto;
+﻿using Application.Dto.FandomDto;
+using Application.Dto.PostDto;
+using Application.Services;
 using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +24,39 @@ namespace WebApi.Controllers
         {
             IReadOnlyList<PostReadDto> posts = await _postService.GetAll();
 
+            return Ok( posts );
+        }
+
+        [Authorize]
+        [HttpGet( "search/category/name" )]
+        public async Task<ActionResult<List<PostReadDto>>> GetPostsByCategoryName(
+        [FromQuery] string categoryName )
+        {
+            if ( string.IsNullOrWhiteSpace( categoryName ) )
+            {
+                return BadRequest( "Category name is required" );
+            }
+
+            List<PostReadDto> posts = await _postService.SearchByCategoryNameAsync( categoryName );
+            return Ok( posts );
+        }
+
+        [Authorize]
+        [HttpGet( "search/category/{categoryId}" )]
+        public async Task<ActionResult<List<PostReadDto>>> GetPostsByCategoryId(
+        [FromRoute] int categoryId )
+        {
+            List<PostReadDto> posts = await _postService.SearchByCategoryIdAsync( categoryId );
+            return Ok( posts );
+        }
+
+        [Authorize]
+        [HttpGet( "search" )]
+        public async Task<ActionResult<List<PostReadDto>>> SearchPosts(
+        [FromQuery] int? categoryId = null,
+        [FromQuery] string? categoryName = null )
+        {
+            List<PostReadDto> posts = await _postService.SearchByCategoryAsync( categoryName, categoryId );
             return Ok( posts );
         }
 

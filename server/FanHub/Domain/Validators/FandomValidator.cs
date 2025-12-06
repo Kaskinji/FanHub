@@ -28,8 +28,8 @@ namespace Domain.Validators
                 .GreaterThan( 0 ).WithMessage( "ID игры должен быть положительным числом" );
 
             RuleFor( x => x.CreationDate )
-                .LessThanOrEqualTo( DateTime.Now ).WithMessage( "Дата создания не может быть в будущем" )
-                .GreaterThanOrEqualTo( new DateTime( 2000, 1, 1 ) ).WithMessage( "Дата создания не может быть раньше 2000 года" )
+                //.LessThanOrEqualTo( DateTime.UtcNow ).WithMessage( "Дата создания не может быть в будущем" )
+                .GreaterThanOrEqualTo( new DateTime( 2000, 1, 1, 0, 0, 0, DateTimeKind.Utc ) ).WithMessage( "Дата создания не может быть раньше 2000 года" )
                 .When( x => x.CreationDate != default );
         }
     }

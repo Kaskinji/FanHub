@@ -1,4 +1,5 @@
-﻿using Application.Dto.FandomDto;
+﻿using System.Collections.Generic;
+using Application.Dto.FandomDto;
 using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,25 @@ public class FandomController : ControllerBase
         _fandomService = fandomService;
     }
 
+    [HttpGet( "search/{name}" )]
+    public async Task<ActionResult<List<FandomReadDto>>> SearchFandoms(
+        [FromQuery] string name )
+    {
+        if ( string.IsNullOrWhiteSpace( name ) )
+            return BadRequest( "Search term cannot be empty" );
+
+        IReadOnlyList<FandomReadDto> fandoms = await _fandomService.SearchByNameAsync( name );
+        return Ok( fandoms );
+    }
+
+    [HttpGet( "search/game/{gameId}" )]
+    public async Task<ActionResult<List<FandomReadDto>>> SearchFandomsByNameAndGame(
+        [FromRoute] int gameId,
+        [FromQuery] string? name = null )
+    {
+        IReadOnlyList<FandomReadDto> fandoms = await _fandomService.SearchByNameAndGameIdAsync( name ?? "", gameId );
+        return Ok( fandoms );
+    }
     // todo: добавить метод для получения подписок
     [HttpGet]
     public async Task<ActionResult<List<FandomReadDto>>> GetFandoms()

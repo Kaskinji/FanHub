@@ -20,11 +20,11 @@ namespace Domain.Validators
                 .Length( 10, 5000 ).WithMessage( "Содержимое должно быть от 10 до 5000 символов" );
 
             RuleFor( x => x.MediaContent )
-                .MaximumLength( 1000 ).WithMessage( "Ссылка на медиа-контент не может превышать 1000 символов" )
-                .Must( UrlValidator.ValidateMediaWithVideoUrl ).WithMessage( "Некорректная ссылка на медиа-контент" );
+                .MaximumLength( 1000 ).WithMessage( "Ссылка на медиа-контент не может превышать 1000 символов" );
+            //.Must( UrlValidator.ValidateMediaWithVideoUrl ).WithMessage( "Некорректная ссылка на медиа-контент" );
 
             RuleFor( x => x.PostDate )
-                .LessThanOrEqualTo( DateTime.Now ).WithMessage( "Дата публикации не может быть в будущем" )
+                //.LessThanOrEqualTo( DateTime.Now ).WithMessage( "Дата публикации не может быть в будущем" )
                 .GreaterThanOrEqualTo( DateTime.Now.AddYears( -1 ) ).WithMessage( "Дата публикации не может быть старше 1 года" );
 
             RuleFor( x => x.UserId )

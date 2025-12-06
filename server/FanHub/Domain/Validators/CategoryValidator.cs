@@ -18,7 +18,7 @@ namespace Domain.Validators
             RuleFor( x => x.Icon )
                 .NotEmpty().WithMessage( "Иконка категории обязательна" )
                 .MaximumLength( 1000 ).WithMessage( "Путь к иконке не может превышать 1000 символов" )
-                .Must( UrlValidator.ValidateImageUrl ).WithMessage( "Некорректный путь к иконке" )
+                //.Must( UrlValidator.ValidateImageUrl ).WithMessage( "Некорректный путь к иконке" )
                 .When( x => !string.IsNullOrEmpty( x.Icon ) );
         }
     }

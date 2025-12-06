@@ -21,7 +21,7 @@ namespace Domain.Validators
 
             RuleFor( x => x.ReleaseDate )
                 .NotEmpty().WithMessage( "Дата релиза обязательна" )
-                .LessThanOrEqualTo( DateTime.Now ).WithMessage( "Дата релиза не может быть в будущем" )
+                .LessThanOrEqualTo( DateTime.UtcNow ).WithMessage( "Дата релиза не может быть в будущем" )
                 .GreaterThanOrEqualTo( new DateTime( 1980, 1, 1 ) ).WithMessage( "Дата релиза не может быть раньше 1980 года" );
 
             RuleFor( x => x.Developer )

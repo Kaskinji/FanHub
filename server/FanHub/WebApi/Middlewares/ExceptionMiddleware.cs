@@ -80,7 +80,6 @@ namespace FanHub.Middlewares
 
             return context.Response.WriteAsJsonAsync( response );
         }
-
     }
 }
 
