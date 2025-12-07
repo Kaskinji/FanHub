@@ -1,4 +1,5 @@
-﻿using Application.Dto.SubscriptionDto;
+﻿using Application.Dto.FandomDto;
+using Application.Dto.SubscriptionDto;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
@@ -40,6 +41,14 @@ namespace Application.Services
             {
                 throw new ArgumentException( "Пользователь уже подписан на этот фандом" );
             }
+        }
+
+        protected override Subscription InitializeEntity( SubscriptionCreateDto dto )
+        {
+            Subscription entity = new Subscription();
+            entity.Date = DateTime.UtcNow;
+
+            return entity;
         }
 
         protected override async Task ExistEntities( Subscription subscription )

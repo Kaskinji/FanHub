@@ -14,9 +14,11 @@ namespace Application.Services
     {
         private readonly IFandomRepository _fandomRepository;
         private readonly IGameRepository _gameRepository;
+        private readonly ISubscriptionRepository _subscriptionRepository;
 
         public FandomService( IFandomRepository fandomRepository,
             IGameRepository gameRepository,
+            ISubscriptionRepository subscriptionRepository,
             IPostRepository postRepository,
             IMapper mapper,
             IValidator<Fandom> validator,
@@ -25,6 +27,32 @@ namespace Application.Services
         {
             _fandomRepository = fandomRepository;
             _gameRepository = gameRepository;
+            _subscriptionRepository = subscriptionRepository;
+        }
+
+        public override async Task<FandomReadDto> GetById( int id )
+        {
+            Fandom entity = await _repository.GetByIdAsyncThrow( id );
+
+            int subscribersCount = await _subscriptionRepository.CountSubscribersAsync( id );
+
+            var dto = _mapper.Map<FandomReadDto>( entity );
+            dto.SubscribersCount = subscribersCount;
+
+            return dto;
+        }
+
+        public override async Task<List<FandomReadDto>> GetAll()
+        {
+            List<Fandom> entities = await _repository.GetAllAsync();
+            var dtos = _mapper.Map<List<FandomReadDto>>( entities );
+
+            foreach ( var dto in dtos )
+            {
+                dto.SubscribersCount = await _subscriptionRepository.CountSubscribersAsync( dto.Id );
+            }
+
+            return dtos;
         }
 
         public async Task<List<FandomReadDto>> SearchByNameAsync( string searchTerm )
@@ -36,8 +64,14 @@ namespace Application.Services
             {
                 return new List<FandomReadDto>();
             }
+            var dtos = _mapper.Map<List<FandomReadDto>>( fandoms );
 
-            return _mapper.Map<List<FandomReadDto>>( fandoms );
+
+            foreach ( var dto in dtos )
+            {
+                dto.SubscribersCount = await _subscriptionRepository.CountSubscribersAsync( dto.Id );
+            }
+            return dtos;
         }
 
         public async Task<List<FandomReadDto>> SearchByNameAndGameIdAsync( string searchTerm, int gameId )
@@ -67,7 +101,15 @@ namespace Application.Services
                 return new List<FandomReadDto>();
             }
 
-            return _mapper.Map<List<FandomReadDto>>( fandoms );
+            var dtos = _mapper.Map<List<FandomReadDto>>( fandoms );
+
+            // Добавляем количество подписчиков
+            foreach ( var dto in dtos )
+            {
+                dto.SubscribersCount = await _subscriptionRepository.CountSubscribersAsync( dto.Id );
+            }
+
+            return dtos;
         }
         protected override async Task CheckUnique( Fandom entity )
         {
