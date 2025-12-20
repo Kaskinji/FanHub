@@ -11,45 +11,34 @@ namespace Application.Services
 {
     public class GameService : BaseService<Game, GameCreateDto, GameReadDto, GameUpdateDto>, IGameService
     {
-        public GameService( IGameRepository gameRepository,
+        private readonly IGameRepository _gameRepository;
+        public GameService( IGameRepository repository,
             IMapper mapper,
             IValidator<Game> validator,
             ILogger<GameService> logger,
-            IUnitOfWork unitOfWork ) : base( gameRepository, mapper, validator, logger, unitOfWork )
+            IUnitOfWork unitOfWork ) : base( repository, mapper, validator, logger, unitOfWork )
         {
+            _gameRepository = repository;
         }
 
-        public async Task<List<GameReadDto>> GetGamesByDeveloperAsync( string developer )
+        public async Task<List<GameReadDto>> SearchGamesByNameAsync( string searchTerm )
         {
-            List<Game> games = await _repository.FindAllAsync( g => g.Developer == developer );
-
+            List<Game> games = await _gameRepository.SearchGamesByNameAsync( searchTerm );
             return _mapper.Map<List<GameReadDto>>( games );
         }
 
-        public async Task<List<GameReadDto>> GetGamesByGenreAsync( string genre )
+        public async Task<List<GameReadDto>> SearchGamesByGenreAsync( string searchTerm )
         {
-            List<Game> games = await _repository.FindAllAsync( g => g.Genre == genre );
-
+            List<Game> games = await _gameRepository.SearchGamesByGenreAsync( searchTerm );
             return _mapper.Map<List<GameReadDto>>( games );
         }
-
-        public async Task<List<GameReadDto>> SearchGamesAsync( string searchTerm )
+        protected async override Task CheckUnique( Game entity )
         {
-            List<Game> games = await _repository.FindAllAsync( g =>
-                g.Title.Contains( searchTerm ) ||
-                g.Description.Contains( searchTerm ) );
+            bool existing = await _gameRepository.IsGameExistAsync( entity );
 
-            return _mapper.Map<List<GameReadDto>>( games );
-        }
-
-        protected async override Task CheckUnique( Game game )
-        {
-            Game? existingGame = await _repository.FindAsync( f =>
-                f.Title == game.Title );
-
-            if ( existingGame is not null )
+            if ( existing is true )
             {
-                throw new ArgumentException( "Игра с таким названием уже существует" );
+                throw new ArgumentException( "A game with that name already exists." );
             }
         }
     }

@@ -25,9 +25,18 @@ namespace WebApi.Controllers
         }
 
         [HttpGet( "{id}" )]
-        public async Task<ActionResult<CategoryReadDto>> GetCategoryById( int id )
+        public async Task<ActionResult<CategoryReadDto>> GetCategoryById(
+            [FromRoute] int id )
         {
             CategoryReadDto category = await _categoryService.GetById( id );
+
+            return Ok( category );
+        }
+        [HttpGet( "search/name" )]
+        public async Task<ActionResult<CategoryReadDto>> GetCategoryByName(
+            [FromQuery] string name )
+        {
+            List<CategoryReadDto> category = await _categoryService.GetByNameAsync( name );
 
             return Ok( category );
         }

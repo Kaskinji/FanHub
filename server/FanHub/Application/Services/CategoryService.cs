@@ -18,29 +18,20 @@ namespace Application.Services
             _categoryRepository = repository;
         }
 
-        public async Task<CategoryReadDto?> GetByNameAsync( string name )
+        public async Task<List<CategoryReadDto>> GetByNameAsync( string name )
         {
-            Category? category = await _categoryRepository.FindAsync( c => c.Name == name );
+            List<Category> category = await _categoryRepository.SearchByNameAsync( name );
 
-            return category is not null ? _mapper.Map<CategoryReadDto>( category ) : null;
-        }
-
-        public async Task<List<CategoryReadDto>> SearchByNameAsync( string searchTerm )
-        {
-            List<Category> categories = await _categoryRepository.FindAllAsync( c =>
-                c.Name.Contains( searchTerm ) );
-
-            return _mapper.Map<List<CategoryReadDto>>( categories );
+            return _mapper.Map<List<CategoryReadDto>>( category );
         }
 
         protected override async Task CheckUnique( Category entity )
         {
-            Category? existing = await _categoryRepository.FindAsync( f =>
-                f.Name == entity.Name );
+            bool existing = await _categoryRepository.IsCategoryExistAsync( entity );
 
-            if ( existing is not null )
+            if ( existing is true )
             {
-                throw new ArgumentException( "Категория с таким названием уже существует" );
+                throw new ArgumentException( "A category with this name already exists." );
             }
         }
     }

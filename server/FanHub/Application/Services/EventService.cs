@@ -29,27 +29,17 @@ namespace Application.Services
             _fandomRepository = fandomRepository;
         }
 
-        public async Task<List<Event>> GetUpcomingEventsAsync( int daysAhead = 30 )
+        public override async Task<List<EventReadDto>> GetAll()
         {
-            return await _eventRepository.FindAllAsync( e =>
-                e.StartDate >= DateTime.UtcNow &&
-                e.StartDate <= DateTime.UtcNow.AddDays( daysAhead ) );
-        }
+            List<Event> events = await _eventRepository.GetAllWithStatsAsync();
 
-        public async Task<List<Event>> GetEventsByFandomAsync( int fandomId )
-        {
-            return await _eventRepository.FindAllAsync( e => e.FandomId == fandomId );
+            return _mapper.Map<List<EventReadDto>>( events );
         }
-
-        public async Task<List<Event>> GetEventsByOrganizerAsync( int organizerId )
+        public async Task<List<EventReadDto>> GetEventsByFandomIdAsync( int fandomId )
         {
-            return await _eventRepository.FindAllAsync( e => e.OrganizerId == organizerId );
-        }
+            List<Event> events = await _eventRepository.GetEventsByFandomIdAsync( fandomId );
 
-        public async Task<List<Event>> SearchEventsAsync( string searchTerm )
-        {
-            return await _eventRepository.FindAllAsync( e =>
-                e.Title.Contains( searchTerm ) || e.Description.Contains( searchTerm ) );
+            return _mapper.Map<List<EventReadDto>>( events );
         }
 
         protected override async Task ExistEntities( Event eventEntity )

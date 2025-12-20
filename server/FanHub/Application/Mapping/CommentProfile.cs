@@ -1,4 +1,5 @@
 ﻿using Application.Dto.CategoryDto;
+using Application.Dto.CommentDto;
 using AutoMapper;
 using Domain.Entities;
 
@@ -8,11 +9,19 @@ namespace Application.Mapping
     {
         public CommentProfile()
         {
-            CreateMap<Category, CategoryReadDto>();
+            CreateMap<Comment, CommentReadDto>();
 
-            CreateMap<CategoryCreateDto, Category>();
+            CreateMap<CommentCreateDto, Comment>()
+                .ForMember( dest => dest.CommentDate, opt => opt.Ignore() ); // Игнорируем!
+            CreateMap<CommentUpdateDto, Comment>();
 
-            CreateMap<CategoryUpdateDto, Category>();
+            CreateMap<Comment, CommentShowDto>()
+                .ForMember( dest => dest.AuthorName,
+                    opt => opt.MapFrom( src => src.User != null ? src.User.Username : "Unknown" ) )
+                .ForMember( dest => dest.AuthorAvatar,
+                    opt => opt.MapFrom( src => src.User != null ? src.User.Avatar : string.Empty ) )
+                .ForMember( dest => dest.AuthorUsername,
+                    opt => opt.MapFrom( src => src.User != null ? src.User.Login : string.Empty ) );
         }
     }
 }

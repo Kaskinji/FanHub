@@ -16,8 +16,6 @@ namespace WebApi.Controllers
             _notificationService = NotificationService;
         }
 
-        // можно добавить GetNotificationsForUser
-
         [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<NotificationReadDto>>> GetNotifications()
@@ -34,6 +32,15 @@ namespace WebApi.Controllers
             NotificationReadDto notification = await _notificationService.GetById( id );
 
             return Ok( notification );
+        }
+
+        [Authorize]
+        [HttpGet( "user/{userId}" )]
+        public async Task<ActionResult<NotificationReadDto>> GetByUserId( int id )
+        {
+            List<NotificationReadDto> notifications = await _notificationService.GetNotificationsByUserIdAsync( id );
+
+            return Ok( notifications );
         }
 
         [Authorize]

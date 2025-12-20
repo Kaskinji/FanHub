@@ -32,93 +32,53 @@ namespace Application.Services
 
         public override async Task<FandomReadDto> GetById( int id )
         {
-            Fandom entity = await _repository.GetByIdAsyncThrow( id );
+            Fandom? entity = await _fandomRepository.GetByIdWithStatsAsync( id );
 
-            int subscribersCount = await _subscriptionRepository.CountSubscribersAsync( id );
-
-            var dto = _mapper.Map<FandomReadDto>( entity );
-            dto.SubscribersCount = subscribersCount;
-
-            return dto;
+            return _mapper.Map<FandomReadDto>( entity );
         }
 
         public override async Task<List<FandomReadDto>> GetAll()
         {
-            List<Fandom> entities = await _repository.GetAllAsync();
-            var dtos = _mapper.Map<List<FandomReadDto>>( entities );
+            List<Fandom> fandoms = await _fandomRepository.GetAllWithStatsAsync();
 
-            foreach ( var dto in dtos )
-            {
-                dto.SubscribersCount = await _subscriptionRepository.CountSubscribersAsync( dto.Id );
-            }
-
-            return dtos;
+            return _mapper.Map<List<FandomReadDto>>( fandoms );
         }
 
         public async Task<List<FandomReadDto>> SearchByNameAsync( string searchTerm )
         {
-            List<Fandom>? fandoms = await _fandomRepository.FindAllAsync( f =>
-                  f.Name.ToLower().Contains( searchTerm.ToLower() ) );
+            List<Fandom> fandoms = await _fandomRepository.SearchByNameWithStatsAsync( searchTerm?.ToLower() ?? "" );
 
-            if ( fandoms == null )
-            {
-                return new List<FandomReadDto>();
-            }
-            var dtos = _mapper.Map<List<FandomReadDto>>( fandoms );
-
-
-            foreach ( var dto in dtos )
-            {
-                dto.SubscribersCount = await _subscriptionRepository.CountSubscribersAsync( dto.Id );
-            }
-            return dtos;
+            return _mapper.Map<List<FandomReadDto>>( fandoms );
         }
 
         public async Task<List<FandomReadDto>> SearchByNameAndGameIdAsync( string searchTerm, int gameId )
         {
-            List<Fandom> fandoms;
-            Game? game = await _gameRepository.GetByIdAsync( gameId );
-            if ( game == null )
-            {
-                //добав конкретный тип исключения
-                throw new Exception( $"Game with id {gameId} not found" );
-            }
+            List<Fandom> fandoms = await _fandomRepository.SearchByNameAndGameWithStatsAsync(
+                searchTerm?.ToLower() ?? "",
+                gameId );
 
-            if ( string.IsNullOrWhiteSpace( searchTerm ) )
-            {
-                fandoms = await _fandomRepository.FindAllAsync( f =>
-                    f.GameId == gameId );
+            return _mapper.Map<List<FandomReadDto>>( fandoms );
+        }
 
-                return _mapper.Map<List<FandomReadDto>>( fandoms );
-            }
+        public async Task<List<FandomReadDto>> GetPopularAsync( int limit )
+        {
+            List<Fandom> fandoms = await _fandomRepository.GetPopularAsync( limit );
 
-            fandoms = await _fandomRepository.FindAllAsync( f =>
-                f.GameId == gameId &&
-                f.Name.ToLower().Contains( searchTerm.ToLower() ) );
+            return _mapper.Map<List<FandomReadDto>>( fandoms );
+        }
+        public async Task<List<FandomReadDto>> GetPopularByGameAsync( int gameId, int limit = 20 )
+        {
+            List<Fandom> fandoms = await _fandomRepository.GetPopularByGameAsync( gameId, limit );
 
-            if ( fandoms == null || fandoms.Count == 0 )
-            {
-                return new List<FandomReadDto>();
-            }
-
-            var dtos = _mapper.Map<List<FandomReadDto>>( fandoms );
-
-            // Добавляем количество подписчиков
-            foreach ( var dto in dtos )
-            {
-                dto.SubscribersCount = await _subscriptionRepository.CountSubscribersAsync( dto.Id );
-            }
-
-            return dtos;
+            return _mapper.Map<List<FandomReadDto>>( fandoms );
         }
         protected override async Task CheckUnique( Fandom entity )
         {
-            Fandom? existing = await _fandomRepository.FindAsync( f =>
-                f.Name == entity.Name );
+            bool existing = await _fandomRepository.IsFandomExistAsync( entity );
 
-            if ( existing is not null )
+            if ( existing is true )
             {
-                throw new ArgumentException( "Фандом с таким названием уже существует" );
+                throw new ArgumentException( "A fandom with this name already exists." );
             }
         }
 

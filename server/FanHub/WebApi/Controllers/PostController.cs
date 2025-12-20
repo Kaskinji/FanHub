@@ -1,6 +1,4 @@
-﻿using Application.Dto.FandomDto;
-using Application.Dto.PostDto;
-using Application.Services;
+﻿using Application.Dto.PostDto;
 using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,35 +26,33 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
-        [HttpGet( "search/category/name" )]
+        [HttpGet( "category/name" )]
         public async Task<ActionResult<List<PostReadDto>>> GetPostsByCategoryName(
         [FromQuery] string categoryName )
         {
-            if ( string.IsNullOrWhiteSpace( categoryName ) )
-            {
-                return BadRequest( "Category name is required" );
-            }
-
             List<PostReadDto> posts = await _postService.SearchByCategoryNameAsync( categoryName );
+
             return Ok( posts );
         }
 
         [Authorize]
-        [HttpGet( "search/category/{categoryId}" )]
+        [HttpGet( "category/{categoryId}" )]
         public async Task<ActionResult<List<PostReadDto>>> GetPostsByCategoryId(
         [FromRoute] int categoryId )
         {
             List<PostReadDto> posts = await _postService.SearchByCategoryIdAsync( categoryId );
+
             return Ok( posts );
         }
 
         [Authorize]
         [HttpGet( "search" )]
         public async Task<ActionResult<List<PostReadDto>>> SearchPosts(
-        [FromQuery] int? categoryId = null,
+        [FromRoute] int? categoryId = null,
         [FromQuery] string? categoryName = null )
         {
             List<PostReadDto> posts = await _postService.SearchByCategoryAsync( categoryName, categoryId );
+
             return Ok( posts );
         }
 
@@ -67,6 +63,25 @@ namespace WebApi.Controllers
             PostReadDto post = await _postService.GetById( id );
 
             return Ok( post );
+        }
+
+        [HttpGet( "popular" )]
+        public async Task<ActionResult<List<PostReadDto>>> GetPopularPosts(
+       [FromQuery] int limit = 20 )
+        {
+            List<PostReadDto> posts = await _postService.GetPopularPosts( limit );
+
+            return Ok( posts );
+        }
+
+        [HttpGet( "fandom/{fandomId}/popular" )]
+        public async Task<ActionResult<List<PostReadDto>>> GetPopularPostsByFandom(
+       [FromRoute] int fandomId,
+       [FromQuery] int limit = 20 )
+        {
+            List<PostReadDto> posts = await _postService.GetPopularPostsByFandom( fandomId, limit );
+
+            return Ok( posts );
         }
 
         [Authorize]

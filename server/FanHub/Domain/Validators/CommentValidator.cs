@@ -15,7 +15,7 @@ namespace Domain.Validators
 
             RuleFor( x => x.CommentDate )
                 .NotEmpty().WithMessage( "Дата комментария обязательна" )
-                .LessThanOrEqualTo( DateTime.UtcNow ).WithMessage( "Дата комментария не может быть в будущем" )
+                .LessThanOrEqualTo( DateTime.UtcNow.AddMinutes( 1 ) ).WithMessage( "Дата комментария не может быть в будущем" )
                 .GreaterThanOrEqualTo( DateTime.UtcNow.AddYears( -1 ) ).WithMessage( "Дата комментария слишком старая" );
 
             RuleFor( x => x.PostId )

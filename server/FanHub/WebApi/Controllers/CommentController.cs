@@ -18,13 +18,21 @@ namespace WebApi.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<ActionResult<List<CommentReadDto>>> GetComments()
+        public async Task<ActionResult<List<CommentShowDto>>> GetCommentsWithAuthorData()
         {
-            IReadOnlyList<CommentReadDto> comments = await _commentService.GetAll();
+            IReadOnlyList<CommentShowDto> comments = await _commentService.GetCommentsAsync();
 
             return Ok( comments );
         }
 
+        [Authorize]
+        [HttpGet( "/post/{postId}" )]
+        public async Task<ActionResult<CommentReadDto>> GetByPostId( int postId )
+        {
+            IReadOnlyList<CommentShowDto> comments = await _commentService.GetCommentsByPostIdAsync( postId );
+
+            return Ok( comments );
+        }
         [Authorize]
         [HttpGet( "{id}" )]
         public async Task<ActionResult<CommentReadDto>> GetCommentById( int id )

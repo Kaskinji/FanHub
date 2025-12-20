@@ -16,7 +16,7 @@ namespace Domain.Validators
 
             RuleFor( x => x.Date )
                 .NotEmpty().WithMessage( "Дата реакции обязательна" )
-                .LessThanOrEqualTo( DateTime.UtcNow ).WithMessage( "Дата реакции не может быть в будущем" )
+                //.LessThanOrEqualTo( DateTime.UtcNow ).WithMessage( "Дата реакции не может быть в будущем" )
                 .GreaterThanOrEqualTo( DateTime.UtcNow.AddYears( -1 ) ).WithMessage( "Дата реакции не может быть старше 1 года" );
 
             RuleFor( x => x.Type )

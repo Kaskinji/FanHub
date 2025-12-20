@@ -19,6 +19,7 @@ namespace Application.Services
         protected IValidator<TEntity> _validator;
         protected ILogger<BaseService<TEntity, TCreateDto, TReadDto, TUpdateDto>> _logger;
         protected IUnitOfWork _unitOfWork;
+
         public BaseService( IBaseRepository<TEntity> repository,
             IMapper mapper,
             IValidator<TEntity> validator,

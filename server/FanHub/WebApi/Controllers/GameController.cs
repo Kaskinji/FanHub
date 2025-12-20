@@ -24,6 +24,23 @@ public class GameController : ControllerBase
         return Ok( games );
     }
 
+    [HttpGet( "/game/name" )]
+    public async Task<ActionResult<GameReadDto>> GetGameByName(
+        [FromQuery] string name )
+    {
+        List<GameReadDto> games = await _gameService.SearchGamesByNameAsync( name );
+
+        return Ok( games );
+    }
+    [HttpGet( "/game/genre" )]
+    public async Task<ActionResult<GameReadDto>> GetGameByGenre(
+        [FromQuery] string name )
+    {
+        List<GameReadDto> games = await _gameService.SearchGamesByGenreAsync( name );
+
+        return Ok( games );
+    }
+
     [HttpGet( "{id}" )]
     public async Task<ActionResult<GameReadDto>> GetGameById( int id )
     {

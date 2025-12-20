@@ -32,51 +32,55 @@ namespace Application.Services
             _postRepository = repository;
         }
 
+        public override async Task<List<PostReadDto>> GetAll()
+        {
+            List<Post> posts = await _postRepository.GetAllWithStatsAsync();
+
+            return _mapper.Map<List<PostReadDto>>( posts );
+        }
         public async Task<List<PostReadDto>> SearchByCategoryNameAsync( string categoryName )
         {
-            if ( string.IsNullOrWhiteSpace( categoryName ) )
-            {
-                return new List<PostReadDto>();
-            }
-
-            Category? category = await _categoryRepository.FindAsync( c =>
-                c.Name.ToLower() == categoryName.ToLower() );
-
-            if ( category == null )
-            {
-                return new List<PostReadDto>();
-            }
-
-            List<Post> posts = await _postRepository.FindAllAsync( p =>
-                p.CategoryId == category.Id );
-
+            List<Post> posts = await _postRepository.FindByCategoryNameAsync( categoryName );
             return _mapper.Map<List<PostReadDto>>( posts );
         }
 
         public async Task<List<PostReadDto>> SearchByCategoryIdAsync( int categoryId )
         {
-            await _categoryRepository.GetByIdAsyncThrow( categoryId );
-
-            List<Post> posts = await _postRepository.FindAllAsync( p =>
-                p.CategoryId == categoryId );
-
+            List<Post> posts = await _postRepository.GetAllByCategoryId( categoryId );
             return _mapper.Map<List<PostReadDto>>( posts );
         }
 
         public async Task<List<PostReadDto>> SearchByCategoryAsync( string? categoryName = null, int? categoryId = null )
         {
+            if ( !categoryId.HasValue && string.IsNullOrWhiteSpace( categoryName ) )
+                return new List<PostReadDto>();
+
+            List<Post> posts;
+
             if ( categoryId.HasValue )
             {
-                return await SearchByCategoryIdAsync( categoryId.Value );
-            }
-            else if ( !string.IsNullOrWhiteSpace( categoryName ) )
-            {
-                return await SearchByCategoryNameAsync( categoryName );
+                posts = await _postRepository.GetAllByCategoryId( categoryId.Value );
             }
             else
             {
-                return new List<PostReadDto>();
+                posts = await _postRepository.FindByCategoryNameAsync( categoryName! );
             }
+
+            return _mapper.Map<List<PostReadDto>>( posts );
+        }
+
+        public async Task<List<PostReadDto>> GetPopularPosts( int limit = 20 )
+        {
+            List<Post> posts = await _postRepository.GetPopularPostsAsync( limit );
+
+            return _mapper.Map<List<PostReadDto>>( posts );
+        }
+
+        public async Task<List<PostReadDto>> GetPopularPostsByFandom( int fandomId, int limit = 20 )
+        {
+            List<Post> posts = await _postRepository.GetPopularPostsByFandomAsync( fandomId, limit );
+
+            return _mapper.Map<List<PostReadDto>>( posts );
         }
         protected override Post InitializeEntity( PostCreateDto dto )
         {

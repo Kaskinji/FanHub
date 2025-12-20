@@ -10,16 +10,17 @@ namespace Infrastructure.Repositories
         {
         }
 
-        public async Task<Category?> GetByNameAsync( string name )
-        {
-            return await _entities.FirstOrDefaultAsync( c => c.Name == name );
-        }
-
         public async Task<List<Category>> SearchByNameAsync( string searchTerm )
         {
             return await _entities
                 .Where( c => c.Name.Contains( searchTerm ) )
                 .ToListAsync();
+        }
+
+        public async Task<bool> IsCategoryExistAsync( Category entity )
+        {
+            return await _entities
+                .AnyAsync( c => c.Name == entity.Name );
         }
     }
 }

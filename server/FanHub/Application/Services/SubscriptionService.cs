@@ -1,5 +1,4 @@
-﻿using Application.Dto.FandomDto;
-using Application.Dto.SubscriptionDto;
+﻿using Application.Dto.SubscriptionDto;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;

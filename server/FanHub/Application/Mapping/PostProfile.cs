@@ -8,7 +8,9 @@ namespace Application.Mapping
     {
         public PostProfile()
         {
-            CreateMap<Post, PostReadDto>();
+            CreateMap<Post, PostReadDto>()
+            .ForMember( dest => dest.ReactionsCount,
+               opt => opt.MapFrom( src => src.Reactions.Count ) );
 
             CreateMap<PostCreateDto, Post>();
 

@@ -19,7 +19,7 @@ namespace Application.Services
             IPostRepository postRepository,
             IUserRepository userRepository,
             IMapper mapper,
-            IValidator<Reaction> validator, 
+            IValidator<Reaction> validator,
             ILogger<ReactionService> logger,
             IUnitOfWork unitOfWork ) : base( repository, mapper, validator, logger, unitOfWork )
         {

@@ -25,6 +25,15 @@ namespace WebApi.Controllers
             return Ok( events );
         }
         [Authorize]
+        [HttpGet( "fandom/{fandomId}" )]
+        public async Task<ActionResult<List<EventReadDto>>> GetEventsByFandomId(
+            [FromRoute] int fandomId )
+        {
+            IReadOnlyList<EventReadDto> events = await _eventService.GetEventsByFandomIdAsync( fandomId );
+
+            return Ok( events );
+        }
+
         [Authorize]
         [HttpGet( "{id}" )]
         public async Task<ActionResult<EventReadDto>> GetEventById( int id )

@@ -1,4 +1,5 @@
-﻿using Application.Dto.NotificationDto;
+﻿using Application.Dto.EventDto;
+using Application.Dto.NotificationDto;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
@@ -15,6 +16,7 @@ namespace Application.Services
         private readonly IUserRepository _userRepository;
         private readonly IPostRepository _postRepository;
         private IEventRepository _eventRepository;
+        private readonly INotificationRepository _notificationRepository;
 
         public NotificationService( INotificationRepository NotificationRepository,
             IUserRepository UserRepository,
@@ -25,6 +27,7 @@ namespace Application.Services
             ILogger<NotificationService> logger,
             IUnitOfWork unitOfWork ) : base( NotificationRepository, mapper, validator, logger, unitOfWork )
         {
+            _notificationRepository = NotificationRepository;
             _userRepository = UserRepository;
             _postRepository = PostRepository;
             _eventRepository = eventRepository;
@@ -45,6 +48,13 @@ namespace Application.Services
             {
                 await _eventRepository.GetByIdAsyncThrow( eventId.Value );
             }
+        }
+
+        public async Task<List<NotificationReadDto>> GetNotificationsByUserIdAsync( int userId )
+        {
+            List<Notification> notifications = await _notificationRepository.GetNotificationsByUserIdAsync( userId );
+
+            return _mapper.Map<List<NotificationReadDto>>( notifications );
         }
     }
 }

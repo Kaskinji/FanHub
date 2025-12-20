@@ -17,5 +17,7 @@
         public DateTime PostDate { get; set; }
 
         public string MediaContent { get; set; } = string.Empty;
+
+        public int ReactionsCount { get; set; }
     }
 }
