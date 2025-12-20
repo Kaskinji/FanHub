@@ -3,23 +3,26 @@ import type { FC } from "react";
 import Input from "../Input/Input";
 import styles from "./SearchInput.module.scss";
 import classNames from "classnames";
+import searchIconLight from "../../../assets/searchIconLight.svg"
+import searchIconDark from "../../../assets/searchIconDark.svg"
 
-interface SearchInputProps {
+export interface SearchInputProps {
     placeholder?: string;
     onSearch: (query: string) => void;
     className?: string;
     variant?: "head" | "secondary";
     size?: "small" | "medium" | "large";
     withIcon?: boolean;
+    theme?: "light" | "dark";
 }
-
-const SearchInput: FC<SearchInputProps> = ({
+export const SearchInput: FC<SearchInputProps> = ({
     placeholder = "Search",
     onSearch,
     className,
-    variant = "primary",
+    variant = "head",
     size = "medium",
-    withIcon = false
+    withIcon = false,
+    theme = "light",
 }) => {
     const [query, setQuery] = useState("");
 
@@ -28,26 +31,40 @@ const SearchInput: FC<SearchInputProps> = ({
         onSearch(query);
     };
 
-    const finalClassName = classNames(
-        styles.searchInput,
+    const finalFormClassName = classNames(
+        styles.searchForm,
+        styles[`searchForm--${variant}`],
+        styles[`searchForm--${size}`],
         {
-            [styles[`searchInput--${variant}`]]: variant,
-            [styles[`searchInput--${size}`]]: size,
-            [styles.searchInputWithIcon]: withIcon,
+            [styles.searchFormWithIcon]: withIcon,
+            [styles.searchFormDark]: theme === "dark", 
+            [styles.searchFormLight]: theme === "light",
         },
         className
     );
 
+    const finalInputClassName = classNames(
+        styles.searchInput,
+        styles[`searchInput--${variant}`]
+    );
+
+    const iconSrc = theme === "dark" ? searchIconLight : searchIconDark;
+
     return (
-        <form onSubmit={handleSubmit} className={styles.searchForm}>
-            {withIcon && <div className={styles.searchIcon}> lupa </div>}
+        <form onSubmit={handleSubmit} className={finalFormClassName}>
             <Input
                 type="text"
                 placeholder={placeholder}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className={finalClassName}
+                className={finalInputClassName}
             />
+            {withIcon && (
+                <img
+                    src={iconSrc}
+                    className={styles.searchIcon}
+                />
+            )}
         </form>
     );
 };

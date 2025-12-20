@@ -3,7 +3,7 @@
     width: 100%;
     background: inherit;
     border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
     padding: 2.5rem;
     margin: 2rem auto;
 }
@@ -22,7 +22,7 @@
 }
 
 .subtitle {
-    color: #white;
+    color: white;
     margin: 0;
     font-size: 1rem;
 }
@@ -92,7 +92,6 @@
     }
 }
 
-// Адаптивность
 @media (max-width: 480px) {
     .loginForm {
         margin: 1rem;

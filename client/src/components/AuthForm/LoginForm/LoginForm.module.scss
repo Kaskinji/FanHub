@@ -3,7 +3,7 @@
     width: 100%;
     background: inherit;
     border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
     padding: 2.5rem;
     margin: 2rem auto;
 }
@@ -66,6 +66,7 @@
 }
 
 .submitButton {
+    background-color: #480491;
     margin-top: 0.5rem;
     height: 3rem;
     font-weight: 600;
@@ -79,7 +80,7 @@
 }
 
 .footerText {
-    color: #white;
+    color: white;
     font-size: 0.875rem;
     margin-right: 50px;
 }
@@ -95,7 +96,6 @@
     }
 }
 
-// Адаптивность
 @media (max-width: 480px) {
     .loginForm {
         margin: 1rem;

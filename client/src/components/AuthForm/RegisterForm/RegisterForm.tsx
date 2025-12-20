@@ -1,10 +1,11 @@
 import { useState, type FC } from "react";
 import { useForm } from "react-hook-form";
 import Input from "../../../components/UI/Input/Input";
-import Button from "../../UI/Button/Button";
+import Button from "../../UI/buttons/Button/Button";
 import styles from "../RegisterForm/RegisterForm.module.scss";
-import type { RegisterFormData } from "../../../types/Auth";
+import type { RegisterFormData } from "../../../types/RegisterFormData";
 import Logo from "../../UI/Logo/Logo"
+import { useNavigate } from "react-router-dom";
 interface RegisterFormProps {
     onRegister?: (data: RegisterFormData) => void;
     isLoading?: boolean;
@@ -15,7 +16,7 @@ const RegisterForm: FC<RegisterFormProps> = ({
     isLoading = false
 }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
-
+    const navigate = useNavigate();
     const {
         register,
         handleSubmit,
@@ -40,7 +41,7 @@ const RegisterForm: FC<RegisterFormProps> = ({
         } catch (error) {
             setError("root", {
                 type: "manual",
-                message: "Ошибка при регистрации. Проверьте данные."
+                message: "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ."
             });
         } finally {
             setIsSubmitting(false);
@@ -52,7 +53,9 @@ const RegisterForm: FC<RegisterFormProps> = ({
     return (
         <div className={styles.registerForm}>
             <div className={styles.header}>
-                <Logo size="large" className={styles.logo} />
+                <div onClick={()=>navigate("/main")}>
+                    <Logo size="large" className={styles.logo} />
+                </div>
                 <p className={styles.subtitle}>Create account</p>
             </div>
 

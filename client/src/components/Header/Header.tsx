@@ -1,9 +1,10 @@
 // components/Header/MainHeader.tsx
 import type { FC } from "react";
 import Logo from "../UI/Logo/Logo";
-import Button from "../UI/Button/Button";
+import Button from "../UI/buttons/Button/Button";
 import SearchInput from "../UI/SearchInput/SearchInput";
 import styles from "../Header/Header.module.scss";
+import { useNavigate } from "react-router-dom";
 
 interface MainHeaderProps {
     onSearch: (query: string) => void;
@@ -11,18 +12,20 @@ interface MainHeaderProps {
 }
 
 const MainHeader: FC<MainHeaderProps> = ({ onSearch, onSignIn }) => {
+    const navigate = useNavigate();
     return (
         <header className={styles.header}>
-            <div className={styles.leftSection}>
+            <div className={styles.leftSection} onClick={() => navigate("/main")}>
                 <Logo size="small" showText={true} />
             </div>
 
             <div className={styles.centerSection}>
                 <SearchInput
-                    placeholder="Search Fandoms..."
+                    placeholder="Search games..."
                     onSearch={onSearch}
                     variant="head"
-                    size="large"
+                    size= "small"
+                    theme="dark"
                     withIcon={true}
                     className={styles.heroSearch}
                 />
@@ -30,7 +33,7 @@ const MainHeader: FC<MainHeaderProps> = ({ onSearch, onSignIn }) => {
 
             <div className={styles.rightSection}>
                 <Button
-                    isInverted
+                    variant="light"
                     onClick={onSignIn}
                     className={styles.signInButton}
                 >

@@ -1,0 +1,193 @@
+.mainPage {
+  display: flex;
+  flex-direction: column;
+}
+
+.mainContent {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 2rem;
+  margin: 0 auto;
+}
+
+.heroSection {
+    text-align: center;
+    margin-bottom: 3rem;
+
+    .heroLogo {
+        margin-bottom: 1rem;
+        display: flex;
+        justify-content: center
+    }
+
+    .heroSubtitle {
+        font-size: 1.25rem;
+        color: white;
+        opacity: 0.9;
+    }
+}
+
+.logoWrapper {
+    width: fit-content;
+    margin: auto
+}
+
+.sectionTitle {
+    color: white;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-align: center;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+    &::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 3px;
+        margin: 0.5rem auto 0;
+        border-radius: 2px;
+    }
+}
+
+.gamesGrid {
+    display: flex; 
+    gap: 1.5rem;
+    max-width: 100%;
+    overflow-x: auto;
+    padding: 20px 10px 30px; 
+    align-items: flex-start;
+    justify-content: flex-start;
+    scrollbar-width: thin;
+    scrollbar-color: #6f1abe80 transparent;
+    
+    &::-webkit-scrollbar {
+        height: 8px;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background: transparent;
+        border-radius: 4px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 4px;
+    }
+}
+
+.fandomsGrid {
+    display: flex; 
+    gap: 1.5rem;
+    max-width: 100%;
+    overflow-x: auto;
+    padding: 20px 10px 30px; 
+    align-items: flex-start;
+    justify-content: flex-start;
+    scrollbar-width: thin;
+    scrollbar-color: #6f1abe80 transparent;
+    
+    &::-webkit-scrollbar {
+        height: 8px;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background: transparent;
+        border-radius: 4px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 4px;
+    }
+}
+
+.centerSection {
+    margin-right: auto;
+    margin-left: auto;
+    width: 50%;
+}
+
+.gameSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 3rem;
+    width: 100%;
+}
+
+.fandomsSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 25px;
+    padding: 2rem 0;
+}
+
+/* Медиа-запросы */
+@media (max-width: 1200px) {
+    .fandomsGrid,
+    .gamesGrid {
+        gap: 1.25rem;
+    }
+    
+    .baseCard {
+        width: 180px;
+        height: 180px;
+    }
+}
+
+@media (max-width: 768px) {
+    .fandomsSection {
+        margin-top: 2rem;
+        padding: 1.5rem 0;
+    }
+    
+    .gameSection {
+        margin-top: 2rem;
+    }
+
+    .sectionTitle {
+        font-size: 1.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .fandomsGrid,
+    .gamesGrid {
+        gap: 1rem;
+        padding: 15px 8px 25px;
+    }
+    
+    .baseCard {
+        width: 160px;
+        height: 160px;
+    }
+}
+
+@media (max-width: 480px) {
+    .fandomsSection {
+        margin-top: 1.5rem;
+        padding: 1rem 0;
+    }
+    
+    .gameSection {
+        margin-top: 1.5rem;
+    }
+
+    .sectionTitle {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .fandomsGrid,
+    .gamesGrid {
+        gap: 0.875rem;
+        padding: 10px 5px 20px;
+    }
+    
+    .baseCard {
+        width: 140px;
+        height: 140px;
+    }
+}

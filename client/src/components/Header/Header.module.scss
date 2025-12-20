@@ -1,16 +1,21 @@
 .header {
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1rem 2rem;
-    background: #2e0338;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 8px 14px;
+    background: #400A72;
     position: sticky;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
     top: 0;
     z-index: 100;
+    box-sizing:border-box;
+    left: 0;
+    right: 0;
 }
 
 .leftSection {
+    box-sizing: border-box;
     flex: 0 0 auto;
 
     :global(.logo) {
@@ -23,6 +28,7 @@
 }
 
 .centerSection {
+        box-sizing: border-box;
     flex: 1;
     max-width: 500px;
     margin: 0 2rem;
@@ -32,33 +38,6 @@
     flex: 0 0 auto;
 }
 
-.signInButton {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    color: white;
-    font-weight: 600;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-
-    &:hover:not(:disabled) {
-        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-        border-color: rgba(255, 255, 255, 0.5);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-
-    &:active {
-        transform: translateY(0);
-    }
-
-    &:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
-}
-
-// Адаптивность
 @media (max-width: 768px) {
     .header {
         padding: 1rem;

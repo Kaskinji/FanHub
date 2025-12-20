@@ -1,6 +1,6 @@
 import type { FC } from "react";
 import styles from "./Logo.module.scss";
-import logoImage from "../../../assets/Logo.png"
+import logoImage from "../../../assets/Logo.svg"
 interface LogoProps {
     size?: "small" | "medium" | "large";
     showText?: boolean;
@@ -17,7 +17,6 @@ const Logo: FC<LogoProps> = ({
             <div className={styles.logoIcon}>
                 <img
                     src={logoImage}
-                    alt="FanHub Logo"
                     className={styles.logoImage}
                 />
             </div>

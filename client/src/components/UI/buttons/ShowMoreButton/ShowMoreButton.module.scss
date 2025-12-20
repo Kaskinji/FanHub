@@ -1,0 +1,38 @@
+.showMoreButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 25px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    
+    &:not(:disabled):hover {
+        gap: 12px;
+    }
+    
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    &__text {
+        font-weight: 700; /* или bold */
+        line-height: 1;
+    }
+    
+    &__arrow {
+        font-weight: 700; /* или bold */
+        line-height: 1;
+        transition: transform 0.3s ease;
+    }
+    
+    &:not(:disabled):hover &__arrow {
+        transform: translateX(2px);
+    }
+    
+    // ... остальные стили
+}
