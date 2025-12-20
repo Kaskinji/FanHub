@@ -2,10 +2,10 @@ import { useState, type FC } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import Input from "../../../components/UI/Input/Input";
-import Button from "../../UI/Button/Button";
+import Button from "../../UI/buttons/Button/Button";
 import styles from "../LoginForm/LoginForm.module.scss";
 import Logo from "../../UI/Logo/Logo"
-import type { LoginFormData } from "../../../types/Auth";
+import type { LoginFormData } from "../../../types/LoginFormData";
 
 interface LoginFormProps {
     onLogin?: (data: LoginFormData) => void;
@@ -29,19 +29,17 @@ const LoginForm: FC<LoginFormProps> = ({
         setIsSubmitting(true);
 
         try {
-            // Симуляция API запроса
             await new Promise(resolve => setTimeout(resolve, 1000));
 
             if (onLogin) {
                 await onLogin(data);
             } else {
                 console.log("Login data:", data);
-                // Здесь будет интеграция с вашим бэкендом
             }
         } catch (error) {
             setError("root", {
                 type: "manual",
-                message: "Ошибка при входе. Проверьте данные."
+                message: "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ."
             });
         } finally {
             setIsSubmitting(false);

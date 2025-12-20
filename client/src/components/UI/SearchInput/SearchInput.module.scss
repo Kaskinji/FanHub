@@ -1,47 +1,7 @@
-.searchForm {
-    width: 100%;
-    position: relative;
-}
-
-.searchIcon {
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: rgba(255, 255, 255, 0.7);
-    z-index: 1;
-    pointer-events: none;
-}
-
-.searchInput {
-    width: 100%;
-    padding: 0.875rem 1.5rem;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 50px;
-    color: white;
-    font-size: 1rem;
-    backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
-
-    &::placeholder {
-        color: rgba(255, 255, 255, 0.7);
-    }
-
-    &:focus {
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
-    }
-
-    &:hover {
-        border-color: rgba(255, 255, 255, 0.3);
-    }
-}
-
-// Варианты цвета
-.searchInput--head {
+.searchForm--head {
     background: rgba(255, 255, 255, 0.15);
 
-    &:focus {
+    &:focus-within {
         background: rgba(255, 255, 255, 0.25);
         border-color: rgba(255, 255, 255, 0.4);
     }
@@ -51,94 +11,154 @@
     }
 }
 
-.searchInput--secondary {
+.searchForm--secondary {
     background: #37044a;
-    border-color: rgba(102, 126, 234, 0.3);
 
-    &:focus {
+    &:focus-within {
         background: #ffffffcc;
-        border-color: rgba(102, 126, 234, 0.5);
+    }
+
+}
+
+.searchForm--small {
+    .searchInput {
+        padding: 7px 16px;
+        font-size: 14px;
+    }
+
+    &.searchFormWithIcon .searchInput {
+        padding-right: 40px;
+    }
+
+    .searchIcon {
+        width: 20px;
+        margin-right: 12px;
+    }
+}
+
+.searchForm--medium {
+    .searchInput {
+        padding: 6px 24px;
+        font-size: 16px;
+    }
+
+    &.searchFormWithIcon .searchInput {
+        padding-right: 40px;
+    }
+
+    .searchIcon {
+        width: 25px;
+    }
+}
+
+.searchForm--large {
+    min-width: 200px;
+    .searchInput {
+        padding: 10px 32px;
+        font-size: 18px;
+    }
+
+    &.searchFormWithIcon .searchInput {
+        padding-right: 50px;
+    }
+
+    .searchIcon {
+        margin-right: 20px;
+        font-size: 18px;
+    }
+}
+
+.searchIcon {
+    pointer-events: none;
+    flex-shrink: 0;
+    margin-right: 16px;
+    display: block;
+}
+
+.searchFormWithIcon {
+    display: flex;
+    align-items: center;
+}
+
+.searchForm {
+    font-family: "Baloo 2";
+    display: flex;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    background-color: white;
+    &:focus-within {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
     }
 
     &:hover {
-        background: rgba(102, 126, 234, 0.25);
+        border-color: rgba(255, 255, 255, 0.3);
     }
 }
 
-// Варианты размеров
-.searchInput--small {
-    padding: 0.625rem 1rem;
-    font-size: 0.875rem;
+.searchInput {
+    flex: 1;
+    width: auto;
+    padding: 14px 24px;
+    border: none;
+    border-radius: 50px;
+    color: #400A72;
+    font-size: 16px;
+    background: transparent;
 
-    &.searchInputWithIcon {
-        padding-left: 2.5rem;
+    &::placeholder {
+        color: #400a72b3;
     }
 
-    & ~ .searchIcon {
-        left: 0.75rem;
-        display: flex;
-        font-size: 0.875rem;
+    &:focus {
+        outline: none;
+    }
+}
+.searchFormLight {
+    background-color: white;
+    border-color: rgba(255, 255, 255, 0.3);
+
+    .searchInput {
+        color: #400A72;
+
+        &::placeholder {
+            color: #400a72b3;
+        }
     }
 }
 
-.searchInput--medium {
-    padding: 0.875rem 1.5rem;
-    font-size: 1rem;
+.searchFormDark {
+    background-color: #6214AB;
+    border-color: rgba(255, 255, 255, 0.15);
+    .searchInput {
+        color: #ffffff;
 
-    &.searchInputWithIcon {
-        padding-left: 3rem;
-    }
-
-    & ~ .searchIcon {
-        left: 1rem;
-        font-size: 1rem;
+        &::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
     }
 }
 
-.searchInput--large {
-    padding: 1.125rem 2rem;
-    font-size: 1.125rem;
-
-    &.searchInputWithIcon {
-        padding-left: 3.5rem;
-    }
-
-    & ~ .searchIcon {
-        left: 1.25rem;
-        font-size: 1.125rem;
-    }
-}
-
-// Вариант с иконкой
-.searchInputWithIcon {
-    position: relative;
-}
-
-// Адаптивность
 @media (max-width: 768px) {
-    .searchInput--medium {
-        padding: 0.75rem 1.25rem;
-        font-size: 0.9rem;
-
-        &.searchInputWithIcon {
-            padding-left: 2.75rem;
+    .searchForm--medium {
+        .searchInput {
+            padding: 14px 20px;
+            font-size: 14px;
         }
 
-        & ~ .searchIcon {
-            left: 0.875rem;
+        .searchIcon {
+            margin-right: 14px;
         }
     }
 
-    .searchInput--large {
-        padding: 1rem 1.75rem;
-        font-size: 1rem;
-
-        &.searchInputWithIcon {
-            padding-left: 3.25rem;
+    .searchForm--large {
+        .searchInput {
+            padding: 16px 28px;
+            font-size: 16px;
         }
 
-        & ~ .searchIcon {
-            left: 1.125rem;
+        .searchIcon {
+            margin-right: 18px;
         }
     }
 }

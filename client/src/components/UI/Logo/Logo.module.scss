@@ -4,14 +4,28 @@
     gap: 0.75rem;
     text-decoration: none;
     color: #aa3bec;
+    cursor: pointer;
 }
+
+.logo:hover {
+    color: #c264f0; /* более светлый оттенок */
+}
+
+.logo:hover .logoText {
+    transition: color 0.3s ease;
+    color: #9679d4; /* изменяем цвет текста при наведении */
+}
+
 
 .logoIcon {
     align-items: center;
     justify-content: center;
+        
 }
 
 .logoImage {
+    width: 100%;
+    height: 100%;
     display: block;
     object-fit: contain;
 }
@@ -23,9 +37,11 @@
     margin: 0;
     line-height: 1;
 }
-// �������
+
 .logo--small {
     .logoIcon {
+        width: 30px;
+        height: 30px;
         font-size: 1.5rem;
     }
 
@@ -36,6 +52,8 @@
 
 .logo--medium {
     .logoIcon {
+        width: 50px;
+        height: 50px;
         font-size: 2.5rem;
     }
 
@@ -46,6 +64,8 @@
 
 .logo--large {
     .logoIcon {
+        width: 75px;
+        height: 75px;
         font-size: 3.5rem;
     }
 
@@ -54,15 +74,3 @@
     }
 }
 
-// ������������
-@media (max-width: 480px) {
-    .logo--large {
-        .logoIcon {
-            font-size: 2.5rem;
-        }
-
-        .logoText {
-            font-size: 2.5rem;
-        }
-    }
-}
