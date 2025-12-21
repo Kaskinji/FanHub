@@ -1,7 +1,7 @@
 import type { FC } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import MainHeader from "../../components/Header/Header";
+import Header from "../../components/Header/Header";
 import Logo from "../../components/UI/Logo/Logo";
 import styles from "./MainPage.module.scss";
 import SearchInput from "../../components/UI/SearchInput/SearchInput";
@@ -29,12 +29,12 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
     { id: 6, name: "GTA lovers", description: "" },
   ];
   const MOCK_GAMES: Game[] = [
-    { id: 1, name: "RDR" },
-    { id: 2, name: "The Witcher" },
-    { id: 3, name: "Skyrim" },
-    { id: 4, name: "DAYZ" },
-    { id: 5, name: "Baldurs Gate" },
-    { id: 6, name: "Cyberpunk 2077" },
+    { id: 1, name: "RDR", imageUrl: "" },
+    { id: 2, name: "The Witcher", imageUrl: "" },
+    { id: 3, name: "Skyrim", imageUrl: "" },
+    { id: 4, name: "DAYZ", imageUrl: "" },
+    { id: 5, name: "Baldur's Gate", imageUrl: "" },
+    { id: 6, name: "Cyberpunk 2077", imageUrl: "" },
   ];
 
   const handleSearch = (query: string) => {
@@ -56,17 +56,17 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
 
   return (
     <div className={styles.mainPage}>
-      <MainHeader onSearch={handleSearch} onSignIn={handleSignIn} />
+      <Header onSearch={handleSearch} onSignIn={handleSignIn} />
       <main className={styles.mainContent}>
         <section className={styles.heroSection}>
           <div className={styles.logoWrapper}>
             <Logo size="large" showText={true} className={styles.heroLogo} />
           </div>
-
+          
           <p className={styles.heroSubtitle}>Find your community</p>
           <div className={styles.centerSection}>
             <SearchInput
-              placeholder="Search Fandoms..."
+              placeholder="Search games"
               variant="secondary"
               size="large"
               withIcon={true}
@@ -76,7 +76,7 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
           </div>
         </section>
         <section className={styles.gameSection}>
-          <SectionTitle title="Top Games" />
+          <SectionTitle title="Games" />
           <div className={styles.titleWrapper}></div>
           <div className={styles.gamesGrid}>
             {filteredGames.map((game) => (
@@ -92,7 +92,6 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
               <FandomCard key={fandom.id} {...fandom} />
             ))}
           </div>
-          <ShowMoreButton variant="light" />
         </section>
       </main>
     </div>
