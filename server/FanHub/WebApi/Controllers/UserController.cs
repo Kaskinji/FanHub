@@ -37,24 +37,6 @@ namespace WebApi.Controllers
             return Ok( user );
         }
 
-        [HttpPost( "login" )]
-        public async Task<ActionResult<UserAuthDto>> LoginUser( string login, string password )
-        {
-            UserAuthDto result = await _authService.LoginAsync( login, password );
-
-            Response.Cookies.Append( "token", result.Token.Value );
-
-            return Ok( result );
-        }
-
-        [HttpPost( "register" )]
-        public async Task<ActionResult<UserAuthDto>> RegisterUser( [FromBody] UserCreateDto dto )
-        {
-            UserAuthDto result = await _authService.RegisterUserAsync( dto );
-
-            return Ok( result );
-        }
-
         [Authorize]
         [HttpPut( "{id}" )]
         public async Task<IActionResult> UpdateUser( int id, [FromBody] UserUpdateDto dto )

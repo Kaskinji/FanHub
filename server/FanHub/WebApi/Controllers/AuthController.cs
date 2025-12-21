@@ -1,4 +1,5 @@
-﻿using Application.Dto.UserDto;
+﻿using Application.Dto.AuthDto;
+using Application.Dto.UserDto;
 using Application.Services.Auth;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -20,9 +21,9 @@ namespace WebApi.Controllers
         }
 
         [HttpPost( "login" )]
-        public async Task<ActionResult<int>> LoginUser( string login, string password )
+        public async Task<ActionResult<int>> LoginUser( [FromBody] AuthUserDto authUserDto )
         {
-            UserAuthDto result = await _authService.LoginAsync( login, password );
+            UserAuthResultDto result = await _authService.LoginAsync( authUserDto.Login, authUserDto.Password );
 
             Response.Cookies.Append( _cookieOptions.JwtCookieName, result.Token.Value );
 
@@ -32,7 +33,7 @@ namespace WebApi.Controllers
         [HttpPost( "register" )]
         public async Task<ActionResult<int>> RegisterUser( [FromBody] UserCreateDto dto )
         {
-            UserAuthDto result = await _authService.RegisterUserAsync( dto );
+            UserAuthResultDto result = await _authService.RegisterUserAsync( dto );
 
             Response.Cookies.Append( _cookieOptions.JwtCookieName, result.Token.Value );
 
@@ -42,7 +43,7 @@ namespace WebApi.Controllers
         [HttpGet( "check" )]
         public async Task<ActionResult<bool>> CheckAuthorized()
         {
-            string? token = Request.Cookies[ "token" ];
+            string? token = Request.Cookies[ _cookieOptions.JwtCookieName ];
 
             if ( string.IsNullOrEmpty( token ) )
             {

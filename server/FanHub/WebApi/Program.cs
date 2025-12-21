@@ -37,8 +37,22 @@ public class Program
 
         builder.Services.AddJwtAuthAndSwagger( builder.Configuration );
 
+        builder.Services.AddCors( options =>
+        {
+            options.AddPolicy( "AllowFrontend", policy =>
+            {
+                policy.WithOrigins(
+                    "http://localhost:5173"
+                )
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
+            } );
+        } );
+
         WebApplication app = builder.Build();
 
+        app.UseCors( "AllowFrontend" );
         app.UseCookiePolicy( new CookiePolicyOptions
         {
             MinimumSameSitePolicy = SameSiteMode.Strict,

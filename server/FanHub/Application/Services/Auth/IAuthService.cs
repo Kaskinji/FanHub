@@ -4,8 +4,8 @@ namespace Application.Services.Auth
 {
     public interface IAuthService
     {
-        Task<UserAuthDto> LoginAsync( string login, string password );
-        Task<UserAuthDto> RegisterUserAsync( UserCreateDto dto );
+        Task<UserAuthResultDto> LoginAsync( string login, string password );
+        Task<UserAuthResultDto> RegisterUserAsync( UserCreateDto dto );
         Task<bool> CheckAuthAsync( string token );
     }
 }

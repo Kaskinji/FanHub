@@ -19,21 +19,21 @@ namespace Application.Services.Auth
             _tokenValidator = tokenValidator;
         }
 
-        public async Task<UserAuthDto> RegisterUserAsync( UserCreateDto dto )
+        public async Task<UserAuthResultDto> RegisterUserAsync( UserCreateDto dto )
         {
             int id = await _userService.Create( dto );
 
             UserReadDto user = await _userService.GetById( id );
             Token token = _tokenGenerator.GenerateToken( id, user.Role );
 
-            return new UserAuthDto()
+            return new UserAuthResultDto()
             {
                 UserId = id,
                 Token = token,
             };
         }
 
-        public async Task<UserAuthDto> LoginAsync( string login, string password )
+        public async Task<UserAuthResultDto> LoginAsync( string login, string password )
         {
             int? userId = await _userService.GetUserIdByCredentialsAsync( login, password );
             if ( userId is null )
@@ -45,7 +45,7 @@ namespace Application.Services.Auth
             UserReadDto user = await _userService.GetById( userId.Value );
             Token token = _tokenGenerator.GenerateToken( userId.Value, user.Role );
 
-            return new UserAuthDto()
+            return new UserAuthResultDto()
             {
                 UserId = userId.Value,
                 Token = token,
