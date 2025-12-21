@@ -1,14 +1,7 @@
 .searchForm--head {
     background: rgba(255, 255, 255, 0.15);
 
-    &:focus-within {
-        background: rgba(255, 255, 255, 0.25);
-        border-color: rgba(255, 255, 255, 0.4);
-    }
 
-    &:hover {
-        background: rgba(255, 255, 255, 0.2);
-    }
 }
 
 .searchForm--secondary {
@@ -86,14 +79,6 @@
     border-radius: 50px;
     transition: all 0.3s ease;
     background-color: white;
-    &:focus-within {
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
-    }
-
-    &:hover {
-        border-color: rgba(255, 255, 255, 0.3);
-    }
 }
 
 .searchInput {
@@ -125,6 +110,14 @@
             color: #400a72b3;
         }
     }
+        &:focus-within {
+        background: rgba(255, 255, 255, 0.874);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.916);
+    }
 }
 
 .searchFormDark {
@@ -136,6 +129,14 @@
         &::placeholder {
             color: rgba(255, 255, 255, 0.6);
         }
+    }
+        &:focus-within {
+        background: rgba(255, 255, 255, 0.25);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.2);
     }
 }
 

@@ -1,4 +1,3 @@
-// components/Header/MainHeader.tsx
 import type { FC } from "react";
 import Logo from "../UI/Logo/Logo";
 import Button from "../UI/buttons/Button/Button";
@@ -6,12 +5,12 @@ import SearchInput from "../UI/SearchInput/SearchInput";
 import styles from "../Header/Header.module.scss";
 import { useNavigate } from "react-router-dom";
 
-interface MainHeaderProps {
+interface HeaderProps {
     onSearch: (query: string) => void;
     onSignIn: () => void;
 }
 
-const MainHeader: FC<MainHeaderProps> = ({ onSearch, onSignIn }) => {
+const Header: FC<HeaderProps> = ({ onSearch, onSignIn }) => {
     const navigate = useNavigate();
     return (
         <header className={styles.header}>
@@ -44,4 +43,4 @@ const MainHeader: FC<MainHeaderProps> = ({ onSearch, onSignIn }) => {
     );
 };
 
-export default MainHeader;
+export default Header;

@@ -9,10 +9,7 @@
     font-size: 25px;
     cursor: pointer;
     transition: color 0.2s ease;
-    
-    &:not(:disabled):hover {
-        gap: 12px;
-    }
+    position: relative;
     
     &:disabled {
         opacity: 0.5;
@@ -20,19 +17,25 @@
     }
 
     &__text {
-        font-weight: 700; /* или bold */
-        line-height: 1;
-    }
-    
-    &__arrow {
-        font-weight: 700; /* или bold */
+        font-weight: 700;
         line-height: 1;
         transition: transform 0.3s ease;
     }
     
-    &:not(:disabled):hover &__arrow {
-        transform: translateX(2px);
+    &__arrow {
+        font-weight: 700;
+        line-height: 1;
+        transition: transform 0.3s ease;
+        position: absolute;
+        left: 100%; 
+        margin-left: 8px; 
     }
     
-    // ... остальные стили
+    &:not(:disabled):hover &__arrow {
+        transform: translateX(5px); 
+    }
+    
+    &:not(:disabled):hover &__text {
+       transform: scale(1.02);
+    }
 }
