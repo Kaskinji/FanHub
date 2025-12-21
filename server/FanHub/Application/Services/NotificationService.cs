@@ -1,5 +1,4 @@
-﻿using Application.Dto.EventDto;
-using Application.Dto.NotificationDto;
+﻿using Application.Dto.NotificationDto;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;

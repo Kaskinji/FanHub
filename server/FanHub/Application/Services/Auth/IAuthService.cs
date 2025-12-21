@@ -6,5 +6,6 @@ namespace Application.Services.Auth
     {
         Task<UserAuthDto> LoginAsync( string login, string password );
         Task<UserAuthDto> RegisterUserAsync( UserCreateDto dto );
+        Task<bool> CheckAuthAsync( string token );
     }
 }

@@ -1,7 +1,9 @@
 ﻿using Application.PasswordHasher;
+using Application.Services.Auth;
 using Application.Tools;
 using Domain.Foundations;
 using Domain.Repositories;
+using Infrastructure.Auth;
 using Infrastructure.Foundations;
 using Infrastructure.PasswordHashers;
 using Infrastructure.Repositories;
@@ -24,6 +26,9 @@ namespace Infrastructure
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IImageTools, ImageTools>();
+
+            services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
+            services.AddScoped<ITokenValidator, JwtTokenValidator>();
 
             services.AddScoped<IPasswordHasher, PasswordHasher>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();

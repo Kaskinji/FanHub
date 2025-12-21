@@ -5,16 +5,13 @@ services:
     build:
       context: .
       dockerfile: WebApi/Dockerfile
-    ports:
-      - "8080:5000"
     environment:
-    - ConnectionStrings__DefaultConnection=Server=mssql,1433;Database=FanHubDb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=true;
+      - ConnectionStrings__DefaultConnection=Server=mssql,1433;Database=FanHubDb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=true;
     depends_on:
       - mssql
     restart: unless-stopped
     volumes:
       - ./Infrastructure/Storage:/app/Infrastructure/Storage
-    command: ["sh", "-c", "sleep 30 && dotnet WebApi.dll"]
 
   mssql:
     image: mcr.microsoft.com/mssql/server:2019-latest

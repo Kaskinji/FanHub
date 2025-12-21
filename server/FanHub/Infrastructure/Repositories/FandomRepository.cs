@@ -1,5 +1,4 @@
 ﻿using Domain.Entities;
-using Domain.Enums;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +12,7 @@ namespace Infrastructure.Repositories
 
         public async Task<List<Fandom>> SearchByNameAndGameWithStatsAsync( string searchTerm, int gameId )
         {
-            var query = _entities
+            IQueryable<Fandom> query = _entities
                 .Include( f => f.Subscriptions )
                 .Include( f => f.Game )
                 .Where( f => f.GameId == gameId );
@@ -67,6 +66,7 @@ namespace Infrastructure.Repositories
                 .Take( limit )
                 .ToListAsync();
         }
+
         public async Task<List<Fandom>> GetPopularByGameAsync( int gameId, int limit = 20 )
         {
             return await _entities

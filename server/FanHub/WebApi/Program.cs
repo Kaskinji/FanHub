@@ -6,6 +6,8 @@ using Serilog;
 using Serilog.Events;
 using WebApi.Bindings;
 using WebApi.Extensions;
+using WebApi.Options;
+using HttpOnlyPolicy = Microsoft.AspNetCore.CookiePolicy.HttpOnlyPolicy;
 
 public class Program
 {
@@ -31,9 +33,18 @@ public class Program
 
         builder.Services.Configure<JwtOptions>( builder.Configuration.GetSection( "JwtOptions" ) );
         builder.Services.Configure<FileToolsOptions>( builder.Configuration.GetSection( "FileToolsOptions" ) );
+        builder.Services.Configure<AuthCookieOptions>( builder.Configuration.GetSection( "AuthCookieOptions" ) );
+
         builder.Services.AddJwtAuthAndSwagger( builder.Configuration );
 
         WebApplication app = builder.Build();
+
+        app.UseCookiePolicy( new CookiePolicyOptions
+        {
+            MinimumSameSitePolicy = SameSiteMode.Strict,
+            HttpOnly = HttpOnlyPolicy.Always,
+            Secure = CookieSecurePolicy.None,
+        } );
 
         if ( app.Environment.IsDevelopment() )
         {

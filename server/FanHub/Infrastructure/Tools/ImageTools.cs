@@ -25,7 +25,6 @@ namespace Infrastructure.Tools
                     Directory.CreateDirectory( folderPath );
                 }
 
-                logger.LogInformation( "FOLDER PATH = = = = = = = = = = = {folderPath}", filePath );
                 using ( FileStream stream = new FileStream( filePath, FileMode.Create ) )
                 {
                     await file.OpenReadStream().CopyToAsync( stream );

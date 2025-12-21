@@ -1,27 +1,22 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Application.Dto.UserDto;
-using Application.Options;
+﻿using Application.Dto.UserDto;
 using Application.Services.Interfaces;
-using Domain.Enums;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Application.Services.Auth
 {
     public class AuthService : IAuthService
     {
-        private IOptions<JwtOptions> _options;
         private IUserService _userService;
         private ILogger<AuthService> _logger;
+        private ITokenGenerator _tokenGenerator;
+        private ITokenValidator _tokenValidator;
 
-        public AuthService( IOptions<JwtOptions> options, IUserService userService, ILogger<AuthService> logger )
+        public AuthService( ITokenGenerator generator, IUserService userService, ILogger<AuthService> logger, ITokenValidator tokenValidator )
         {
-            _options = options;
             _userService = userService;
+            _tokenGenerator = generator;
             _logger = logger;
+            _tokenValidator = tokenValidator;
         }
 
         public async Task<UserAuthDto> RegisterUserAsync( UserCreateDto dto )
@@ -29,7 +24,7 @@ namespace Application.Services.Auth
             int id = await _userService.Create( dto );
 
             UserReadDto user = await _userService.GetById( id );
-            Token token = GenerateToken( id, user.Role );
+            Token token = _tokenGenerator.GenerateToken( id, user.Role );
 
             return new UserAuthDto()
             {
@@ -48,7 +43,7 @@ namespace Application.Services.Auth
             }
 
             UserReadDto user = await _userService.GetById( userId.Value );
-            Token token = GenerateToken( userId.Value, user.Role );
+            Token token = _tokenGenerator.GenerateToken( userId.Value, user.Role );
 
             return new UserAuthDto()
             {
@@ -57,26 +52,9 @@ namespace Application.Services.Auth
             };
         }
 
-        private Token GenerateToken( int userId, UserRole role )
+        public async Task<bool> CheckAuthAsync( string token )
         {
-            List<Claim> claims = new List<Claim>()
-            {
-                new Claim( nameof(userId), userId.ToString() ),
-                new Claim( ClaimTypes.Role, role.ToString() )
-            };
-
-            SigningCredentials signingCredentials = new SigningCredentials(
-               new SymmetricSecurityKey( Encoding.UTF8.GetBytes( _options.Value.Secret ) ), SecurityAlgorithms.HmacSha256 );
-
-            DateTime expireDate = DateTime.UtcNow.AddMinutes( _options.Value.TokenValidityInMinutes );
-            JwtSecurityToken token = new JwtSecurityToken(
-                signingCredentials: signingCredentials,
-                expires: expireDate,
-                claims: claims
-                );
-            string tokenString = new JwtSecurityTokenHandler().WriteToken( token );
-
-            return new Token( tokenString, expireDate );
+            return await _tokenValidator.ValidateTokenAsync( token );
         }
     }
 }

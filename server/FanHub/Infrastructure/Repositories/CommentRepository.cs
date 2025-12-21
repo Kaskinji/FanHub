@@ -1,6 +1,4 @@
-﻿using Application.Dto.CommentDto;
-using System.Xml.Linq;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 

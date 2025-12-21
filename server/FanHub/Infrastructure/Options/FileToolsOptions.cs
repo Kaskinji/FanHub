@@ -2,6 +2,6 @@
 {
     public class FileToolsOptions
     {
-        public string StorageUrl { get; init; }
+        public string StorageUrl { get; init; } = null!;
     }
 }

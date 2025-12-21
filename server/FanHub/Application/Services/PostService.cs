@@ -41,19 +41,23 @@ namespace Application.Services
         public async Task<List<PostReadDto>> SearchByCategoryNameAsync( string categoryName )
         {
             List<Post> posts = await _postRepository.FindByCategoryNameAsync( categoryName );
+
             return _mapper.Map<List<PostReadDto>>( posts );
         }
 
         public async Task<List<PostReadDto>> SearchByCategoryIdAsync( int categoryId )
         {
             List<Post> posts = await _postRepository.GetAllByCategoryId( categoryId );
+
             return _mapper.Map<List<PostReadDto>>( posts );
         }
 
         public async Task<List<PostReadDto>> SearchByCategoryAsync( string? categoryName = null, int? categoryId = null )
         {
             if ( !categoryId.HasValue && string.IsNullOrWhiteSpace( categoryName ) )
+            {
                 return new List<PostReadDto>();
+            }
 
             List<Post> posts;
 

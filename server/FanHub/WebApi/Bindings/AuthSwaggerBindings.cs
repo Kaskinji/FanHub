@@ -2,8 +2,10 @@
 using System.Text;
 using Domain.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using WebApi.Options;
 
 namespace WebApi.Bindings
 {
@@ -11,8 +13,10 @@ namespace WebApi.Bindings
     {
         public static IServiceCollection AddJwtAuthAndSwagger( this IServiceCollection services, IConfiguration configuration )
         {
+            AuthCookieOptions? cookieOptions = configuration.GetSection( "AuthCookieOptions" ).Get<AuthCookieOptions>();
+
             services.AddAuthentication( JwtBearerDefaults.AuthenticationScheme )
-                .AddJwtBearer( options =>
+                .AddJwtBearer( ( options ) =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
@@ -23,6 +27,15 @@ namespace WebApi.Bindings
                         ValidateAudience = false,
                         ValidateLifetime = true,
                         RoleClaimType = ClaimTypes.Role,
+                    };
+                    options.Events = new JwtBearerEvents()
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            context.Token = context.Request.Cookies[ cookieOptions!.JwtCookieName ];
+
+                            return Task.CompletedTask;
+                        }
                     };
                 } );
 
@@ -61,6 +74,7 @@ namespace WebApi.Bindings
                         Array.Empty<string>()
                     }
                 } );
+
             } );
 
             return services;

@@ -42,6 +42,8 @@ namespace WebApi.Controllers
         {
             UserAuthDto result = await _authService.LoginAsync( login, password );
 
+            Response.Cookies.Append( "token", result.Token.Value );
+
             return Ok( result );
         }
 

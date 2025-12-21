@@ -1,5 +1,4 @@
-﻿using Application.Dto.CategoryDto;
-using Application.Dto.CommentDto;
+﻿using Application.Dto.CommentDto;
 using AutoMapper;
 using Domain.Entities;
 
