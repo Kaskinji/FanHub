@@ -2,8 +2,6 @@ import Header from "../../components/Header/Header";
 import ShowMoreButton from "../../components/UI/buttons/ShowMoreButton/ShowMoreButton";
 import SearchInput from "../../components/UI/SearchInput/SearchInput";
 import SectionTitle from "../../components/UI/SectionTitle/SectionTitle";
-import { GamePageProvider } from "../../context/GamePageProvider";
-import { useGamePage } from "../../hooks/useGamePage";
 import styles from "./GamePage.module.scss";
 import { TitleCard } from "../../components/TitleCard/TitleCard";
 
@@ -41,23 +39,25 @@ const gameData = {
 
 export default function GamePage() {
   return (
-    <GamePageProvider gameData={gameData}>
-      <div className={styles.page}>
-        <Header onSearch={() => {}} onSignIn={() => {}} />
-        <Content />
-      </div>
-    </GamePageProvider>
+    <div className={styles.page}>
+      <Header onSearch={() => {}} onSignIn={() => {}} />
+      <Content game={gameData} />
+    </div>
   );
 }
 
 /* ================= CONTENT ================= */
 
-function Content() {
+interface ContentProps {
+  game: typeof gameData;
+}
+
+function Content({ game }: ContentProps) {
   return (
     <main className={styles.content}>
-      <GameCard />
+      <GameCard game={game} />
       <SectionTitle title="Fandoms" />
-      <Fandoms />
+      <Fandoms fandoms={game.fandoms} />
       <ShowMoreButton variant="light" />
     </main>
   );
@@ -65,8 +65,11 @@ function Content() {
 
 /* ================= GAME CARD ================= */
 
-function GameCard() {
-  const { game } = useGamePage();
+interface GameCardProps {
+  game: typeof gameData;
+}
+
+function GameCard({ game }: GameCardProps) {
   return (
     <section className={styles.gameCard}>
       <div className={styles.gameLeft}>
@@ -94,14 +97,16 @@ function GameCard() {
           </div>
         </div>
       </div>
-      <GameRight />
+      <GameRight game={game} />
     </section>
   );
 }
 
-function GameRight() {
-  const { game } = useGamePage();
+interface GameRightProps {
+  game: typeof gameData;
+}
 
+function GameRight({ game }: GameRightProps) {
   return (
     <div className={styles.gameRight}>
       <SearchInput withIcon={true} onSearch={() => {}} />
@@ -128,14 +133,15 @@ function GameRight() {
   );
 }
 
-/* ================= FANDOMS ================= */
 
-function Fandoms() {
-  const { game } = useGamePage();
+interface FandomsProps {
+  fandoms: typeof gameData.fandoms;
+}
 
+function Fandoms({ fandoms }: FandomsProps) {
   return (
     <section className={styles.fandoms}>
-      {game.fandoms.map((fandom) => (
+      {fandoms.map((fandom) => (
         <FandomCard
           key={fandom.id}
           title={fandom.title}

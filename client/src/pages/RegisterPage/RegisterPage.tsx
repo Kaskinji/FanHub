@@ -1,8 +1,8 @@
 import type { FC } from "react";
 import { useNavigate } from "react-router-dom";
-import RegisterForm from "../../../components/AuthForm/RegisterForm/RegisterForm";
-import type { RegisterFormData } from "../../../types/RegisterFormData";
-import styles from "../register/Register.module.scss";
+import RegisterForm from "../../components/AuthForm/RegisterForm/RegisterForm";
+import type { RegisterFormData } from "../../types/RegisterFormData";
+import styles from "./RegisterPage.module.scss";
 
 const RegisterPage: FC = () => {
   const navigate = useNavigate();
