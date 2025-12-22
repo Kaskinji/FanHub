@@ -1,6 +1,7 @@
 ﻿using Application.Dto.UserDto;
 using Application.Services.Auth;
 using Application.Services.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,11 +13,13 @@ namespace WebApi.Controllers
     {
         private IUserService _userService;
         private IAuthService _authService;
+        private IMapper _mapper;
 
-        public UserController( IAuthService authService, IUserService UserService )
+        public UserController( IAuthService authService, IUserService UserService, IMapper mapper )
         {
             _authService = authService;
             _userService = UserService;
+            _mapper = mapper;
         }
 
         [Authorize( Policy = "AdminOnly" )]
@@ -30,11 +33,11 @@ namespace WebApi.Controllers
 
         [Authorize]
         [HttpGet( "{id}" )]
-        public async Task<ActionResult<UserReadDto>> GetUserById( int id )
+        public async Task<ActionResult<UserSafeReadDto>> GetUserById( int id )
         {
             UserReadDto user = await _userService.GetById( id );
 
-            return Ok( user );
+            return Ok( _mapper.Map<UserSafeReadDto>( user ) );
         }
 
         [Authorize]

@@ -1,4 +1,5 @@
 ﻿using Application;
+using Application.Mapping;
 using Application.Options;
 using FanHub.Middlewares;
 using Infrastructure;
@@ -6,6 +7,7 @@ using Serilog;
 using Serilog.Events;
 using WebApi.Bindings;
 using WebApi.Extensions;
+using WebApi.Mapping;
 using WebApi.Options;
 using HttpOnlyPolicy = Microsoft.AspNetCore.CookiePolicy.HttpOnlyPolicy;
 
@@ -34,6 +36,8 @@ public class Program
         builder.Services.Configure<JwtOptions>( builder.Configuration.GetSection( "JwtOptions" ) );
         builder.Services.Configure<FileToolsOptions>( builder.Configuration.GetSection( "FileToolsOptions" ) );
         builder.Services.Configure<AuthCookieOptions>( builder.Configuration.GetSection( "AuthCookieOptions" ) );
+
+        builder.Services.AddAutoMapper( typeof( WebApi.Mapping.UserProfile ).Assembly );
 
         builder.Services.AddJwtAuthAndSwagger( builder.Configuration );
 

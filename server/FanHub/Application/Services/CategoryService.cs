@@ -12,6 +12,7 @@ namespace Application.Services
     public class CategoryService : BaseService<Category, CategoryCreateDto, CategoryReadDto, CategoryUpdateDto>, ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
+
         public CategoryService( ICategoryRepository repository, IMapper mapper, IValidator<Category> validator, ILogger<CategoryService> logger, IUnitOfWork unitOfWork )
         : base( repository, mapper, validator, logger, unitOfWork )
         {

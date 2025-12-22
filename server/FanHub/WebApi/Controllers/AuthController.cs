@@ -1,4 +1,5 @@
-﻿using Application.Dto.AuthDto;
+﻿using System.Threading.Tasks.Dataflow;
+using Application.Dto.AuthDto;
 using Application.Dto.UserDto;
 using Application.Services.Auth;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +14,21 @@ namespace WebApi.Controllers
     {
         private IAuthService _authService;
         private AuthCookieOptions _cookieOptions;
+        private CookieOptions _options;
 
         public AuthController( IAuthService authService, IOptions<AuthCookieOptions> cookieOptions )
         {
             _authService = authService;
             _cookieOptions = cookieOptions.Value;
+            _options = new CookieOptions
+            {
+                HttpOnly = _cookieOptions.HttpOnly,
+                Secure = _cookieOptions.Secure,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTimeOffset.UtcNow.AddDays( _cookieOptions.ExpireDays ),
+                Path = "/",
+                Domain = "localhost"
+            };
         }
 
         [HttpPost( "login" )]
@@ -25,9 +36,17 @@ namespace WebApi.Controllers
         {
             UserAuthResultDto result = await _authService.LoginAsync( authUserDto.Login, authUserDto.Password );
 
-            Response.Cookies.Append( _cookieOptions.JwtCookieName, result.Token.Value );
+            Response.Cookies.Append( _cookieOptions.JwtCookieName, result.Token.Value, _options );
 
             return Ok( result.UserId );
+        }
+
+        [HttpPost( "logout" )]
+        public IActionResult LogoutUser( [FromBody] UserCreateDto dto )
+        {
+            Response.Cookies.Delete( _cookieOptions.JwtCookieName, _options );
+
+            return Ok();
         }
 
         [HttpPost( "register" )]
@@ -35,7 +54,7 @@ namespace WebApi.Controllers
         {
             UserAuthResultDto result = await _authService.RegisterUserAsync( dto );
 
-            Response.Cookies.Append( _cookieOptions.JwtCookieName, result.Token.Value );
+            Response.Cookies.Append( _cookieOptions.JwtCookieName, result.Token.Value, _options );
 
             return Ok( result.UserId );
         }
