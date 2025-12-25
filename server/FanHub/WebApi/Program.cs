@@ -1,5 +1,4 @@
 ﻿using Application;
-using Application.Mapping;
 using Application.Options;
 using FanHub.Middlewares;
 using Infrastructure;
@@ -7,7 +6,6 @@ using Serilog;
 using Serilog.Events;
 using WebApi.Bindings;
 using WebApi.Extensions;
-using WebApi.Mapping;
 using WebApi.Options;
 using HttpOnlyPolicy = Microsoft.AspNetCore.CookiePolicy.HttpOnlyPolicy;
 

@@ -35,8 +35,6 @@ namespace Application
             services.AddValidatorsFromAssemblyContaining<NotificationValidator>();
             services.AddValidatorsFromAssemblyContaining<ReactionValidator>();
             services.AddValidatorsFromAssemblyContaining<SubscriptionValidator>();
-            services.AddValidatorsFromAssemblyContaining<UrlValidator>();
-
 
             services.AddAutoMapper( typeof( CategoryProfile ).Assembly );
             services.AddAutoMapper( typeof( FandomProfile ).Assembly );

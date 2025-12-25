@@ -22,13 +22,12 @@ namespace Domain.Validators
                 .Matches( "^[a-zA-Z0-9_]+$" ).WithMessage( "Логин может содержать только буквы, цифры и подчеркивания" );
 
             RuleFor( x => x.PasswordHash )
-                .NotEmpty().WithMessage( "Пароль обязателен" );// убрал, потому что у нас хэш а не пароль
+                .NotEmpty().WithMessage( "Пароль обязателен" );
 
             RuleFor( x => x.Avatar )
                 .MaximumLength( 1000 ).WithMessage( "URL аватара не может превышать 1000 символов" )
-                .Must( UrlValidator.ValidateImageUrl ).WithMessage( "Некорректный URL аватара" )
+                .MinimumLength( 10 )
                 .Unless( x => x.Avatar is null );
-            //можно оставить проверку даты регистрации, но не надо сравнивать с датой которая сейчас
         }
     }
 }

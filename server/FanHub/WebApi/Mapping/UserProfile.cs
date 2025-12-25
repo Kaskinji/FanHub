@@ -1,6 +1,5 @@
 ﻿using Application.Dto.UserDto;
 using AutoMapper;
-using Domain.Entities;
 
 namespace WebApi.Mapping
 {

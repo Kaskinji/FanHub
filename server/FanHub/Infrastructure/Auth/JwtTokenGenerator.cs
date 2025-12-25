@@ -22,7 +22,7 @@ namespace Infrastructure.Auth
         {
             List<Claim> claims = new List<Claim>()
             {
-                new Claim( nameof(userId), userId.ToString() ),
+                new Claim( ClaimTypes.NameIdentifier, userId.ToString() ),
                 new Claim( ClaimTypes.Role, role.ToString() )
             };
 

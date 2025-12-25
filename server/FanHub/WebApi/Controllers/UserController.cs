@@ -1,9 +1,12 @@
-﻿using Application.Dto.UserDto;
+﻿using System.Security.Claims;
+using Application.Dto.UserDto;
 using Application.Services.Auth;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using WebApi.Options;
 
 namespace WebApi.Controllers
 {
@@ -12,12 +15,10 @@ namespace WebApi.Controllers
     public class UserController : ControllerBase
     {
         private IUserService _userService;
-        private IAuthService _authService;
         private IMapper _mapper;
 
         public UserController( IAuthService authService, IUserService UserService, IMapper mapper )
         {
-            _authService = authService;
             _userService = UserService;
             _mapper = mapper;
         }
@@ -38,6 +39,18 @@ namespace WebApi.Controllers
             UserReadDto user = await _userService.GetById( id );
 
             return Ok( _mapper.Map<UserSafeReadDto>( user ) );
+        }
+
+        [Authorize]
+        [HttpGet( "current" )]
+        public async Task<ActionResult<UserReadDto>> GetCurrentUser()
+        {
+            Claim? userClaim = User.FindFirst( ClaimTypes.NameIdentifier );
+            int id = int.Parse( userClaim!.Value );
+
+            UserReadDto user = await _userService.GetById( id );
+
+            return Ok( user );
         }
 
         [Authorize]

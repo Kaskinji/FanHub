@@ -1,6 +1,4 @@
-﻿using Domain.Enums;
-
-namespace Application.Dto.UserDto
+﻿namespace Application.Dto.UserDto
 {
     public class UserSafeReadDto
     {

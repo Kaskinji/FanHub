@@ -4,6 +4,7 @@ using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
+using Domain.Extensions;
 using Domain.Foundations;
 using Domain.Repositories;
 using FluentValidation;
@@ -36,6 +37,29 @@ namespace Application.Services
 
             return user.Id;
         }
+        public override async Task Update( int id, UserUpdateDto dto )
+        {
+            User entity = await _repository.GetByIdAsyncThrow( id );
+
+            _mapper.Map( dto, entity );
+
+            if ( dto.Password is not null )
+            {
+                entity.PasswordHash = _hasher.Hash( dto.Password );
+            }
+
+            await CheckUnique( entity );
+
+            await ExistEntities( entity );
+
+            await _validator.ValidateAndThrowAsync( entity );
+
+            _logger.LogTrace( $"User with id '{id}' was updated." );
+
+            _repository.Update( entity );
+
+            await _unitOfWork.CommitAsync();
+        }
 
         protected override User InitializeEntity( UserCreateDto dto )
         {
@@ -52,15 +76,15 @@ namespace Application.Services
             User? existing = await _repository.FindAsync( u =>
                 u.Login == entity.Login );
 
-            if ( existing is not null )
+            if ( existing is not null && existing.Id != entity.Id )
             {
                 throw new ArgumentException( "Пользователь с таким логином уже существует" );
             }
 
-            User? existingUser = await _repository.FindAsync( u =>
+            existing = await _repository.FindAsync( u =>
                 u.Username == entity.Username );
 
-            if ( existingUser is not null )
+            if ( existing is not null && existing.Id != entity.Id )
             {
                 throw new ArgumentException( "Пользователь с таким именем уже существует" );
             }

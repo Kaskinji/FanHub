@@ -1,4 +1,4 @@
-﻿using Application.Dto.EventDto;
+﻿    using Application.Dto.EventDto;
 using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
