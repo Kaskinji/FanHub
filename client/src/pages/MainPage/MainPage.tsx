@@ -7,7 +7,7 @@ import styles from "./MainPage.module.scss";
 import SearchInput from "../../components/UI/SearchInput/SearchInput";
 import type { Fandom } from "../../types/Fandom";
 import type { Game } from "../../types/Game";
-import GameCard from "./GameCard/GameCard";
+import GameCard from "../MainPage/GameCard/GameCard";
 import FandomCard from "./FandomCard/FandomCard";
 import SectionTitle from "../../components/UI/SectionTitle/SectionTitle";
 import ShowMoreButton from "../../components/UI/buttons/ShowMoreButton/ShowMoreButton";
@@ -54,6 +54,11 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
     fandom.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const handleShowMore = () => {
+    // Переход на страницу всех фандомов с передачей ID игры
+    navigate(`/allgames?game`);
+  };
+
   return (
     <div className={styles.mainPage}>
       <Header onSearch={handleSearch} onSignIn={handleSignIn} />
@@ -83,7 +88,10 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
               <GameCard key={game.id} {...game} />
             ))}
           </div>
-          <ShowMoreButton variant="light" />
+          <ShowMoreButton 
+            variant="light" 
+            onClick={handleShowMore} // Добавляем обработчик
+          />
         </section>
         <section className={styles.fandomsSection}>
           <SectionTitle title="Top Fandoms" />

@@ -6,6 +6,7 @@ import { GamePageProvider } from "../../context/GamePageProvider";
 import { useGamePage } from "../../hooks/useGamePage";
 import styles from "./GamePage.module.scss";
 import { TitleCard } from "../../components/TitleCard/TitleCard";
+import { useNavigate } from "react-router-dom";
 
 const gameData = {
   id: 1,
@@ -53,12 +54,22 @@ export default function GamePage() {
 /* ================= CONTENT ================= */
 
 function Content() {
+  const navigate = useNavigate(); // Хук для навигации
+  const { game } = useGamePage();
+
+  const handleShowMore = () => {
+    // Переход на страницу всех фандомов с передачей ID игры
+    navigate(`/allfandoms?game=${game.id}`);
+  };
   return (
     <main className={styles.content}>
       <GameCard />
       <SectionTitle title="Fandoms" />
       <Fandoms />
-      <ShowMoreButton variant="light" />
+     <ShowMoreButton 
+        variant="light" 
+        onClick={handleShowMore} // Добавляем обработчик
+      />
     </main>
   );
 }
