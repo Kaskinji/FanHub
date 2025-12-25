@@ -30,7 +30,7 @@ namespace Infrastructure.Tools
                     await file.OpenReadStream().CopyToAsync( stream );
                 }
 
-                return fileName;
+                return $"/images/{fileName}";
             }
             catch ( Exception ex )
             {
@@ -46,18 +46,17 @@ namespace Infrastructure.Tools
                 throw new ArgumentException( "Image name is empty." );
             }
 
+            string fileName = Path.GetFileName( imageName );
+
             string folderPath = Path.GetFullPath( fileToolsOptions.Value.StorageUrl );
-            string filePath = Path.Combine( folderPath, imageName );
+            string filePath = Path.Combine( folderPath, fileName );
 
             if ( File.Exists( filePath ) )
             {
-                byte[] imageBytes = File.ReadAllBytes( filePath );
-                return imageBytes;
+                return File.ReadAllBytes( filePath );
             }
-            else
-            {
-                throw new KeyNotFoundException( "Image is not found." );
-            }
+
+            throw new KeyNotFoundException( $"Image '{fileName}' not found." );
         }
 
         public void DeleteImage( string imageName )
@@ -67,9 +66,10 @@ namespace Infrastructure.Tools
                 throw new ArgumentException( "Image name is empty." );
             }
 
-            string currentDirectory = Directory.GetCurrentDirectory();
-            string folderPath = Path.Combine( currentDirectory, fileToolsOptions.Value.StorageUrl );
-            string filePath = Path.Combine( folderPath, imageName );
+            string fileName = Path.GetFileName( imageName );
+
+            string folderPath = Path.GetFullPath( fileToolsOptions.Value.StorageUrl );
+            string filePath = Path.Combine( folderPath, fileName );
 
             if ( File.Exists( filePath ) )
             {
@@ -77,7 +77,7 @@ namespace Infrastructure.Tools
             }
             else
             {
-                throw new KeyNotFoundException( "Image is not found." );
+                throw new KeyNotFoundException( $"Image '{fileName}' not found." );
             }
         }
     }

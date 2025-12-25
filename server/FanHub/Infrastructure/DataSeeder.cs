@@ -34,7 +34,6 @@ namespace Infrastructure
                     PasswordHash = _passwordHasher.Hash( "admin123" ),
                     Role = UserRole.Admin,
                     RegistrationDate = DateTime.UtcNow,
-                    Avatar = "7e45239d-4ad9-43c2-8b96-e24c4ac3fa32.jpg"
                 };
 
                 _context.Users.Add( adminUser );

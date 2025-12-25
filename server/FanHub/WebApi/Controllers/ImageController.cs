@@ -28,15 +28,6 @@ namespace WebApi.Controllers
             return Ok( result );
         }
 
-        [HttpGet( "{fileName}" )]
-        public ActionResult<byte[]> GetImage(
-            [FromRoute] string fileName )
-        {
-            byte[] result = _imageHelperTools.GetImage( fileName );
-
-            return File( result, "image/jpeg" );
-        }
-
         [Authorize]
         [HttpDelete( "{fileName}" )]
         public IActionResult DeleteImage(

@@ -54,6 +54,32 @@ public class Program
 
         WebApplication app = builder.Build();
 
+        app.UseStaticFiles( new StaticFileOptions
+        {
+            OnPrepareResponse = ctx =>
+            {
+                string path = ctx.File.Name;
+
+                if ( path.EndsWith( ".jpg" ) ||
+                    path.EndsWith( ".jpeg" ) ||
+                    path.EndsWith( ".png" ) ||
+                    path.EndsWith( ".webp" ) ||
+                    path.EndsWith( ".gif" ) )
+                {
+                    if ( path.Contains( "_v" ) || path.Contains( "?v=" ) )
+                    {
+                        ctx.Context.Response.Headers.CacheControl =
+                            "public, max-age=31536000, immutable";
+                    }
+                    else
+                    {
+                        ctx.Context.Response.Headers.CacheControl =
+                            "public, max-age=31536000";
+                    }
+                }
+            }
+        } );
+
         app.UseCors( "AllowFrontend" );
         app.UseCookiePolicy( new CookiePolicyOptions
         {
