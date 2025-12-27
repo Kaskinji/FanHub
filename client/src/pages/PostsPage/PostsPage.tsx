@@ -92,8 +92,8 @@ export default function PostsPage() {
       
       <main className={styles.content}>
         <div className={styles.header}>
-          <h1 className={styles.title}>Посты сообщества</h1>
-          <button className={styles.createButton}>Создать пост</button>
+          <h1 className={styles.title}>Community Posts</h1>
+          <button className={styles.createButton}>Create a post</button>
         </div>
         
         <div className={styles.postsGrid}>
