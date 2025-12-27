@@ -7,7 +7,7 @@ import Button from "../../UI/buttons/Button/Button";
 import styles from "../LoginForm/LoginForm.module.scss";
 import Logo from "../../UI/Logo/Logo";
 import type { LoginFormData } from "../../../types/LoginFormData";
-import { API_CONFIG } from "../../../config/apiConfig";
+import { authApi } from "../../../api/AuthApi";
 
 interface LoginFormProps {
   onLogin?: (data: LoginFormData, userId: number) => void;
@@ -33,31 +33,16 @@ const LoginForm: FC<LoginFormProps> = ({
 
     try {
       // Отправляем запрос на сервер
-      const response = await axios.post<number>(
-        `${API_CONFIG.BASE_URL + "/auth/login"}`, // Убедитесь, что путь соответствует вашему API
-        {
-          login: data.login,
-          password: data.password
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          withCredentials: true
-        }
-      );
-
-      if (response.status === 200) {
-        const userId = response.data;
-        
-        console.log("Login successful. User ID:", userId);
-        localStorage.setItem("user_id", userId.toString());
+      const response = await authApi.login({login: data.login, password: data.password});
+      
+        console.log("Login successful. User ID:", response);
+        localStorage.setItem("user_id", response.toString());
         if (onLogin) {
-          await onLogin(data, userId);
+          await onLogin(data, response);
         }
         
         navigate("/main");
-      }
+      
 
     } catch (error) {
       // Обработка ошибок
@@ -200,7 +185,7 @@ const LoginForm: FC<LoginFormProps> = ({
         <div className={styles.footer}>
           <span className={styles.footerText}>
             Don't you have an account?{" "}
-            <Link to="/Registration" className={styles.link}>
+            <Link to="/registration" className={styles.link}>
               Join to us
             </Link>
           </span>

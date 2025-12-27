@@ -1,0 +1,93 @@
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 50%;
+  font-weight: bold;
+  user-select: none;
+  
+  &.clickable {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
+
+// Размеры с пропорциональными шрифтами
+.small {
+  width: 32px;
+  height: 32px;
+  font-size: 14px; // Примерно 44% от ширины
+}
+
+.medium {
+  width: 48px;
+  height: 48px;
+  font-size: 20px; // Примерно 42% от ширины
+}
+
+.large {
+  width: 150px;
+  height: 150px;
+  font-size: 64px; // Примерно 43% от ширины
+}
+
+.xlarge {
+  width: 200px;
+  height: 200px;
+  font-size: 86px; // Примерно 43% от ширины
+}
+
+// Альтернативный подход с относительными единицами
+.relativeSmall {
+  width: 2rem; // 32px при базовом 16px
+  height: 2rem;
+  font-size: 0.875rem; // 14px
+}
+
+.relativeMedium {
+  width: 3rem; // 48px
+  height: 3rem;
+  font-size: 1.25rem; // 20px
+}
+
+.relativeLarge {
+  width: 9.375rem; // 150px
+  height: 9.375rem;
+  font-size: 4rem; // 64px
+}
+
+.relativeXlarge {
+  width: 12.5rem; // 200px
+  height: 12.5rem;
+  font-size: 5.375rem; // 86px
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #741ec5;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Baloo 2";
+  // Автоматическое масштабирование текста под размер контейнера
+  &::after {
+    content: attr(data-initial);
+    font-size: inherit; // Наследуем размер шрифта от .avatar
+    font-weight: inherit;
+  }
+}

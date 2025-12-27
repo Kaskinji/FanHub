@@ -8,12 +8,12 @@ import type {
   AuthContextType 
 } from '../../types/AuthTypes';
 import { authApi } from '../../api/AuthApi';
+import { userApi } from '../../api/UserApi';
 
 interface AuthProviderProps {
   children: React.ReactNode;
 }
 
-// Тип для ошибки в провайдере
 interface ProviderAuthError extends Error {
   message: string;
   code?: string;
@@ -24,13 +24,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   children 
 }) => {
   const [state, setState] = useState<AuthState>({
-    user: null,
+    user: undefined,
     isAuthenticated: false,
     isLoading: true,
-    error: null,
+    error: undefined,
   });
 
-  // Вспомогательная функция для создания ошибки
   const createAuthError = (message: string, originalError?: unknown): ProviderAuthError => {
     const error: ProviderAuthError = new Error(message);
     
@@ -41,17 +40,31 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     return error;
   };
 
-  // Преобразование ID пользователя в объект User
-  const createUserFromId = useCallback((userId: number): User => {
-    // Пробуем получить сохраненное имя из localStorage
-    const savedName = localStorage.getItem(`user_name_${userId}`);
-    
-    return {
-      id: userId.toString(),
-      name: savedName || `User ${userId}`,
-      email: '',
-      role: 'user' as const,
-    };
+  // Функция для получения пользователя по ID
+  const fetchUserById = useCallback(async (userId: number): Promise<User | null> => {
+    try {
+      const userData = await userApi.getCurrentUser();
+      
+      if (!userData) {
+        return null;
+      }
+
+      // Преобразуем UserReadDto в User (адаптируем под ваш тип User)
+      const user: User = {
+        id: userData.id.toString(),
+        login: userData.login, // или userData.email, если есть
+        name: userData.username,
+        role: userData.role,
+        avatar: userData.avatar,
+        registrationDate: userData.registrationDate
+        // Добавьте другие поля при необходимости
+      };
+      
+      return user;
+    } catch (error) {
+      console.error(`Failed to fetch user ${userId}:`, error);
+      return null;
+    }
   }, []);
 
   // Проверка аутентификации при загрузке
@@ -59,20 +72,31 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     const checkAuth = async () => {
       try {
         const { isAuthenticated, userId } = await authApi.checkAuth();
-        console.log(isAuthenticated, userId);
+        
         if (isAuthenticated && userId) {
-          console.log("aasdf");
-          const user = createUserFromId(userId);
-          setState(prev => ({ 
-            ...prev, 
-            user, 
-            isAuthenticated: true, 
-            isLoading: false 
-          }));
+          // Получаем данные пользователя
+          const user = await fetchUserById(userId);
+          
+          if (user) {
+            setState(prev => ({ 
+              ...prev, 
+              user, 
+              isAuthenticated: true, 
+              isLoading: false 
+            }));
+          } else {
+            // Пользователь не найден, сбрасываем аутентификацию
+            setState(prev => ({ 
+              ...prev, 
+              user: undefined, 
+              isAuthenticated: false, 
+              isLoading: false 
+            }));
+          }
         } else {
           setState(prev => ({ 
             ...prev, 
-            user: null, 
+            user: undefined, 
             isAuthenticated: false, 
             isLoading: false 
           }));
@@ -81,7 +105,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
         console.error('Auth check failed:', error);
         setState(prev => ({ 
           ...prev, 
-          user: null, 
+          user: undefined, 
           isAuthenticated: false, 
           isLoading: false 
         }));
@@ -89,18 +113,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     };
 
     checkAuth();
-  }, [createUserFromId]);
+  }, [fetchUserById]);
 
   // Вход
   const login = useCallback(async (credentials: LoginCredentials): Promise<void> => {
-    setState(prev => ({ ...prev, isLoading: true, error: null }));
+    setState(prev => ({ ...prev, isLoading: true, error: undefined }));
     
     try {
       const userId = await authApi.login(credentials);
       
-      localStorage.setItem('user_id', userId.toString());
+      // Получаем данные пользователя после успешного входа
+      const user = await fetchUserById(userId);
       
-      const user = createUserFromId(userId);
+      if (!user) {
+        throw new Error('Failed to load user data after login');
+      }
+      
+      localStorage.setItem('user_id', userId.toString());
       
       setState(prev => ({ 
         ...prev, 
@@ -122,7 +151,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
       
       throw authError;
     }
-  }, [createUserFromId]);
+  }, [fetchUserById]);
 
   // Выход
   const logout = useCallback(async (): Promise<void> => {
@@ -132,29 +161,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
       await authApi.logout();
     } catch (error: unknown) {
       console.error('Logout API failed:', error);
-      // Продолжаем очистку даже если API запрос не удался
     } finally {
       localStorage.removeItem('user_id');
       
       setState({
-        user: null,
+        user: undefined,
         isAuthenticated: false,
         isLoading: false,
-        error: null,
+        error: undefined,
       });
     }
   }, []);
 
-  // Обновление пользователя
-  const updateUser = useCallback((userData: Partial<User>) => {
+  const updateUser = useCallback(async (userData: Partial<User>) => {
     setState(prev => {
       if (!prev.user) return prev;
       
       const updatedUser = { ...prev.user, ...userData };
-      
-      if (userData.name && updatedUser.id) {
-        localStorage.setItem(`user_name_${updatedUser.id}`, userData.name);
-      }
       
       return {
         ...prev,
@@ -165,27 +188,48 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
 
   // Очистка ошибок
   const clearError = useCallback(() => {
-    setState(prev => ({ ...prev, error: null }));
+    setState(prev => ({ ...prev, error: undefined }));
   }, []);
 
   // Регистрация
   const register = useCallback(async (data: RegisterData): Promise<void> => {
-    setState(prev => ({ ...prev, isLoading: true, error: null }));
+    setState(prev => ({ ...prev, isLoading: true, error: undefined }));
     
     try {
-      // TODO: Реализовать регистрацию когда появится API
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await authApi.register(data);
       
-      const mockUser: User = {
-        id: Date.now().toString(),
-        email: data.email,
-        name: data.name,
-        role: 'user' as const,
+      const userData = await userApi.getCurrentUser();
+      
+      if (!userData) {
+        throw Error;
+      }
+
+      // Преобразуем UserReadDto в User (адаптируем под ваш тип User)
+      const user: User = {
+        id: userData.id.toString(),
+        login: userData.login, // или userData.email, если есть
+        name: userData.username,
+        role: userData.role,
+        avatar: userData.avatar,
+        registrationDate: userData.registrationDate
       };
+
+           
+      if (user === undefined)
+      {
+        setState(prev => ({ 
+        ...prev, 
+        user: undefined, 
+        isAuthenticated: true, 
+        isLoading: false 
+
+      }));
+      throw Error;
+      }
       
       setState(prev => ({ 
         ...prev, 
-        user: mockUser, 
+        user: user, 
         isAuthenticated: true, 
         isLoading: false 
       }));
@@ -205,7 +249,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     }
   }, []);
 
-  // Значение контекста - строго по типу AuthContextType
+  // Значение контекста
   const contextValue: AuthContextType = {
     user: state.user,
     isAuthenticated: state.isAuthenticated,

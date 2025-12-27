@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_CONFIG } from '../config/apiConfig';
+import type { Role } from '../types/enums/Roles';
 
 export interface UserSafeReadDto {
   id: number;
@@ -28,7 +29,7 @@ export interface UserReadDto {
   login: string;
   passwordHash: string;
   avatar?: string;
-  role: 'User' | 'Admin' | 'Moderator';
+  role: Role;
   registrationDate: string;
 }
 
@@ -44,7 +45,7 @@ export class UserApi {
    */
   async getUsers(): Promise<UserReadDto[]> {
     try {
-      const response = await axios.get<UserReadDto[]>(`${this.baseUrl}/api/users`, {
+      const response = await axios.get<UserReadDto[]>(`${this.baseUrl}/users`, {
         withCredentials: true,
         timeout: 10000,
       });
@@ -60,7 +61,7 @@ export class UserApi {
    */
   async getUserById(id: number): Promise<UserSafeReadDto> {
     try {
-      const response = await axios.get<UserSafeReadDto>(`${this.baseUrl}/api/users/${id}`, {
+      const response = await axios.get<UserSafeReadDto>(`${this.baseUrl}/users/${id}`, {
         withCredentials: true,
         timeout: 10000,
       });
@@ -74,19 +75,18 @@ export class UserApi {
   /**
    * Получить текущего авторизованного пользователя
    */
-  async getCurrentUser(): Promise<UserSafeReadDto | null> {
+  async getCurrentUser(): Promise<UserReadDto | undefined> {
     try {
-      // Сначала проверяем, есть ли сохраненный ID
       const userId = localStorage.getItem('user_id');
       
       if (!userId) {
-        return null;
+        return undefined;
       }
 
-      return await this.getUserById(Number(userId));
+      return (await axios.get<UserReadDto>(`${this.baseUrl}/users/current`, {withCredentials: true})).data;
     } catch (error) {
       console.error('Failed to get current user:', error);
-      return null;
+      return undefined;
     }
   }
 
@@ -95,7 +95,7 @@ export class UserApi {
    */
   async updateUser(id: number, userData: UserUpdateDto): Promise<void> {
     try {
-      await axios.put(`${this.baseUrl}/api/users/${id}`, userData, {
+      await axios.put(`${this.baseUrl}/users/${id}`, userData, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -129,7 +129,7 @@ export class UserApi {
    */
   async deleteUser(id: number): Promise<void> {
     try {
-      await axios.delete(`${this.baseUrl}/api/users/${id}`, {
+      await axios.delete(`${this.baseUrl}/users/${id}`, {
         withCredentials: true,
         timeout: 10000,
       });
@@ -155,56 +155,6 @@ export class UserApi {
       localStorage.removeItem('user_id');
     } catch (error) {
       this.handleUserError(error, 'Failed to delete current user');
-    }
-  }
-
-  /**
-   * Получить аватар пользователя (если нужно отдельно)
-   */
-  async getUserAvatar(id: number): Promise<string | null> {
-    try {
-      const user = await this.getUserById(id);
-      return user.avatar || null;
-    } catch (error) {
-      console.error('Failed to get user avatar:', error);
-      return null;
-    }
-  }
-
-  /**
-   * Обновить аватар пользователя
-   */
-  async updateUserAvatar(id: number, avatarData: FormData): Promise<void> {
-    try {
-      await axios.put(`${this.baseUrl}/api/users/${id}/avatar`, avatarData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        withCredentials: true,
-        timeout: 30000, // Больше времени для загрузки файла
-      });
-    } catch (error) {
-      this.handleUserError(error, 'Failed to update avatar');
-    }
-  }
-
-  /**
-   * Обновить аватар текущего пользователя
-   */
-  async updateCurrentUserAvatar(avatarFile: File): Promise<void> {
-    try {
-      const userId = localStorage.getItem('user_id');
-      
-      if (!userId) {
-        throw new Error('User not authenticated');
-      }
-
-      const formData = new FormData();
-      formData.append('avatar', avatarFile);
-
-      await this.updateUserAvatar(Number(userId), formData);
-    } catch (error) {
-      this.handleUserError(error, 'Failed to update current user avatar');
     }
   }
 

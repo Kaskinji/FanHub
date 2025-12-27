@@ -1,5 +1,6 @@
-import axios from 'axios';
-import { API_CONFIG } from '../config/apiConfig';
+import axios from "axios";
+import type { RegisterData } from "../types/AuthTypes";
+import { API_CONFIG } from "../config/apiConfig";
 
 export interface LoginCredentials {
   login: string;
@@ -20,7 +21,7 @@ export class AuthApi {
         credentials,
         {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           withCredentials: true,
           timeout: 10000,
@@ -32,37 +33,68 @@ export class AuthApi {
       this.handleAuthError(error);
     }
   }
+  async register(data: RegisterData): Promise<number> {
+    try {
+      console.log("sending:", data);
+      const result = await axios.post<number>(
+        `${this.baseUrl}/auth/register`,
+        {
+          username: data.username,
+          login: data.login,
+          password: data.password,
+          avatar: undefined,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+
+      localStorage.setItem("user_id", result.data.toString());
+      return result.data;
+    } catch (error) {
+      this.handleAuthError(error);
+    }
+  }
 
   async checkAuth(): Promise<{ isAuthenticated: boolean; userId?: number }> {
     try {
-      const userId = localStorage.getItem('user_id');
+      const userId = localStorage.getItem("user_id");
 
       if (userId) {
-        const response = await axios.get<boolean>(`${this.baseUrl}/auth/check`, {
-          withCredentials: true,
-          timeout: 10000,
-        });
-        console.log(response)
-        if(response.data === true)
-        {
+        const response = await axios.get<boolean>(
+          `${this.baseUrl}/auth/check`,
+          {
+            withCredentials: true,
+            timeout: 10000,
+          }
+        );
+        console.log(response);
+        if (response.data === true) {
           return { isAuthenticated: true, userId: Number(userId) };
         }
       }
 
       return { isAuthenticated: false };
     } catch (error) {
-      console.error('Auth check failed:', error);
+      console.error("Auth check failed:", error);
       return { isAuthenticated: false };
     }
   }
 
   async logout(): Promise<void> {
     try {
-      await axios.post(`${this.baseUrl}/auth/logout`, {}, {
-        withCredentials: true,
-      });
+      await axios.post(
+        `${this.baseUrl}/auth/logout`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
     } finally {
-      localStorage.removeItem('user_id');
+      localStorage.removeItem("user_id");
     }
   }
 
@@ -70,26 +102,52 @@ export class AuthApi {
     if (axios.isAxiosError(error)) {
       if (error.response) {
         const status = error.response.status;
-        const message = error.response.data?.message || 'Authentication failed';
+        const message = error.response.data?.message || "Authentication failed";
 
         switch (status) {
           case 400:
-            throw new Error('Invalid login or password format.');
+            throw new Error("Invalid login or password format.");
           case 401:
-            throw new Error('Invalid username or password.');
+            throw new Error("Invalid username or password.");
           case 404:
-            throw new Error('User not found.');
+            throw new Error("User not found.");
           case 500:
-            throw new Error('Server error. Please try again later.');
+            throw new Error("Server error. Please try again later.");
           default:
             throw new Error(message);
         }
       } else if (error.request) {
-        throw new Error('Network error. Please check your connection.');
+        throw new Error("Network error. Please check your connection.");
       }
     }
 
-    throw new Error('An unexpected error occurred.');
+    throw new Error("An unexpected error occurred.");
+  }
+
+  private handleRegisterError(error: unknown): never {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        const status = error.response.status;
+        const message = error.response.data?.message || "Authentication failed";
+
+        switch (status) {
+          case 400:
+            throw new Error(message);
+          case 401:
+            throw new Error(message);
+          case 404:
+            throw new Error(message);
+          case 500:
+            throw new Error(message);
+          default:
+            throw new Error(message);
+        }
+      } else if (error.request) {
+        throw new Error("Network error. Please check your connection.");
+      }
+    }
+
+    throw new Error("An unexpected error occurred.");
   }
 }
 
