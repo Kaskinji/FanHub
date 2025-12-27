@@ -10,9 +10,9 @@ import type { Post, Comment as CommentType } from "../../types/Post";
 const mockPosts: Post[] = [
   {
     id: 1,
-    title: "Скрытый корабль у берегов Арда Скеллиг",
-    content: "Полное описание того, как найти скрытый корабль...",
-    excerpt: "Мы нашли скрытый корабль, который не отмечен на картах...",
+    title: "A hidden ship off the coast of Ard Skellig",
+    content: "A complete description of how to find a hidden ship...",
+    excerpt: "We found a hidden ship that is not marked on the maps...",
     image: "/images/ship-found.jpg",
     author: {
       id: 101,
@@ -23,25 +23,23 @@ const mockPosts: Post[] = [
       { type: 'like', count: 42, userReacted: false },
       { type: 'fire', count: 15, userReacted: true }
     ],
-    category: "Гайды",
-    tags: ["скеллиге", "корабли", "тайны"],
+    category: "Guide",
+    tags: [],
     createdAt: "2024-01-15T10:30:00Z",
     commentCount: 23
   },
-  // ... больше постов
 ];
 
  const repeatedPosts: Post[] = Array.from({ length: 15 }, (_, index) => ({
     ...mockPosts[0],
     id: index + 1,
-    title: `Пост ${index + 1}: Скрытый корабль у берегов Арда Скеллиг`,
-    // Опционально: изменяем некоторые данные для разнообразия
+    title: `A hidden ship off the coast of Ard Skellig`,
   }));
 
 const mockComments: CommentType[] = [
   {
     id: 1,
-    content: "Отличный гайд, спасибо! Обязательно схожу на поиски в эти выходные.",
+    content: "Great guide, thanks! I'll definitely go on a search this weekend.",
     author: {
       id: 102,
       username: "Yennefer",
@@ -52,7 +50,7 @@ const mockComments: CommentType[] = [
   },
   {
     id: 2,
-    content: "Был там на прошлой неделе, нашел старинный меч! Советую всем!",
+    content: "I was there last week and found an old sword! I recommend it to everyone!",
     author: {
       id: 103,
       username: "Ciri",
@@ -63,7 +61,7 @@ const mockComments: CommentType[] = [
   },
   {
     id: 3,
-    content: "А есть точные координаты? Хочу сходить с друзьями.",
+    content: "Do you have the exact coordinates? I want to go with my friends.",
     author: {
       id: 104,
       username: "Jaskier",

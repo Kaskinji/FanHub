@@ -5,7 +5,6 @@ import styles from "../AllGamesPage/AllGamesPage.module.scss";
 import { useAllGames } from "../../hooks/useAllGamesPage";
 import type { GamePreview } from "../../types/AllGamesPageData";
 import GameCard from "../MainPage/GameCard/GameCard";
-import { AllGamesPageProvider } from "../../context/AllGamesPageProvider";
 
 const mockGames: GamePreview[] = [
   { id: 1, name: "Rdr2", imageUrl: "/images/windows.jpg"},
@@ -28,23 +27,23 @@ const mockGames: GamePreview[] = [
 
 export default function AllGamesPage() {
   return (
-    <AllGamesPageProvider gamesData={mockGames}>
       <div className={styles.page}>
         <Header onSearch={() => {}} onSignIn={() => {}} />
-        <Content />
+        <Content games={ mockGames } />
       </div>
-    </AllGamesPageProvider>
   );
 }
 
 /* ================= CONTENT ================= */
-
-function Content() {
+interface ContentProps {
+  games: typeof mockGames;
+}
+function Content({ games }: ContentProps) {
   const { setSearchQuery } = useAllGames();
   return (
     <main className={styles.content}>
       <Top onSearch={setSearchQuery} />
-      <Games />
+      <Games games={ games}/>
     </main>
   );
 }
@@ -74,13 +73,15 @@ function Top({ onSearch }: TopProps) {
   );
 }
 /* ================= gameS SECTION ================= */
-
-function Games() {
+interface AllGamesProps {
+  games: typeof mockGames;
+}
+function Games({ games }: AllGamesProps) {
   return (
     <section className={styles.gamesSection}>
       <SectionTitle title="Games" />
       <div className={styles.gamesGrid}>
-        {mockGames.map((game: GamePreview) => (
+        {games.map((game: GamePreview) => (
           <GameCard
             key={game.id}
             id={game.id}

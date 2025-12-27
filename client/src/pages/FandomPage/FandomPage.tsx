@@ -2,8 +2,7 @@ import Header from "../../components/Header/Header";
 import ShowMoreButton from "../../components/UI/buttons/ShowMoreButton/ShowMoreButton";
 import SearchInput from "../../components/UI/SearchInput/SearchInput";
 import SectionTitle from "../../components/UI/SectionTitle/SectionTitle";
-import { FandomPageProvider } from "../../context/FandomPageProvider";
-import { useFandomPage } from "../../hooks/useFandomPage";
+
 import styles from "./FandoPage.module.scss";
 import { TitleCard } from "../../components/TitleCard/TitleCard";
 import type { FandomPageData, Reaction } from "../../types/FandomPageData";
@@ -13,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 const fandomData: FandomPageData = {
   id: 1,
   title: "Skellige exploring club",
-  description: "Мы исследуем все тайны Скеллиге! Открываем скрытые корабли, находим секреты древних кланов и делимся лучшими маршрутами для путешествий по островам.",
+  description: "We explore all the mysteries of Skellige! We discover hidden ships, uncover the secrets of ancient clans, and share the best routes for exploring the islands.",
   coverImage: "/images/skellige-cover.jpg",
   rules: "1.  The Golden Rule: Ship and Let Ship ''Shipping'' is personal. You may love a pairing that others don't, and that's okay.\n2. Do: Respect everyone's right to enjoy their favorite ships, characters, and tropes.\n3. Do Not: Harass, insult, or start ''shipping wars'' with fans who have\n4==",
   
@@ -78,31 +77,32 @@ const fandomData: FandomPageData = {
 
 export default function FandomPage() {
   return (
-    <FandomPageProvider fandomData={fandomData}>
-      <div className={styles.page}>
-        <Header onSearch={() => {}} onSignIn={() => {}} />
-        <Content />
-      </div>
-    </FandomPageProvider>
+    <div className={styles.page}>
+      <Header onSearch={() => {}} onSignIn={() => {}} />
+      <Content fandom={fandomData}/>
+    </div>
   );
 }
 
 /* ================= CONTENT ================= */
 
-function Content() {
+interface ContentProps {
+  fandom: typeof fandomData;
+}
+
+function Content({ fandom }: ContentProps) {
   const navigate = useNavigate();
   const handleShowMore = () => {
-    // Переход на страницу всех фандомов с передачей ID игры
     navigate(`/posts`);
   };
   return (
     <main className={styles.content}>
-      <FandomCard />  
+      <FandomCard fandom={fandom} />  
       <SectionTitle title="Events" />
-      <Events />
+      <Events events={fandom.eventsPreviews}/>
       <ShowMoreButton variant="light" />
       <SectionTitle title="Popular Posts" />
-      <Posts />
+      <Posts posts={ fandom.postsPreviews } />
       <ShowMoreButton 
         variant="light" 
         onClick={handleShowMore} // Добавляем обработчик
@@ -113,11 +113,11 @@ function Content() {
 }
 
 /* ================= FANDOM CARD ================= */
-
+interface FandomCardProps {
+  fandom: typeof fandomData;
+}
 // Обновленная функция FandomCard в FandoPage.tsx
-function FandomCard() {
-  const { fandom } = useFandomPage();
-  
+function FandomCard({ fandom }: FandomCardProps) {
   return (
     <section className={styles.fandomCard}>
       <div className={styles.fandomLeft}>
@@ -128,14 +128,16 @@ function FandomCard() {
           Subscribe
         </button>
       </div>
-      <FandomRight />
+      <FandomRight fandom ={ fandom }/>
     </section>
   );
 }
 
+interface FandomRightProps {
+  fandom: typeof fandomData;
+}
 // Обновленная функция FandomRight
-function FandomRight() {
-  const { fandom } = useFandomPage();
+function FandomRight({ fandom }: FandomRightProps) {
 
   return (
     <div className={styles.fandomRight}>
@@ -161,13 +163,14 @@ function FandomRight() {
 }
 
 /* ================= POSTS ================= */
-
-function Posts() {
-  const { fandom } = useFandomPage();
+interface PostProps {
+  posts: FandomPageData['postsPreviews'];
+}
+function Posts({ posts }: PostProps) {
 
   return (
     <section className={styles.posts}>
-      {fandom.postsPreviews.map((post) => (
+      {posts.map((post) => (
         <PostCard
           key={post.id}
           title={post.title}
@@ -219,13 +222,14 @@ function PostCard({ title, image, author, reactions }: PostCardProps) {
 }
 
 /* ================= EVENTS ================= */
-
-function Events() {
-  const { fandom } = useFandomPage();
+interface EventsProps {
+  events: FandomPageData['eventsPreviews'];
+}
+function Events( { events }: EventsProps) {
 
   return (
     <section className={styles.events}>
-      {fandom.eventsPreviews.map((event) => (
+      {events.map((event) => (
         <EventCard
           key={event.id}
           title={event.title}

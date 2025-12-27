@@ -1,14 +1,8 @@
-import { useContext } from "react";
-import { AllFandomsContext } from "../context/AllFandomsPageContext";
-
 export const useAllFandoms = () => {
-  const context = useContext(AllFandomsContext);
+   const setSearchQuery = (query: string) => {
+    console.log("Searching for:", query);
+  };
   
-  if (!context) {
-    throw new Error(
-      "useAllFandoms must be used within AllFandomsProvider"
-    );
-  }
   
-  return context;
+  return { setSearchQuery};
 };

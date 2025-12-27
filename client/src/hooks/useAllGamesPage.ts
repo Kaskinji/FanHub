@@ -1,14 +1,8 @@
-import { useContext } from "react";
-import { AllGamesContext } from "../context/AllGamesPageContext";
-
 export const useAllGames = () => {
-  const context = useContext(AllGamesContext);
+   const setSearchQuery = (query: string) => {
+    console.log("Searching for:", query);
+  };
   
-  if (!context) {
-    throw new Error(
-      "useAllGames must be used within AllGamesProvider"
-    );
-  }
   
-  return context;
+  return { setSearchQuery};
 };

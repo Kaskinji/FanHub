@@ -1,9 +1,6 @@
 import Header from "../../components/Header/Header";
 import ShowMoreButton from "../../components/UI/buttons/ShowMoreButton/ShowMoreButton";
-import SearchInput from "../../components/UI/SearchInput/SearchInput";
 import SectionTitle from "../../components/UI/SectionTitle/SectionTitle";
-import { GamePageProvider } from "../../context/GamePageProvider";
-import { useGamePage } from "../../hooks/useGamePage";
 import styles from "./GamePage.module.scss";
 import { TitleCard } from "../../components/TitleCard/TitleCard";
 import { useNavigate } from "react-router-dom";
@@ -42,42 +39,45 @@ const gameData = {
 
 export default function GamePage() {
   return (
-    <GamePageProvider gameData={gameData}>
-      <div className={styles.page}>
-        <Header onSearch={() => {}} onSignIn={() => {}} />
-        <Content />
-      </div>
-    </GamePageProvider>
+    <div className={styles.page}>
+      <Header onSearch={() => {}} onSignIn={() => {}} />
+      <Content game={gameData} />
+    </div>
   );
 }
 
 /* ================= CONTENT ================= */
 
-function Content() {
-  const navigate = useNavigate(); // Хук для навигации
-  const { game } = useGamePage();
+interface ContentProps {
+  game: typeof gameData;
+}
 
+function Content({ game }: ContentProps) {
+  const navigate = useNavigate();
   const handleShowMore = () => {
     // Переход на страницу всех фандомов с передачей ID игры
-    navigate(`/allfandoms?game=${game.id}`);
+    navigate(`/allfandoms`);
   };
   return (
     <main className={styles.content}>
-      <GameCard />
+      <GameCard game={game} />
       <SectionTitle title="Fandoms" />
-      <Fandoms />
-     <ShowMoreButton 
+      <Fandoms fandoms={game.fandoms} />
+      <ShowMoreButton 
         variant="light" 
         onClick={handleShowMore} // Добавляем обработчик
-      />
+      />  
     </main>
   );
 }
 
 /* ================= GAME CARD ================= */
 
-function GameCard() {
-  const { game } = useGamePage();
+interface GameCardProps {
+  game: typeof gameData;
+}
+
+function GameCard({ game }: GameCardProps) {
   return (
     <section className={styles.gameCard}>
       <div className={styles.gameLeft}>
@@ -105,48 +105,70 @@ function GameCard() {
           </div>
         </div>
       </div>
-      <GameRight />
+      <GameRight game={game} />
     </section>
   );
 }
 
-function GameRight() {
-  const { game } = useGamePage();
+interface GameRightProps {
+  game: typeof gameData;
+}
 
+function GameRight({ game }: GameRightProps) {
   return (
     <div className={styles.gameRight}>
-      <SearchInput withIcon={true} onSearch={() => {}} />
       <div className={styles.infoBox}>
-        <h3>About the game:</h3>
+        <h3 className={styles.infoTitle}>About the game:</h3>
         <p>{game.description}</p>
       </div>
 
       <div className={styles.infoBox}>
-        <p>
-          <strong>Genre:</strong> {game.details.genre}
-        </p>
-        <p>
-          <strong>Publisher:</strong> {game.details.publisher}
-        </p>
-        <p>
-          <strong>Developer:</strong> {game.details.developer}
-        </p>
-        <p>
-          <strong>Release date:</strong> {game.details.releaseDate}
-        </p>
+        <div className={styles.detailBox}>
+          <p className={styles.infoTitle}>
+          Genre:
+          </p>
+          <p className={styles.detailText}>
+            {game.details.genre}
+          </p>
+        </div>
+        <div className={styles.detailBox}>
+          <p className={styles.infoTitle}>
+          Publisher:
+          </p>
+          <p className={styles.detailText}>
+            {game.details.publisher}
+          </p>
+        </div>
+        <div className={styles.detailBox}>
+          <p className={styles.infoTitle}>
+          Developer:
+          </p>
+          <p className={styles.detailText}>
+            {game.details.developer}
+          </p>
+        </div>
+        <div className={styles.detailBox}>
+          <p className={styles.infoTitle}>
+          Release date:
+          </p>
+          <p className={styles.detailText}>
+            {game.details.releaseDate}
+          </p>
+        </div>
       </div>
     </div>
   );
 }
 
-/* ================= FANDOMS ================= */
 
-function Fandoms() {
-  const { game } = useGamePage();
+interface FandomsProps {
+  fandoms: typeof gameData.fandoms;
+}
 
+function Fandoms({ fandoms }: FandomsProps) {
   return (
     <section className={styles.fandoms}>
-      {game.fandoms.map((fandom) => (
+      {fandoms.map((fandom) => (
         <FandomCard
           key={fandom.id}
           title={fandom.title}

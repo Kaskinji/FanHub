@@ -3,9 +3,8 @@ import SearchInput from "../../components/UI/SearchInput/SearchInput";
 import SectionTitle from "../../components/UI/SectionTitle/SectionTitle";
 import styles from "../AllFandomsPage/AllFandomsPage.module.scss";
 import { useAllFandoms } from "../../hooks/useAllFandomsPage";
-import type { FandomPreview } from "../../types/AllFandomsPageData";
+import type { FandomPreview } from "../../types/Fandom";
 import FandomCard from "../MainPage/FandomCard/FandomCard";
-import { AllFandomsPageProvider } from "../../context/AllFandomsPageProvider";
 
 const mockFandoms: FandomPreview[] = [
   { id: 1, name: "Rdr Community", imageUrl: "/images/windows.jpg"},
@@ -36,23 +35,24 @@ const mockFandoms: FandomPreview[] = [
 
 export default function AllFandomsPage() {
   return (
-    <AllFandomsPageProvider fandomsData={mockFandoms}>
       <div className={styles.page}>
         <Header onSearch={() => {}} onSignIn={() => {}} />
-        <Content />
+        <Content fandoms={mockFandoms} />
       </div>
-    </AllFandomsPageProvider>
   );
 }
 
 /* ================= CONTENT ================= */
+interface ContentProps {
+  fandoms: typeof mockFandoms;
+}
 
-function Content() {
+function Content({ fandoms }: ContentProps) {
   const { setSearchQuery } = useAllFandoms();
   return (
     <main className={styles.content}>
       <Top onSearch={setSearchQuery} />
-      <Fandoms />
+      <Fandoms fandoms={fandoms}/>
     </main>
   );
 }
@@ -87,13 +87,15 @@ function Top({ onSearch }: TopProps) {
   );
 }
 /* ================= FANDOMS SECTION ================= */
-
-function Fandoms() {
+interface AllFandomsProps {
+  fandoms: typeof mockFandoms;
+}
+function Fandoms({ fandoms }: AllFandomsProps) {
   return (
     <section className={styles.fandomsSection}>
       <SectionTitle title="Fandoms" />
       <div className={styles.fandomsGrid}>
-        {mockFandoms.map((fandom: FandomPreview) => (
+        {fandoms.map((fandom: FandomPreview) => (
           <FandomCard
             key={fandom.id}
             id={fandom.id}

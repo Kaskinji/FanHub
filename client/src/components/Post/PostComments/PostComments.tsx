@@ -33,7 +33,7 @@ const PostComments: FC<PostCommentsProps> = ({
   return (
     <section className={styles.postComments}>
       <h3 className={styles.title}>
-        Комментарии ({comments.length})
+        Comments ({comments.length})
       </h3>
       
       {/* Форма создания комментария */}
@@ -47,7 +47,7 @@ const PostComments: FC<PostCommentsProps> = ({
       <div className={styles.commentsList}>
         {comments.length === 0 ? (
           <div className={styles.noComments}>
-            Пока нет комментариев. Будьте первым!
+            There are no comments yet. Be the first!
           </div>
         ) : (
           comments.map((comment) => (

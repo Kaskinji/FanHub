@@ -61,7 +61,7 @@ const CommentCreator: FC<CommentCreatorProps> = ({
         className={styles.commentTextarea}
         value={commentText}
         onChange={(e) => setCommentText(e.target.value)}
-        placeholder="Напишите комментарий..."
+        placeholder="Write a comment..."
         disabled={isSubmitting}
       />
       <div className={styles.commentActions}>
@@ -70,7 +70,7 @@ const CommentCreator: FC<CommentCreatorProps> = ({
           type="submit"
           disabled={!commentText.trim() || isSubmitting}
         >
-          {isSubmitting ? 'Отправка...' : 'Опубликовать'}
+          {isSubmitting ? 'Submit...' : 'Publish'}
         </button>
       </div>
     </form>
