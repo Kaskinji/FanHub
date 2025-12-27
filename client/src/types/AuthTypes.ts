@@ -1,16 +1,19 @@
+import type { Role } from "./enums/Roles";
+
 export interface User {
   id: string;
-  email: string;
+  login: string;
   name: string;
   avatar?: string;
-  role: 'user' | 'admin';
+  role: Role;
+  registrationDate: string;
 }
 
 export interface AuthState {
-  user: User | null;
+  user: User | undefined;
   isAuthenticated: boolean;
   isLoading: boolean;
-  error: string | null;
+  error: string | undefined;
 }
 
 // Используем те же имена полей, что и в AuthService
@@ -20,17 +23,17 @@ export interface LoginCredentials {
 }
 
 export interface RegisterData {
-  email: string;
+  username: string;
+  login: string;
   password: string;
-  name: string;
-  confirmPassword?: string;
+  avatar: string | undefined;
 }
 
 export interface AuthContextType {
-  user: User | null;
+  user: User | undefined;
   isAuthenticated: boolean;
   isLoading: boolean;
-  error: string | null;
+  error: string | undefined;
   login: (credentials: LoginCredentials) => Promise<void>; // Изменено на void
   register: (data: RegisterData) => Promise<void>; // Изменено на void
   logout: () => Promise<void>; // Изменено на void

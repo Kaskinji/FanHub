@@ -1,6 +1,5 @@
 import Header from "../../components/Header/Header";
 import ShowMoreButton from "../../components/UI/buttons/ShowMoreButton/ShowMoreButton";
-import SearchInput from "../../components/UI/SearchInput/SearchInput";
 import SectionTitle from "../../components/UI/SectionTitle/SectionTitle";
 import styles from "./GamePage.module.scss";
 import { TitleCard } from "../../components/TitleCard/TitleCard";
@@ -109,25 +108,44 @@ interface GameRightProps {
 function GameRight({ game }: GameRightProps) {
   return (
     <div className={styles.gameRight}>
-      <SearchInput withIcon={true} onSearch={() => {}} />
       <div className={styles.infoBox}>
-        <h3>About the game:</h3>
+        <h3 className={styles.infoTitle}>About the game:</h3>
         <p>{game.description}</p>
       </div>
 
       <div className={styles.infoBox}>
-        <p>
-          <strong>Genre:</strong> {game.details.genre}
-        </p>
-        <p>
-          <strong>Publisher:</strong> {game.details.publisher}
-        </p>
-        <p>
-          <strong>Developer:</strong> {game.details.developer}
-        </p>
-        <p>
-          <strong>Release date:</strong> {game.details.releaseDate}
-        </p>
+        <div className={styles.detailBox}>
+          <p className={styles.infoTitle}>
+          Genre:
+          </p>
+          <p className={styles.detailText}>
+            {game.details.genre}
+          </p>
+        </div>
+        <div className={styles.detailBox}>
+          <p className={styles.infoTitle}>
+          Publisher:
+          </p>
+          <p className={styles.detailText}>
+            {game.details.publisher}
+          </p>
+        </div>
+        <div className={styles.detailBox}>
+          <p className={styles.infoTitle}>
+          Developer:
+          </p>
+          <p className={styles.detailText}>
+            {game.details.developer}
+          </p>
+        </div>
+        <div className={styles.detailBox}>
+          <p className={styles.infoTitle}>
+          Release date:
+          </p>
+          <p className={styles.detailText}>
+            {game.details.releaseDate}
+          </p>
+        </div>
       </div>
     </div>
   );

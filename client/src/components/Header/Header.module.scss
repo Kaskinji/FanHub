@@ -106,17 +106,7 @@
             }
         }
         
-        .logoutButton {
-            padding: 6px 12px;
-            font-size: 0.85rem;
-            background-color: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            
-            &:hover {
-                background-color: rgba(255, 255, 255, 0.2);
-            }
-        }
+
     }
     
     .signInButton {
@@ -130,7 +120,9 @@
         }
     }
 }
-
+.headerAvatar {
+    border: 1px white solid;
+}
 @media (max-width: 768px) {
     .header {
         padding: 12px;
@@ -155,11 +147,7 @@
         
         .userSection {
             gap: 0.5rem;
-            
-            .userName {
-                display: none;
-            }
-            
+            justify-self: end;
             .userInfo {
                 padding: 2px 4px;
             }
@@ -188,7 +176,7 @@
                 width: 28px;
                 height: 28px;
             }
-            
+
             .avatarPlaceholder {
                 width: 28px;
                 height: 28px;

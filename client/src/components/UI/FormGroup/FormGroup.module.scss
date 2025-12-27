@@ -1,0 +1,18 @@
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #e4d5f5;
+}
+
+.errorText {
+  color: #f44336;
+  font-size: 12px;
+  margin-top: 2px;
+}

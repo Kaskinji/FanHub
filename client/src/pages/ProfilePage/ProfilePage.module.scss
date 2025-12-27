@@ -1,0 +1,80 @@
+.page {
+  min-height: 100vh;
+}
+
+.content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px 20px 20px 20px;
+  background-color: #48198645;
+  border-radius: 0px 0px 10px 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.actions {
+  margin-left: auto;
+}
+
+.wrapper {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.registrationInfo {
+  display: flex;
+  margin-left: auto;
+}
+
+.registrationText {
+  font-weight: 700;
+  margin-right: 20px;
+}
+
+.editButton {
+  background-color: #3b077f;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #532587;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+.logoutButton {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  margin-left: 20px;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  font-size: 18px;
+  color: #666;
+}
+
+.error {
+  text-align: center;
+  padding: 40px;
+  color: #dc3545;
+  font-size: 18px;
+}

@@ -6,6 +6,7 @@ import RegisterPage from "./pages/RegisterPage/RegisterPage.tsx";
 import MainPage from "./pages/MainPage/MainPage.tsx";
 import GamePage from "./pages/GamePage/GamePage.tsx";
 import { AuthProvider } from "./contexts/AuthContext/AuthProvider.tsx";
+import { ProfilePage } from "./pages/ProfilePage/ProfilePage.tsx";
 
 const App: FC = () => {
   return (
@@ -18,6 +19,7 @@ const App: FC = () => {
             <Route path="/registration" element={<RegisterPage />} />
             <Route path="/main" element={<MainPage onSearch={() => {}} />} />
             <Route path="/game/:id" element={<GamePage />} />
+            <Route path="/profile" element={<ProfilePage/>}/>
           </Routes>
         </Layout>
       </Router>
