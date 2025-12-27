@@ -1,0 +1,138 @@
+// components/Comment/CommentCreator.module.scss
+.commentCreator {
+  background-color: white;
+  border: 2px solid #892be2; // Фиолетовая рамка толщиной 2px
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(138, 43, 226, 0.1);
+  transition: all 0.3s ease;
+  
+  &:focus-within {
+    border-color: #6a0dad0c; // Темнее при фокусе
+    box-shadow: 0 4px 16px rgba(138, 43, 226, 0.2);
+  }
+}
+
+.replyIndicator {
+  background-color: rgba(138, 43, 226, 0.1);
+  border: 1px solid rgba(138, 43, 226, 0.2);
+  border-radius: 8px;
+  padding: 0.5rem 0.8rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #8a2be2;
+  
+  strong {
+    color: #6a0dad;
+    margin-left: 0.3rem;
+  }
+}
+
+.cancelReply {
+  background-color: transparent;
+  border: 1px solid #e0e0e0;
+  color: #666;
+  padding: 0.25rem 0.5rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background-color: #f8f8f8;
+    border-color: #8a2be2;
+    color: #8a2be2;
+  }
+}
+
+.textareaWrapper {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.commentTextarea {
+  width: 100%;
+  min-height: 60px;
+  max-height: 200px;
+  background-color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.8rem;
+  color: #333;
+  font-size: 1rem;
+  font-family: inherit;
+  line-height: 1.5;
+  resize: none; // Отключаем ручное изменение размера
+  overflow-y: auto;
+  transition: height 0.2s ease;
+  
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 1px rgba(138, 43, 226, 0.3);
+  }
+  
+  &::placeholder {
+    color: #999;
+  }
+  
+  &:disabled {
+    background-color: #f9f9f9;
+    color: #999;
+    cursor: not-allowed;
+  }
+  
+  /* Стили для скроллбара */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #c9c9c9;
+    border-radius: 3px;
+    
+    &:hover {
+      background: #a9a9a9;
+    }
+  }
+}
+
+.commentActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.submitButton {
+  background: linear-gradient(90deg, #8a2be2, #6a0dad);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3);
+    background: linear-gradient(90deg, #7a1bd2, #5a0b9d);
+  }
+  
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: linear-gradient(90deg, #aaa, #888);
+  }
+}

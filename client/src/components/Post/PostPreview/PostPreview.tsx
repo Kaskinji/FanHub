@@ -55,10 +55,10 @@ const PostPreview: FC<PostPreviewProps> = ({ post, onClick, className }) => {
           
           <div className={styles.stats}>
             <span className={styles.reactions}>
-              {totalReactions > 0 && `🔥 ${totalReactions}`}
+              {totalReactions > 0 && `${totalReactions}`}
             </span>
             <span className={styles.comments}>
-              💬 {post.commentCount}
+              {post.commentCount}
             </span>
           </div>
         </div>

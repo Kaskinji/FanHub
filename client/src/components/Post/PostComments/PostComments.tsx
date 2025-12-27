@@ -3,7 +3,7 @@ import { useState, type FC } from "react";
 import styles from "./PostComments.module.scss";
 import type { Comment as CommentType } from "../../../types/Post";
 import Comment from "../Comment/Comment";
-import CommentCreator from "./PostComments.module.scss";
+import CommentCreator from "../Comment/CommentCreator/CommentCreator";
 
 interface PostCommentsProps {
   comments: CommentType[];
@@ -27,7 +27,7 @@ const PostComments: FC<PostCommentsProps> = ({
 
   const handleReply = (commentId: number) => {
     setReplyingTo(commentId);
-    // Можно добавить скролл к форме ответа
+    // Можно передать информацию о reply в CommentCreator через props
   };
 
   return (
@@ -40,6 +40,7 @@ const PostComments: FC<PostCommentsProps> = ({
       <CommentCreator
         onSubmit={handleAddComment}
         isSubmitting={isAddingComment}
+        replyingTo={replyingTo ? comments.find(c => c.id === replyingTo) : null}
       />
       
       {/* Список комментариев */}

@@ -31,10 +31,17 @@ const mockPosts: Post[] = [
   // ... больше постов
 ];
 
+ const repeatedPosts: Post[] = Array.from({ length: 15 }, (_, index) => ({
+    ...mockPosts[0],
+    id: index + 1,
+    title: `Пост ${index + 1}: Скрытый корабль у берегов Арда Скеллиг`,
+    // Опционально: изменяем некоторые данные для разнообразия
+  }));
+
 const mockComments: CommentType[] = [
   {
     id: 1,
-    content: "Отличный гайд, спасибо!",
+    content: "Отличный гайд, спасибо! Обязательно схожу на поиски в эти выходные.",
     author: {
       id: 102,
       username: "Yennefer",
@@ -43,14 +50,35 @@ const mockComments: CommentType[] = [
     createdAt: "2024-01-15T12:30:00Z",
     reactions: [{ type: 'like', count: 5 }]
   },
-  // ... больше комментариев
+  {
+    id: 2,
+    content: "Был там на прошлой неделе, нашел старинный меч! Советую всем!",
+    author: {
+      id: 103,
+      username: "Ciri",
+      avatar: "/images/ciri-avatar.jpg"
+    },
+    createdAt: "2024-01-16T09:15:00Z",
+    reactions: [{ type: 'fire', count: 3 }, { type: 'like', count: 8 }]
+  },
+  {
+    id: 3,
+    content: "А есть точные координаты? Хочу сходить с друзьями.",
+    author: {
+      id: 104,
+      username: "Jaskier",
+      avatar: "/images/jaskier-avatar.jpg"
+    },
+    createdAt: "2024-01-16T14:45:00Z",
+    reactions: [{ type: 'like', count: 2 }]
+  },
 ];
 
 export default function PostsPage() {
   const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
   const [isAddingComment, setIsAddingComment] = useState(false);
 
-  const selectedPost = mockPosts.find(post => post.id === selectedPostId);
+  const selectedPost = repeatedPosts.find(post => post.id === selectedPostId);
 
   const handleAddComment = async (content: string) => {
     setIsAddingComment(true);
@@ -71,7 +99,7 @@ export default function PostsPage() {
         </div>
         
         <div className={styles.postsGrid}>
-          {mockPosts.map((post) => (
+          {repeatedPosts.map((post) => (
             <PostPreview
               key={post.id}
               post={post}

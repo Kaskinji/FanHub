@@ -62,14 +62,14 @@ const Comment: FC<CommentProps> = ({ comment, onReply, className }) => {
             </div>
           )}
           
-          {onReply && (
+          {/* {onReply && (
             <button 
               className={styles.replyButton}
               onClick={() => onReply(comment.id)}
             >
               Ответить
             </button>
-          )}
+          )} */}
         </div>
 
         {/* Вложенные комментарии */}

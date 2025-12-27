@@ -1,6 +1,6 @@
 // components/Post/PostFull.tsx
-import { useState, type FC } from "react";
-import styles from "./PostFull.Module.scss";
+import {  type FC } from "react";
+import styles from "./PostFull.module.scss";
 import type { Post, Comment as CommentType } from "../../../types/Post";
 import PostComments from "../PostComments/PostComments";
 
@@ -19,7 +19,6 @@ const PostFull: FC<PostFullProps> = ({
   onAddComment,
   isAddingComment = false
 }) => {
-  const [isLiked, setIsLiked] = useState(false);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("ru-RU", {
@@ -78,14 +77,6 @@ const PostFull: FC<PostFullProps> = ({
             {post.content}
           </div>
           
-          {/* Теги */}
-          {post.tags.length > 0 && (
-            <div className={styles.tags}>
-              {post.tags.map((tag) => (
-                <span key={tag} className={styles.tag}>#{tag}</span>
-              ))}
-            </div>
-          )}
         </article>
         
         {/* Реакции */}
@@ -118,10 +109,7 @@ const PostFull: FC<PostFullProps> = ({
 const getReactionEmoji = (type: string) => {
   const emojis: Record<string, string> = {
     like: '👍',
-    fire: '🔥',
-    heart: '❤️',
-    laugh: '😄',
-    sad: '😢'
+    fire: '🔥'
   };
   return emojis[type] || '👍';
 };
