@@ -50,6 +50,7 @@ const LoginPage: FC = () => {
       
       // После успешного логина navigate сработает в useEffect
       console.log("Login successful");
+      navigate("/", { replace: true });
     } catch (error) {
       console.error("Login failed:", error);
       throw error; // Пробрасываем ошибку форме

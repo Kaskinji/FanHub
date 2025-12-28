@@ -19,10 +19,9 @@ const App: FC = () => {
         <Router>
             <Layout>
                 <Routes>
-                    <Route path="/" element={<LoginPage />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/registration" element={<RegisterPage />} />
-                    <Route path="/main" element={<MainPage onSearch={()=>{}} />} />
+                    <Route path="/" element={<MainPage onSearch={()=>{}} />} />
                     <Route path="/game/:id" element={<GamePage />} />
                     <Route path="/fandom/:id" element={<FandomPage />} />
                     <Route path="/allfandoms" element = {<AllFandomsPage /> } />

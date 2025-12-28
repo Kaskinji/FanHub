@@ -4,7 +4,7 @@ import SectionTitle from "../../components/UI/SectionTitle/SectionTitle";
 import styles from "./GamePage.module.scss";
 import { TitleCard } from "../../components/TitleCard/TitleCard";
 import { useNavigate } from "react-router-dom";
-import type { GameContextData } from "../../types/Game";
+import type { GameContextData as GameData } from "../../types/Game";
 
 const gameData = 
 {
@@ -64,7 +64,7 @@ function Content({ game }: ContentProps) {
     state: { 
       gameId: game.id,
       gameTitle: game.title 
-    } as GameContextData
+    } as GameData
   });
 };
 
