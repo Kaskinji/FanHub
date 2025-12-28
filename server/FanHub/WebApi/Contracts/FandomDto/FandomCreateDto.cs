@@ -1,10 +1,8 @@
-﻿namespace Application.Dto.FandomDto
+﻿namespace WebApi.Contracts.FandomDto
 {
     public class FandomCreateDto
     {
         public int GameId { get; set; }
-
-        public int CreatorId { get; set; }
 
         public string Name { get; set; } = string.Empty;
 

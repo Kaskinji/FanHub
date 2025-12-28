@@ -1,7 +1,9 @@
 ﻿using Application.Dto.PostDto;
 using Application.Services.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Extensions;
 
 namespace WebApi.Controllers
 {
@@ -10,10 +12,12 @@ namespace WebApi.Controllers
     public class PostController : ControllerBase
     {
         private IPostService _postService;
+        private IMapper _mapper;
 
-        public PostController( IPostService postService )
+        public PostController( IPostService postService, IMapper mapper )
         {
             _postService = postService;
+            _mapper = mapper;
         }
 
         [Authorize]
@@ -86,9 +90,13 @@ namespace WebApi.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<int>> CreatePost( [FromBody] PostCreateDto dto )
+        public async Task<ActionResult<int>> CreatePost( [FromBody] WebApi.Contracts.PostDto.PostCreateDto dto )
         {
-            int id = await _postService.Create( dto );
+            PostCreateDto createDto = _mapper.Map<PostCreateDto>( dto );
+
+            createDto.UserId = this.GetCurrentUserId();
+
+            int id = await _postService.Create( createDto );
 
             return Ok( id );
         }

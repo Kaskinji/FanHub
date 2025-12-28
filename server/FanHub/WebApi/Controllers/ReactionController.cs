@@ -1,7 +1,9 @@
 ﻿using Application.Dto.ReactionDto;
 using Application.Services.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Extensions;
 
 namespace WebApi.Controllers
 {
@@ -10,10 +12,12 @@ namespace WebApi.Controllers
     public class ReactionController : ControllerBase
     {
         private IReactionService _reactionService;
+        private IMapper _mapper;
 
-        public ReactionController( IReactionService reactionService )
+        public ReactionController( IReactionService reactionService, IMapper mapper )
         {
             _reactionService = reactionService;
+            _mapper = mapper;
         }
 
         [Authorize]
@@ -36,9 +40,13 @@ namespace WebApi.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<int>> CreateReaction( [FromBody] ReactionCreateDto dto )
+        public async Task<ActionResult<int>> CreateReaction( [FromBody] WebApi.Contracts.ReactionDto.ReactionCreateDto dto )
         {
-            int id = await _reactionService.Create( dto );
+            var createDto = _mapper.Map<ReactionCreateDto>( dto );
+
+            createDto.UserId = this.GetCurrentUserId();
+
+            int id = await _reactionService.Create( createDto );
 
             return Ok( id );
         }

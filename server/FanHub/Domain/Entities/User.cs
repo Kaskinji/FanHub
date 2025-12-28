@@ -16,6 +16,8 @@ public class User : Entity
 
     public UserRole Role { get; set; }
 
+
+    public ICollection<Fandom> Fandoms { get; set; } = new List<Fandom>();
     public ICollection<Reaction> Reactions { get; set; } = new List<Reaction>();
     public ICollection<Event> Events { get; set; } = new List<Event>();
     public ICollection<Comment> Comments { get; set; } = new List<Comment>();

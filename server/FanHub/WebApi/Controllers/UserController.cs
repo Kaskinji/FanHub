@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using WebApi.Extensions;
 using WebApi.Options;
 
 namespace WebApi.Controllers
@@ -45,8 +46,7 @@ namespace WebApi.Controllers
         [HttpGet( "current" )]
         public async Task<ActionResult<UserReadDto>> GetCurrentUser()
         {
-            Claim? userClaim = User.FindFirst( ClaimTypes.NameIdentifier );
-            int id = int.Parse( userClaim!.Value );
+            int id = this.GetCurrentUserId();
 
             UserReadDto user = await _userService.GetById( id );
 

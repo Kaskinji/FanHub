@@ -1,7 +1,9 @@
 ﻿using Application.Dto.SubscriptionDto;
 using Application.Services.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Extensions;
 
 namespace WebApi.Controllers
 {
@@ -10,10 +12,12 @@ namespace WebApi.Controllers
     public class SubscriptionController : ControllerBase
     {
         private ISubscriptionService _subscriptionService;
+        private IMapper _mapper;
 
-        public SubscriptionController( ISubscriptionService subscriptionService )
+        public SubscriptionController( ISubscriptionService subscriptionService, IMapper mapper )
         {
             _subscriptionService = subscriptionService;
+            _mapper = mapper;
         }
 
         [Authorize]
@@ -36,9 +40,13 @@ namespace WebApi.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<int>> CreateSubscription( [FromBody] SubscriptionCreateDto dto )
+        public async Task<ActionResult<int>> CreateSubscription( [FromBody] WebApi.Contracts.SubscriptionDto.SubscriptionCreateDto dto )
         {
-            int id = await _subscriptionService.Create( dto );
+            SubscriptionCreateDto createDto = _mapper.Map<SubscriptionCreateDto>( dto );
+
+            createDto.UserId = this.GetCurrentUserId();
+
+            int id = await _subscriptionService.Create( createDto );
 
             return Ok( id );
         }

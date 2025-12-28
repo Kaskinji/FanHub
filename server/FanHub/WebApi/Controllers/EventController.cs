@@ -1,7 +1,9 @@
-﻿    using Application.Dto.EventDto;
+﻿using Application.Dto.EventDto;
 using Application.Services.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Extensions;
 
 namespace WebApi.Controllers
 {
@@ -10,10 +12,11 @@ namespace WebApi.Controllers
     public class EventController : ControllerBase
     {
         private IEventService _eventService;
-
-        public EventController( IEventService EventService )
+        private IMapper _mapper;
+        public EventController( IEventService EventService, IMapper mapper )
         {
             _eventService = EventService;
+            _mapper = mapper;
         }
 
         [Authorize]
@@ -44,9 +47,14 @@ namespace WebApi.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<int>> CreateEvent( [FromBody] EventCreateDto dto )
+        public async Task<ActionResult<int>> CreateEvent( [FromBody] WebApi.Contracts.EventDto.EventCreateDto dto )
         {
-            int id = await _eventService.Create( dto );
+
+            EventCreateDto createDto = _mapper.Map<EventCreateDto>( dto );
+
+            createDto.OrganizerId = this.GetCurrentUserId();
+
+            int id = await _eventService.Create( createDto );
 
             return Ok( id );
         }

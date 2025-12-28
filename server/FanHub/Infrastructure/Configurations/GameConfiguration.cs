@@ -38,8 +38,7 @@ namespace Infrastructure.Configurations
 
             builder.HasMany( g => g.Fandoms )
                    .WithOne( f => f.Game )
-                   .HasForeignKey( f => f.GameId )
-                   .OnDelete( DeleteBehavior.Restrict );
+                   .HasForeignKey( f => f.GameId );
 
             builder.HasIndex( g => g.Title );
             builder.HasIndex( g => g.Genre );

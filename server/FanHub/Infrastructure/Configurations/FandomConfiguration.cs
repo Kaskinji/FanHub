@@ -11,6 +11,9 @@ public class FandomConfiguration : IEntityTypeConfiguration<Fandom>
         builder.Property( f => f.GameId )
             .IsRequired();
 
+        builder.Property( f => f.CreatorId )
+            .IsRequired();
+
         builder.Property( f => f.Name )
             .IsRequired()
             .HasMaxLength( 128 );
