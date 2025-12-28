@@ -36,6 +36,12 @@ public class Program
         builder.Services.Configure<AuthCookieOptions>( builder.Configuration.GetSection( "AuthCookieOptions" ) );
 
         builder.Services.AddAutoMapper( typeof( WebApi.Mapping.UserProfile ).Assembly );
+        builder.Services.AddAutoMapper( typeof( WebApi.Mapping.FandomProfile ).Assembly );
+        builder.Services.AddAutoMapper( typeof( WebApi.Mapping.EventProfile ).Assembly );
+        builder.Services.AddAutoMapper( typeof( WebApi.Mapping.CommentProfile ).Assembly );
+        builder.Services.AddAutoMapper( typeof( WebApi.Mapping.PostProfile ).Assembly );
+        builder.Services.AddAutoMapper( typeof( WebApi.Mapping.ReactionProfile ).Assembly );
+        builder.Services.AddAutoMapper( typeof( WebApi.Mapping.SubscriptionProfile ).Assembly );
 
         builder.Services.AddJwtAuthAndSwagger( builder.Configuration );
 

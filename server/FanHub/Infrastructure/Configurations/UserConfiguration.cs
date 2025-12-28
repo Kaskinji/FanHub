@@ -32,6 +32,12 @@ namespace Infrastructure.Configurations
                 .HasConversion<byte>()
                 .IsRequired();
 
+            builder.HasMany( u => u.Fandoms )
+                .WithOne( r => r.Creator )
+                .HasForeignKey( r => r.CreatorId )
+                .OnDelete( DeleteBehavior.NoAction );
+
+
             builder.HasMany( u => u.Reactions )
                 .WithOne( r => r.User )
                 .HasForeignKey( r => r.UserId );

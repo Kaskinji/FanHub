@@ -1,7 +1,9 @@
 ﻿using Application.Dto.CommentDto;
 using Application.Services.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Extensions;
 
 namespace WebApi.Controllers
 {
@@ -10,10 +12,12 @@ namespace WebApi.Controllers
     public class CommentController : ControllerBase
     {
         private ICommentService _commentService;
+        private IMapper _mapper;
 
-        public CommentController( ICommentService commentService )
+        public CommentController( ICommentService commentService, IMapper mapper )
         {
             _commentService = commentService;
+            _mapper = mapper;
         }
 
         [Authorize]
@@ -44,9 +48,13 @@ namespace WebApi.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<int>> CreateComment( [FromBody] CommentCreateDto dto )
+        public async Task<ActionResult<int>> CreateComment( [FromBody] WebApi.Contracts.CommentDto.CommentCreateDto dto )
         {
-            int id = await _commentService.Create( dto );
+            CommentCreateDto createDto = _mapper.Map<CommentCreateDto>( dto );
+
+            createDto.UserId = this.GetCurrentUserId();
+
+            int id = await _commentService.Create( createDto );
 
             return Ok( id );
         }

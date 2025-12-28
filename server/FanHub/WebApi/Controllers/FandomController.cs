@@ -1,7 +1,9 @@
 ﻿using Application.Dto.FandomDto;
 using Application.Services.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Extensions;
 
 namespace FanHub.Controllers;
 
@@ -10,9 +12,12 @@ namespace FanHub.Controllers;
 public class FandomController : ControllerBase
 {
     private IFandomService _fandomService;
-    public FandomController( IFandomService fandomService )
+    private IMapper _mapper;
+
+    public FandomController( IFandomService fandomService, IMapper mapper )
     {
         _fandomService = fandomService;
+        _mapper = mapper;
     }
 
     [HttpGet( "name" )]
@@ -71,9 +76,13 @@ public class FandomController : ControllerBase
 
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<int>> CreateFandom( [FromBody] FandomCreateDto dto )
+    public async Task<ActionResult<int>> CreateFandom( [FromBody] WebApi.Contracts.FandomDto.FandomCreateDto dto )
     {
-        int id = await _fandomService.Create( dto );
+        int creatorId = this.GetCurrentUserId();
+        FandomCreateDto createDto = _mapper.Map<FandomCreateDto>( dto );
+        createDto.CreatorId = creatorId;
+
+        int id = await _fandomService.Create( createDto );
 
         return Ok( id );
     }

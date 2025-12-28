@@ -31,18 +31,6 @@ public class PostConfiguration : IEntityTypeConfiguration<Post>
         builder.Property( p => p.MediaContent )
             .HasMaxLength( 1000 );
 
-        builder.HasOne( p => p.User )
-            .WithMany( u => u.Posts )
-            .HasForeignKey( p => p.UserId );
-
-        builder.HasOne( p => p.Fandom )
-            .WithMany( f => f.Posts )
-            .HasForeignKey( p => p.FandomId );
-
-        builder.HasOne( p => p.Category )
-            .WithMany( c => c.Posts )
-            .HasForeignKey( p => p.CategoryId );
-
         builder.HasMany( p => p.Comments )
             .WithOne( c => c.Post )
             .HasForeignKey( c => c.PostId )

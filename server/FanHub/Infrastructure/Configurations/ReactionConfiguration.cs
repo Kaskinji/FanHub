@@ -23,14 +23,6 @@ namespace Infrastructure.Configurations
                 .IsRequired()
                 .HasConversion<byte>();
 
-            builder.HasOne( r => r.User )
-                .WithMany( u => u.Reactions )
-                .HasForeignKey( r => r.UserId );
-
-            builder.HasOne( r => r.Post )
-                .WithMany( p => p.Reactions )
-                .HasForeignKey( r => r.PostId );
-
             builder.HasIndex( r => r.UserId );
             builder.HasIndex( r => r.PostId );
             builder.HasIndex( r => r.Date );
