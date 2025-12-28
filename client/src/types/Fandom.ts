@@ -10,3 +10,8 @@ export interface FandomPreview {
     name: string;
     imageUrl?: string;
 }
+
+export interface FandomContextData {
+  fandomId: number;
+  fandomName: string;
+}

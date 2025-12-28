@@ -1,10 +1,12 @@
 // app/posts/PostsPage.tsx
+import { useLocation } from "react-router-dom";
 import { useState } from "react";
 import Header from "../../components/Header/Header";
 import PostPreview from "../../components/Post/PostPreview/PostPreview";
 import PostFull from "../../components/Post/PostFull/PostFull";
 import styles from "./PostsPage.module.scss";
 import type { Post, Comment as CommentType } from "../../types/Post";
+import type { PostsContextData } from "../../types/Post"; 
 
 // Mock данные
 const mockPosts: Post[] = [
@@ -73,6 +75,8 @@ const mockComments: CommentType[] = [
 ];
 
 export default function PostsPage() {
+  const location = useLocation();
+  const postsData = location.state as PostsContextData;
   const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
   const [isAddingComment, setIsAddingComment] = useState(false);
 
@@ -92,7 +96,12 @@ export default function PostsPage() {
       
       <main className={styles.content}>
         <div className={styles.header}>
-          <h1 className={styles.title}>Community Posts</h1>
+          <div className={styles.fandomInfo}>
+            <span className={styles.fandomLabel}>fandom: </span>
+            <span className={styles.fandomName}>{postsData.fandomName}</span>
+          </div>
+          <h1 className={styles.title}> 
+                Posts </h1>
           <button className={styles.createButton}>Create a post</button>
         </div>
         

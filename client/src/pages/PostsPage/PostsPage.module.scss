@@ -11,6 +11,27 @@
   padding: 2rem;
 }
 
+.fandomLabel {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  font-weight: 500;
+}
+.fandomName {
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+}
+.fandomInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  width: fit-content;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 .header {
   display: flex;
   justify-content: space-between;

@@ -4,8 +4,10 @@ import SectionTitle from "../../components/UI/SectionTitle/SectionTitle";
 import styles from "./GamePage.module.scss";
 import { TitleCard } from "../../components/TitleCard/TitleCard";
 import { useNavigate } from "react-router-dom";
+import type { GameContextData } from "../../types/Game";
 
-const gameData = {
+const gameData = 
+{
   id: 1,
   title: "The Witcher 3: Wild Hunt",
   description:
@@ -37,6 +39,8 @@ const gameData = {
   ],
 };
 
+
+
 export default function GamePage() {
   return (
     <div className={styles.page}>
@@ -55,9 +59,13 @@ interface ContentProps {
 function Content({ game }: ContentProps) {
   const navigate = useNavigate();
   const handleShowMore = () => {
-    // Переход на страницу всех фандомов с передачей ID игры
-    navigate(`/allfandoms`);
-  };
+  navigate(`/allfandoms`, {
+    state: { 
+      gameId: game.id,
+      gameTitle: game.title 
+    } as GameContextData
+  });
+};
   return (
     <main className={styles.content}>
       <GameCard game={game} />

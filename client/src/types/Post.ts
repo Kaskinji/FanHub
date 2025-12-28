@@ -36,3 +36,8 @@ export interface Reaction {
   count: number;
   userReacted?: boolean;
 }
+
+export interface PostsContextData {
+  fandomId: number;
+  fandomName: string;
+}

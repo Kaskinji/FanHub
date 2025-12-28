@@ -7,7 +7,7 @@ import styles from "./FandoPage.module.scss";
 import { TitleCard } from "../../components/TitleCard/TitleCard";
 import type { FandomPageData, Reaction } from "../../types/FandomPageData";
 import { useNavigate } from "react-router-dom";
-
+import type { FandomContextData } from "../../types/Fandom";
 
 const fandomData: FandomPageData = {
   id: 1,
@@ -93,7 +93,12 @@ interface ContentProps {
 function Content({ fandom }: ContentProps) {
   const navigate = useNavigate();
   const handleShowMore = () => {
-    navigate(`/posts`);
+    navigate(`/posts`, {
+       state: { 
+         fandomId: fandom.id,
+         fandomName: fandom.title 
+       } as FandomContextData
+     });
   };
   return (
     <main className={styles.content}>
