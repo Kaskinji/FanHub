@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .button {
   padding: 5px 24px;
   border-radius: 25px;
@@ -32,7 +34,7 @@
   color: white;
   
   &:hover:not(:disabled) {
-    background-color: lighten(#400a72, 10%);
+    background-color: color.adjust(#400a72, $lightness: 10%);
     box-shadow: 0 0 10px rgba(242, 129, 255, 0.279);
   }
   
@@ -47,7 +49,6 @@
     }
   }
 }
-
 
 .button--light {
   background-color: #f0f0f0;
@@ -64,7 +65,7 @@
     border: 1px solid #400a72;
     
     &:hover:not(:disabled) {
-      background-color: lighten(#400a72, 10%);
+      background-color: color.adjust(#400a72, $lightness: 10%);
       box-shadow: 0 0 10px rgba(64, 10, 114, 0.3);
     }
   }

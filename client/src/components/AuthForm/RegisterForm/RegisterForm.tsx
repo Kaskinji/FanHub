@@ -6,6 +6,7 @@ import styles from "../RegisterForm/RegisterForm.module.scss";
 import type { RegisterFormData } from "../../../types/RegisterFormData";
 import Logo from "../../UI/Logo/Logo"
 import { useNavigate } from "react-router-dom";
+
 interface RegisterFormProps {
     onRegister?: (data: RegisterFormData) => void;
     isLoading?: boolean;
@@ -31,17 +32,24 @@ const RegisterForm: FC<RegisterFormProps> = ({
         setIsSubmitting(true);
 
         try {
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            if (data.password !== data.confirmPassword) {
+                setError("confirmPassword", {
+                    type: "manual",
+                    message: "Passwords do not match"
+                });
+                return;
+            }
 
             if (onRegister) {
                 await onRegister(data);
             } else {
                 console.log("Register data:", data);
+                alert("Registration successful! (mock)");
             }
-        } catch (error) {
+        } catch {
             setError("root", {
                 type: "manual",
-                message: "������ ��� �����������. ��������� ������."
+                message: "Error in registration."
             });
         } finally {
             setIsSubmitting(false);
@@ -60,18 +68,15 @@ const RegisterForm: FC<RegisterFormProps> = ({
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-
                 <div className={styles.inputGroup}>
-
                     <Input
-                        type="Login"
-                        placeholder="Your Login"
+                        type="text"
+                        placeholder="Login"
                         {...register("login", {
-                            required: "login is required"
+                            required: "Login is required"
                         })}
                         className={errors.login ? styles.inputError : ""}
                     />
-
                     {errors.login && (
                         <span className={styles.errorMessage}>
                             {errors.login.message}
@@ -80,16 +85,14 @@ const RegisterForm: FC<RegisterFormProps> = ({
                 </div>
 
                 <div className={styles.inputGroup}>
-
                     <Input
-                        type="username"
-                        placeholder="Your username"
+                        type="text"
+                        placeholder="Username"
                         {...register("username", {
-                            required: "username is required",
+                            required: "Username is required",
                         })}
                         className={errors.username ? styles.inputError : ""}
                     />
-
                     {errors.username && (
                         <span className={styles.errorMessage}>
                             {errors.username.message}
@@ -98,12 +101,11 @@ const RegisterForm: FC<RegisterFormProps> = ({
                 </div>
 
                 <div className={styles.inputGroup}>
-
                     <Input
                         type="password"
-                        placeholder="Your password"
+                        placeholder="Password"
                         {...register("password", {
-                            required: "password is required",
+                            required: "Password is required",
                             minLength: {
                                 value: 6,
                                 message: "The password must be at least 6 characters long"
@@ -111,7 +113,6 @@ const RegisterForm: FC<RegisterFormProps> = ({
                         })}
                         className={errors.password ? styles.inputError : ""}
                     />
-
                     {errors.password && (
                         <span className={styles.errorMessage}>
                             {errors.password.message}
@@ -120,24 +121,23 @@ const RegisterForm: FC<RegisterFormProps> = ({
                 </div>
 
                 <div className={styles.inputGroup}>
-
                     <Input
                         type="password"
-                        placeholder="Confirm password"
+                        placeholder="Confirm Password"
                         {...register("confirmPassword", {
                             required: "Please confirm your password",
                             validate: (value) =>
                                 value === password || "Passwords do not match"
                         })}
-                        className={errors.password ? styles.inputError : ""}
+                        className={errors.confirmPassword ? styles.inputError : ""}
                     />
-
-                    {errors.password && (
+                    {errors.confirmPassword && (
                         <span className={styles.errorMessage}>
-                            {errors.password.message}
+                            {errors.confirmPassword.message}
                         </span>
                     )}
                 </div>
+
                 {errors.root && (
                     <div className={styles.rootError}>
                         {errors.root.message}

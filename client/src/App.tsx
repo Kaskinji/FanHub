@@ -1,17 +1,21 @@
 import type { FC } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
-import LoginPage from "./pages/auth/login/Login";
-import RegisterPage from "./pages/auth/register/Register";
-import MainPage from "./pages/MainPage/MainPage.tsx"
+import LoginPage from "./pages/LoginPage/LoginPage.tsx";
+import RegisterPage from "./pages/RegisterPage/RegisterPage.tsx";
+import MainPage from "./pages/MainPage/MainPage.tsx";
 import GamePage from "./pages/GamePage/GamePage.tsx";
 import FandomPage from "./pages/FandomPage/FandomPage.tsx";
 import AllFandomsPage from "./pages/AllFandomsPage/AllFandomsPage.tsx";
 import AllGamesPage from "./pages/AllGamesPage/AllGamesPage.tsx"
 import PostsPage from "./pages/PostsPage/PostsPage.tsx";
+import { AuthProvider } from "./contexts/AuthContext/AuthProvider.tsx";
+import { ProfilePage } from "./pages/ProfilePage/ProfilePage.tsx";
 
 const App: FC = () => {
     return (
+      <AuthProvider>
+
         <Router>
             <Layout>
                 <Routes>
@@ -24,10 +28,11 @@ const App: FC = () => {
                     <Route path="/allfandoms" element = {<AllFandomsPage /> } />
                     <Route path="/allgames" element = {<AllGamesPage /> } />
                     <Route path="/posts" element = {<PostsPage /> } />
+                    <Route path="/profile" element={<ProfilePage/>}/>
                 </Routes>
             </Layout>
         </Router>
+      </AuthProvider>
     );
-};
-
-export default App
+  }
+export default App;

@@ -9,7 +9,7 @@
     box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
     top: 0;
     z-index: 100;
-    box-sizing:border-box;
+    box-sizing: border-box;
     left: 0;
     right: 0;
 }
@@ -17,6 +17,9 @@
 .leftSection {
     box-sizing: border-box;
     flex: 0 0 auto;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
 
     :global(.logo) {
         transition: transform 0.2s ease;
@@ -28,21 +31,103 @@
 }
 
 .centerSection {
-        box-sizing: border-box;
+    box-sizing: border-box;
     flex: 1;
     max-width: 500px;
     margin: 0 2rem;
+    
+    .loadingPlaceholder {
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+    }
 }
 
 .rightSection {
     flex: 0 0 auto;
-}
+    
+    .authLoading {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+    
+    .userSection {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        
+        .userInfo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+            
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+            
+            .avatar {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 2px solid #ffffff;
+            }
+            
+            .avatarPlaceholder {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background-color: #ffffff;
+                color: #400A72;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                font-size: 0.9rem;
+                border: 2px solid #ffffff;
+            }
+            
+            .userName {
+                color: #ffffff;
+                font-weight: 500;
+                font-size: 0.9rem;
+                max-width: 120px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+        
 
+    }
+    
+    .signInButton {
+        padding: 8px 16px;
+        background-color: #ffffff;
+        color: #400A72;
+        font-weight: 600;
+        
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+    }
+}
+.headerAvatar {
+    border: 1px white solid;
+}
 @media (max-width: 768px) {
     .header {
-        padding: 1rem;
+        padding: 12px;
         flex-wrap: wrap;
-        gap: 1rem;
+        gap: 12px;
     }
 
     .centerSection {
@@ -59,21 +144,53 @@
 
     .rightSection {
         text-align: right;
-    }
-
-    .signInButton {
-        padding: 0.6rem 1.2rem;
-        font-size: 0.9rem;
+        
+        .userSection {
+            gap: 0.5rem;
+            justify-self: end;
+            .userInfo {
+                padding: 2px 4px;
+            }
+            
+            .logoutButton {
+                padding: 4px 8px;
+                font-size: 0.8rem;
+            }
+        }
+        
+        .signInButton {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+        }
     }
 }
 
 @media (max-width: 480px) {
     .header {
-        padding: 0.75rem;
+        padding: 8px;
     }
+    
+    .rightSection {
+        .userSection {
+            .avatar {
+                width: 28px;
+                height: 28px;
+            }
 
-    .signInButton {
-        padding: 0.5rem 1rem;
-        font-size: 0.85rem;
+            .avatarPlaceholder {
+                width: 28px;
+                height: 28px;
+                font-size: 0.8rem;
+            }
+        }
+        
+        .signInButton {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+        }
+    }
+    
+    .centerSection {
+        margin-top: 4px;
     }
 }

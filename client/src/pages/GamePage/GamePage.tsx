@@ -57,6 +57,7 @@ interface ContentProps {
 }
 
 function Content({ game }: ContentProps) {
+
   const navigate = useNavigate();
   const handleShowMore = () => {
   navigate(`/allfandoms`, {
@@ -66,6 +67,7 @@ function Content({ game }: ContentProps) {
     } as GameContextData
   });
 };
+
   return (
     <main className={styles.content}>
       <GameCard game={game} />
