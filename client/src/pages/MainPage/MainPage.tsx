@@ -56,7 +56,7 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
 
   const handleShowMore = () => {
     // Переход на страницу всех фандомов с передачей ID игры
-    navigate(`/allgames?game`);
+    navigate(`/allgames`);
   };
 
   return (

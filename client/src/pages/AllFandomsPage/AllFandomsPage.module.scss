@@ -128,7 +128,6 @@
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   gap: 120px;
   width: 90%;
-  
   @media (max-width: 768px) {
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 16px;

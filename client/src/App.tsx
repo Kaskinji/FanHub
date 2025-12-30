@@ -7,31 +7,31 @@ import MainPage from "./pages/MainPage/MainPage.tsx";
 import GamePage from "./pages/GamePage/GamePage.tsx";
 import FandomPage from "./pages/FandomPage/FandomPage.tsx";
 import AllFandomsPage from "./pages/AllFandomsPage/AllFandomsPage.tsx";
-import AllGamesPage from "./pages/AllGamesPage/AllGamesPage.tsx"
+import AllGamesPage from "./pages/AllGamesPage/AllGamesPage.tsx";
 import PostsPage from "./pages/PostsPage/PostsPage.tsx";
 import { AuthProvider } from "./contexts/AuthContext/AuthProvider.tsx";
 import { ProfilePage } from "./pages/ProfilePage/ProfilePage.tsx";
 
 const App: FC = () => {
-    return (
-      <AuthProvider>
+  return (
+    <AuthProvider>
+      <Router>
+        <Layout>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/registration" element={<RegisterPage />} />
+            <Route path="/" element={<MainPage onSearch={() => {}} />} />
+            <Route path="/game/:id" element={<GamePage />} />
+            <Route path="/fandom/:id" element={<FandomPage />} />
+            <Route path="/allfandoms" element={<AllFandomsPage />} />
+            <Route path="/allgames" element={<AllGamesPage />} />
+            <Route path="/posts" element={<PostsPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+          </Routes>
+        </Layout>
+      </Router>
+    </AuthProvider>
+  );
+};
 
-        <Router>
-            <Layout>
-                <Routes>
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/registration" element={<RegisterPage />} />
-                    <Route path="/" element={<MainPage onSearch={()=>{}} />} />
-                    <Route path="/game/:id" element={<GamePage />} />
-                    <Route path="/fandom/:id" element={<FandomPage />} />
-                    <Route path="/allfandoms" element = {<AllFandomsPage /> } />
-                    <Route path="/allgames" element = {<AllGamesPage /> } />
-                    <Route path="/posts" element = {<PostsPage /> } />
-                    <Route path="/profile" element={<ProfilePage/>}/>
-                </Routes>
-            </Layout>
-        </Router>
-      </AuthProvider>
-    );
-  }
 export default App;
