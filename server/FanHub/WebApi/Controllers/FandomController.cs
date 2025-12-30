@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Extensions;
 
-namespace FanHub.Controllers;
+namespace WebApi.Controllers;
 
 [Route( "/api/fandoms" )]
 [ApiController]
@@ -29,7 +29,7 @@ public class FandomController : ControllerBase
         return Ok( fandoms );
     }
 
-    [HttpGet( "game/{gameId}" )]
+    [HttpGet( "search/{gameId}" )]
     public async Task<ActionResult<List<FandomReadDto>>> SearchFandomsByNameAndGame(
         [FromRoute] int gameId,
         [FromQuery] string? name = null )
@@ -48,7 +48,7 @@ public class FandomController : ControllerBase
         return Ok( posts );
     }
 
-    [HttpGet( "game/{gameId}/popular" )]
+    [HttpGet( "search/{gameId}/popular" )]
     public async Task<ActionResult<List<FandomReadDto>>> GetPopularFandomsByGame(
        [FromRoute] int gameId,
        [FromQuery] int limit = 20 )
@@ -70,6 +70,14 @@ public class FandomController : ControllerBase
     public async Task<ActionResult<FandomReadDto>> GetFandomById( int id )
     {
         FandomReadDto Fandom = await _fandomService.GetById( id );
+
+        return Ok( Fandom );
+    }
+
+    [HttpGet( "stats/{id}" )]
+    public async Task<ActionResult<FandomStatsDto>> GetFandomWithStatsById( int id )
+    {
+        FandomStatsDto Fandom = await _fandomService.GetFandomWithStatsById( id );
 
         return Ok( Fandom );
     }

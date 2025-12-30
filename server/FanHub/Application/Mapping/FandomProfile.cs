@@ -8,11 +8,13 @@ namespace Application.Mapping
     {
         public FandomProfile()
         {
-            CreateMap<Fandom, FandomReadDto>()
+            CreateMap<Fandom, FandomStatsDto>()
            .ForMember( dest => dest.SubscribersCount,
                 opt => opt.MapFrom( src => src.Subscriptions.Count ) )
             .ForMember( dest => dest.PostsCount,
                 opt => opt.MapFrom( src => src.Posts.Count ) );
+
+            CreateMap<Fandom, FandomReadDto>();
 
             CreateMap<FandomCreateDto, Fandom>();
 

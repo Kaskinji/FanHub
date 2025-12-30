@@ -39,7 +39,7 @@ namespace Application.Services
 
         public override async Task<List<FandomReadDto>> GetAll()
         {
-            List<Fandom> fandoms = await _fandomRepository.GetAllWithStatsAsync();
+            List<Fandom> fandoms = await _fandomRepository.GetAllAsync();
 
             return _mapper.Map<List<FandomReadDto>>( fandoms );
         }
@@ -66,6 +66,7 @@ namespace Application.Services
 
             return _mapper.Map<List<FandomReadDto>>( fandoms );
         }
+
         public async Task<List<FandomReadDto>> GetPopularByGameAsync( int gameId, int limit = 20 )
         {
             List<Fandom> fandoms = await _fandomRepository.GetPopularByGameAsync( gameId, limit );
@@ -93,6 +94,11 @@ namespace Application.Services
         protected override async Task ExistEntities( Fandom entity )
         {
             await _gameRepository.GetByIdAsyncThrow( entity.GameId );
+        }
+
+        public async Task<FandomStatsDto> GetFandomWithStatsById( int id )
+        {
+            return _mapper.Map<FandomStatsDto>( await _fandomRepository.GetByIdWithStatsAsync( id ) );
         }
     }
 }

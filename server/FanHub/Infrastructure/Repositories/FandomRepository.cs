@@ -33,6 +33,7 @@ namespace Infrastructure.Repositories
                 .Where( f => f.Name.ToLower().Contains( searchTerm ) )
                 .ToListAsync();
         }
+
         public async Task<List<Fandom>> GetAllWithStatsAsync()
         {
             return await _entities

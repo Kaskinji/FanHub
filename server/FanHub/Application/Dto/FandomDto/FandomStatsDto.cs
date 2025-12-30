@@ -1,6 +1,6 @@
 ﻿namespace Application.Dto.FandomDto
 {
-    public class FandomReadDto
+    public class FandomStatsDto
     {
         public int Id { get; set; }
         public int GameId { get; set; }
@@ -12,5 +12,7 @@
         public DateTime CreationDate { get; set; }
 
         public string Rules { get; set; } = string.Empty;
+        public int SubscribersCount { get; set; }
+        public int PostsCount { get; set; }
     }
 }
