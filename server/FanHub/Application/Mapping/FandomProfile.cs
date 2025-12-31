@@ -18,7 +18,10 @@ namespace Application.Mapping
 
             CreateMap<FandomCreateDto, Fandom>();
 
-            CreateMap<FandomUpdateDto, Fandom>();
+            CreateMap<FandomUpdateDto, Fandom>()
+            .ForAllMembers( opt => opt.Condition(
+                ( src, dest, srcMember, destMember ) => srcMember is not null
+            ) );
         }
     }
 }
