@@ -2,71 +2,216 @@ import Header from "../../components/Header/Header";
 import SearchInput from "../../components/UI/SearchInput/SearchInput";
 import SectionTitle from "../../components/UI/SectionTitle/SectionTitle";
 import styles from "../AllGamesPage/AllGamesPage.module.scss";
-import { useAllGames } from "../../hooks/useAllGamesPage";
+import Button from "../../components/UI/buttons/Button/Button"
 import type { GamePreview } from "../../types/AllGamesPageData";
 import GameCard from "../MainPage/GameCard/GameCard";
-
-const mockGames: GamePreview[] = [
-  { id: 1, name: "Rdr2", imageUrl: "/images/windows.jpg"},
-  { id: 2, name: "Hollow knight", imageUrl: "/images/hollow-knight.jpg"},
-  { id: 3, name: "Dota 2", imageUrl: "/images/dota.jpg"},
-  { id: 4, name: "Witcher", imageUrl: "/images/witcher-wiki.jpg"},
-  { id: 5, name: "Skyrim", imageUrl: "/images/minecraft.jpg" },
-  { id: 6, name: "GT", imageUrl: "/images/gta.jpg" },
-  { id: 7, name: "The Last Of Us", imageUrl: "/images/winter-champion.jpg" },
-  { id: 8, name: "DayZ", imageUrl: "/images/witcher-flower.jpg" },
-  { id: 9, name: "Rdr2", imageUrl: "/images/windows.jpg"},
-  { id: 10, name: "Hollow knight", imageUrl: "/images/hollow-knight.jpg"},
-  { id: 11, name: "Dota 2", imageUrl: "/images/dota.jpg"},
-  { id: 12, name: "Witcher", imageUrl: "/images/witcher-wiki.jpg"},
-  { id: 13, name: "Skyrm", imageUrl: "/images/minecraft.jpg" },
-  { id: 14, name: "GTA", imageUrl: "/images/gta.jpg" },
-  { id: 15, name: "The Last Of Us", imageUrl: "/images/winter-champion.jpg" },
-  { id: 16, name: "DayZ", imageUrl: "/images/witcher-flower.jpg" },
-];
+import { useGames } from "../../hooks/useGames";
+import { useEffect } from "react";
 
 export default function AllGamesPage() {
-  return (
+  const {
+    games,
+    loading,
+    error,
+    genres,
+    selectedGenre,
+    showGenreFilter,
+    loadGames,
+    searchGames,
+    filterByGenre,
+    toggleGenreFilter,
+    resetFilters,
+    clearError
+  } = useGames();
+
+  useEffect(() => {
+    loadGames();
+  }, []);
+
+  
+  const handleSearch = (query: string) => {
+    searchGames(query);
+  };
+
+  const handleGenreSelect = (genre: string) => {
+    filterByGenre(genre);
+  };
+
+  if (error) {
+    return (
       <div className={styles.page}>
-        <Header onSearch={() => {}} onSignIn={() => {}} />
-        <Content games={ mockGames } />
+        <Header onSearch={handleSearch} onSignIn={() => {}} />
+        <div className={styles.errorContainer}>
+          <p className={styles.errorText}>{error}</p>
+          <Button onClick={() => {
+            clearError();
+            loadGames();
+          }}>
+            Retry
+          </Button>
+        </div>
       </div>
+    );
+  }
+
+  return (
+    <div className={styles.page}>
+      <Header onSearch={handleSearch} onSignIn={() => {}} />
+      <Content 
+        games={games}
+        loading={loading}
+        genres={genres}
+        selectedGenre={selectedGenre}
+        showGenreFilter={showGenreFilter}
+        onSearch={handleSearch}
+        onGenreSelect={handleGenreSelect}
+        onToggleFilter={toggleGenreFilter}
+        onResetFilters={resetFilters}
+      />
+    </div>
   );
 }
 
 /* ================= CONTENT ================= */
 interface ContentProps {
-  games: typeof mockGames;
+  games: GamePreview[];
+  loading: boolean;
+  genres: string[];
+  selectedGenre: string;
+  showGenreFilter: boolean;
+  onSearch: (query: string) => void;
+  onGenreSelect: (genre: string) => void;
+  onToggleFilter: () => void;
+  onResetFilters: () => void;
 }
-function Content({ games }: ContentProps) {
-  const { setSearchQuery } = useAllGames();
+function Content({   
+  games, 
+  loading, 
+  genres, 
+  selectedGenre, 
+  showGenreFilter,
+  onSearch, 
+  onGenreSelect,
+  onToggleFilter,
+  onResetFilters  
+}: ContentProps) {
   return (
     <main className={styles.content}>
-      <Top onSearch={setSearchQuery} />
-      <Games games={ games}/>
+      <Top 
+        onSearch={onSearch}
+        onToggleFilter={onToggleFilter}
+        showGenreFilter={showGenreFilter}
+      />
+      
+      {/* Фильтр по жанрам (показывается/скрывается) */}
+      {showGenreFilter && (
+        <GenreFilter 
+          genres={genres}
+          selectedGenre={selectedGenre}
+          onSelect={onGenreSelect}
+          onClose={onToggleFilter}
+        />
+      )}
+      
+      {/* Панель активных фильтров */}
+      <ActiveFilters 
+        selectedGenre={selectedGenre}
+        onReset={onResetFilters}
+      />
+      
+      <Games games={games} loading={loading}/>
     </main>
+  );
+}
+
+interface ActiveFiltersProps {
+  selectedGenre: string;
+  onReset: () => void;
+}
+
+function ActiveFilters({ selectedGenre, onReset }: ActiveFiltersProps) {
+  if (selectedGenre === 'all') {
+    return null;
+  }
+
+  return (
+    <div className={styles.activeFilters}>
+      <div className={styles.activeFilterTag}>
+        <span className={styles.filterLabel}>Genre:</span>
+        <span className={styles.filterValue}>{selectedGenre}</span>
+        <button className={styles.removeFilter} onClick={onReset}>
+          ×
+        </button>
+      </div>
+    </div>
+  );
+}
+
+interface GenreFilterProps {
+  genres: string[];
+  selectedGenre: string;
+  onSelect: (genre: string) => void;
+  onClose: () => void;
+}
+
+function GenreFilter({ genres, selectedGenre, onSelect, onClose }: GenreFilterProps) {
+  return (
+    <div className={styles.genreFilterPanel}>
+      <div className={styles.genreFilterHeader}>
+        <h3 className={styles.genreFilterTitle}>Filter by Genre</h3>
+        <button className={styles.closeButton} onClick={onClose}>×</button>
+      </div>
+      <div className={styles.genreFilterGrid}>
+        <button
+          className={`${styles.genreOption} ${selectedGenre === 'all' ? styles.selected : ''}`}
+          onClick={() => onSelect('all')}
+        >
+          All Games
+        </button>
+        {genres.map(genre => (
+          <button
+            key={genre}
+            className={`${styles.genreOption} ${selectedGenre === genre ? styles.selected : ''}`}
+            onClick={() => onSelect(genre)}
+          >
+            {genre}
+          </button>
+        ))}
+      </div>
+    </div>
   );
 }
 
 /* ================= TOP SECTION ================= */
 
 interface TopProps {
-  onSearch: (query: string) => void;
+   onSearch: (query: string) => void;
+  onToggleFilter: () => void;
+  showGenreFilter: boolean;
 }
 
-function Top({ onSearch }: TopProps) {
-
+function Top({ onSearch, onToggleFilter, showGenreFilter }: TopProps) {
   return (
     <div className={styles.top}>
       <div className={styles.topHeader}>
-        <div className={styles.searchWrapper}>
-          <SearchInput 
-            placeholder="Search games..."
-            withIcon={true}
-            onSearch={onSearch}
-            variant="head"
-            size="medium"
-          />
+        <h1 className={styles.pageTitle}>All Games</h1>
+        <div className={styles.controls}>
+          <Button
+            variant={"light"}
+            onClick={onToggleFilter}
+            className={styles.filterButton}
+          >
+            {showGenreFilter ? "Hide Filters" : "Filter by Genre"}
+          </Button>
+          <div className={styles.searchWrapper}>
+            <SearchInput 
+              placeholder="Search games..."
+              withIcon={true}
+              onSearch={onSearch}
+              variant="head"
+              size="medium"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -74,9 +219,31 @@ function Top({ onSearch }: TopProps) {
 }
 /* ================= gameS SECTION ================= */
 interface AllGamesProps {
-  games: typeof mockGames;
+  games: GamePreview[];
+  loading: boolean;
 }
-function Games({ games }: AllGamesProps) {
+function Games({ games, loading }: AllGamesProps) {
+  if (loading) {
+    return (
+      <section className={styles.gamesSection}>
+        <SectionTitle title="Games" />
+        <div className={styles.loadingContainer}>
+          <div className={styles.loadingSpinner}></div>
+          <p>Loading games...</p>
+        </div>
+      </section>
+    );
+  }
+  if (games.length === 0) {
+    return (
+      <section className={styles.gamesSection}>
+        <SectionTitle title="Games" />
+        <div className={styles.noGames}>
+          <p>No games found</p>
+        </div>
+      </section>
+    );
+  }
   return (
     <section className={styles.gamesSection}>
       <SectionTitle title="Games" />
@@ -86,8 +253,7 @@ function Games({ games }: AllGamesProps) {
             key={game.id}
             id={game.id}
             name={game.name}
-            imageUrl={game.imageUrl
-            }
+            imageUrl={game.imageUrl}
           />
         ))}
       </div>
