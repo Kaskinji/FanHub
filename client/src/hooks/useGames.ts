@@ -1,39 +1,33 @@
 // hooks/useGames.ts
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { gameApi } from '../api/GameApi';
-import type { GamePreview } from '../types/AllGamesPageData';
-import { getGameImage } from '../utils/gameImage';
+import type { GameReadDto } from '../api/GameApi';
 
 export const useGames = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [filteredGames, setFilteredGames] = useState<GamePreview[]>([]);
+  const [gamesData, setGamesData] = useState<GameReadDto[]>([]); 
   const [selectedGenre, setSelectedGenre] = useState<string>('all');
   const [showGenreFilter, setShowGenreFilter] = useState(false);
-  const [genres, setGenres] = useState<string[]>([]);
 
+  // Преобразуем GameReadDto[] → GamePreview[] (оптимизировано через useMemo)
+  const gamesPreview = useMemo(() => 
+    gameApi.adaptToGamePreviews(gamesData),
+    [gamesData]
+  );
 
+  // Извлекаем уникальные жанры (оптимизировано через useMemo)
+  const genres = useMemo(() => 
+    Array.from(new Set(gamesData.map(game => game.genre).filter(Boolean))).sort(),
+    [gamesData]
+  );
+  
   const loadGames = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-
       const gamesData = await gameApi.getGames();
-      console.log('Games data from API:', gamesData);
-      
-      const gamePreviews = gamesData.map(game => ({
-        id: game.id,
-        name: game.title,
-        imageUrl: getGameImage(game.coverImage, game.title)
-      }));
-
-      setFilteredGames(gamePreviews); 
-      const uniqueGenres = Array.from(
-        new Set(gamesData.map(game => game.genre).filter(Boolean))
-      ).sort();
-
-      setGenres(uniqueGenres);
-      
+      setGamesData(gamesData);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to load games';
       setError(errorMessage);
@@ -43,8 +37,7 @@ export const useGames = () => {
     }
   }, []);
 
-
-   const filterByGenreAPI = useCallback(async (genre: string) => {
+  const filterByGenreAPI = useCallback(async (genre: string) => {
     try {
       setLoading(true);
       setSelectedGenre(genre);
@@ -53,16 +46,8 @@ export const useGames = () => {
       if (genre === 'all') {
         await loadGames();
       } else {
-       
-
         const gamesData = await gameApi.searchGamesByGenre(genre);
-        const gamePreviews = gamesData.map(game => ({
-          id: game.id,
-          name: game.title,
-          imageUrl: getGameImage(game.coverImage, game.title)
-        }));
-        
-        setFilteredGames(gamePreviews);
+        setGamesData(gamesData);
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to filter games';
@@ -72,33 +57,16 @@ export const useGames = () => {
     }
   }, [loadGames]);
 
-
-  const toggleGenreFilter = useCallback(() => {
-    setShowGenreFilter(prev => !prev);
-  }, []);
-
-  
-  const resetFilters = useCallback(async () => {
-    setSelectedGenre('all');
-    setShowGenreFilter(false);
-    await loadGames();
-  }, [loadGames]);
-
   const searchGames = useCallback(async (query: string) => {
     try {
       setLoading(true);
       setSelectedGenre('all');
       
       if (!query.trim()) {
-        await loadGames();
+        await loadGames(); // Показываем все игры если пустой поиск
       } else {
         const gamesData = await gameApi.searchGamesByName(query);
-        const gamePreviews = gamesData.map(game => ({
-          id: game.id,
-          name: game.title,
-          imageUrl: getGameImage(game.coverImage, game.title)
-        }));
-        setFilteredGames(gamePreviews);
+        setGamesData(gamesData); // ← Обновляем gamesData
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to search games';
@@ -108,18 +76,45 @@ export const useGames = () => {
     }
   }, [loadGames]);
 
-   return {
-    games: filteredGames,
+  const getGameById = useCallback((id: number): GameReadDto | undefined => {
+    return gamesData.find(game => game.id === id);
+  }, [gamesData]);
+
+  const toggleGenreFilter = useCallback(() => {
+    setShowGenreFilter(prev => !prev);
+  }, []);
+
+  const resetFilters = useCallback(async () => {
+    setSelectedGenre('all');
+    setShowGenreFilter(false);
+    await loadGames();
+  }, [loadGames]);
+
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
+
+  return {
+    // Для отображения списка (GamePreview[])
+    games: gamesPreview,
+    
+    // Для навигации (GameReadDto[])
+    gamesData,
+    
+    // UI состояния
     loading,
     error,
     genres,
     selectedGenre,
     showGenreFilter,
+    
+    // Методы
     loadGames,
     searchGames,
-    filterByGenre: filterByGenreAPI, 
+    filterByGenre: filterByGenreAPI,
     toggleGenreFilter,
     resetFilters,
-    clearError: () => setError(null),
+    clearError,
+    getGameById,
   };
 };

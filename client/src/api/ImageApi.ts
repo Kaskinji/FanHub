@@ -1,10 +1,10 @@
 import axios from "axios";
-import { API_CONFIG } from "../config/apiConfig";
+import { SERVER_CONFIG } from "../config/apiConfig";
 
 export class ImageApi {
   private readonly baseUrl: string;
 
-  constructor(baseUrl: string = API_CONFIG.BASE_URL) {
+  constructor(baseUrl: string = SERVER_CONFIG.BASE_URL) {
     this.baseUrl = baseUrl;
   }
 

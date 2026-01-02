@@ -2,24 +2,27 @@ import type { FC, MouseEvent } from "react";
 import BaseCard from "../../../components/BaseCard/BaseCard";
 import { useNavigate } from "react-router-dom";
 import styles from "./GameCard.module.scss";
+import type { GamePreview } from "../../../types/AllGamesPageData";
+import type { GameReadDto } from "../../../api/GameApi";
 
 interface GameCardProps {
-    id: number;
-    name: string;
-    imageUrl?: string;
-    className?: string;
-    onClick?: (id: number, name: string) => void;
+  gamePreview: GamePreview; 
+  gameFull?: GameReadDto;  
+  className?: string;
 }
 
 const GameCard: FC<GameCardProps> = ({
-    id,
-    name,
-    imageUrl,
+    gamePreview,
+    gameFull,
     className,
-    onClick,
 }) => {
-    const navigate = useNavigate();
 
+        const navigate = useNavigate();
+    if (!gamePreview) {
+        console.warn('GameCard: gamePreview is undefined');
+        return null; 
+    }
+    
     const cardClasses = [
         styles.gameCard,
         className || ""
@@ -27,26 +30,26 @@ const GameCard: FC<GameCardProps> = ({
         .filter(Boolean)
         .join(" ");
 
-    const handleAction = (event: MouseEvent, id: number) => {
-        if (onClick) {
-            onClick(id, name);
-            return;
-        }
-
-        // Иначе стандартная навигация
-        navigate(`/game/${id}`);
-    };
+     const handleAction = (event: MouseEvent, id: number) => {
+    if (gameFull) {
+      navigate(`/game/${id}`, {
+        state: { game: gameFull }
+      });
+    } else {
+      navigate(`/game/${id}`);
+    }
+  };
 
     return (
       <div className={styles.gameCardWrapper}>
         <BaseCard
-            id={id}
-            title={name}
-            imageUrl={imageUrl}
-            className={cardClasses}
-            onAction={handleAction}
-            data-testid={`game-card-${id}`}
-        />
+        id={gamePreview.id}
+        title={gamePreview.name}
+        imageUrl={gamePreview.imageUrl}
+        className={cardClasses}
+        onAction={handleAction}
+        data-testid={`game-card-${gamePreview.id}`}
+      />
         </div>
     );
 };

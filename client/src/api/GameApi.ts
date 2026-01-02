@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_CONFIG } from '../config/apiConfig';
+import { API_CONFIG, SERVER_CONFIG } from '../config/apiConfig';
 import type { GamePreview } from '../types/AllGamesPageData';
 
 export interface GameReadDto {
@@ -41,27 +41,15 @@ export class GameApi {
   }
 
 
-  getGameImageUrl(game: GameReadDto): string {
-    if (!game.coverImage) {
-      return `${this.baseUrl}/images/default-game.jpg`;
-    }
-    
-    if (game.coverImage.startsWith('http')) {
-      return game.coverImage;
-    }
-    
-    if (game.coverImage.startsWith('/')) {
-      return `${this.baseUrl}${game.coverImage}`;
-    }
-    
-    return `${this.baseUrl}/images/games/${game.coverImage}`;
+  public getGameImageUrl(game: string): string {
+    return `${SERVER_CONFIG.BASE_URL}${game}`
   }
 
    adaptToGamePreview(game: GameReadDto): GamePreview {
     return {
       id: game.id,
       name: game.title,
-      imageUrl: this.getGameImageUrl(game)
+      imageUrl: this.getGameImageUrl(game.coverImage)
     };
   }
 
@@ -72,10 +60,10 @@ export class GameApi {
 
   async getGames(): Promise<GameReadDto[]> {
   try {
-    console.log('Fetching games from:', `${this.baseUrl}/api/games`);
+    console.log('Fetching games from:', `${this.baseUrl}/games`);
     
     const response = await axios.get<GameReadDto[]>(
-      `${this.baseUrl}/api/games`,
+      `${this.baseUrl}/games`,
       {
         withCredentials: true,
         timeout: 10000,
@@ -94,7 +82,7 @@ export class GameApi {
   async searchGamesByName(name: string): Promise<GameReadDto[]> {
     try {
       const response = await axios.get<GameReadDto[]>(
-        `${this.baseUrl}/game/name`,
+        `${this.baseUrl}/games/game/name`,
         {
           params: { name },
           withCredentials: true,
@@ -112,7 +100,7 @@ export class GameApi {
   async searchGamesByGenre(genre: string): Promise<GameReadDto[]> {
   try {
     const response = await axios.get<GameReadDto[]>(
-      `${this.baseUrl}/game/genre`,
+      `${this.baseUrl}/games/game/genre`,
       {
         params: { name: genre }, 
         withCredentials: true,
@@ -130,7 +118,7 @@ export class GameApi {
   async getGameById(id: number): Promise<GameReadDto> {
     try {
       const response = await axios.get<GameReadDto>(
-        `${this.baseUrl}/api/games/${id}`,
+        `${this.baseUrl}/games/${id}`,
         {
           withCredentials: true,
           timeout: 10000,
@@ -147,7 +135,7 @@ export class GameApi {
   async createGame(gameData: GameCreateDto): Promise<number> {
     try {
       const response = await axios.post<number>(
-        `${this.baseUrl}/api/games`,
+        `${this.baseUrl}/games`,
         gameData,
         {
           headers: {
@@ -168,7 +156,7 @@ export class GameApi {
   async updateGame(id: number, gameData: GameUpdateDto): Promise<void> {
     try {
       await axios.put(
-        `${this.baseUrl}/api/games/${id}`,
+        `${this.baseUrl}/games/${id}`,
         gameData,
         {
           headers: {
@@ -187,7 +175,7 @@ export class GameApi {
   async deleteGame(id: number): Promise<void> {
     try {
       await axios.delete(
-        `${this.baseUrl}/api/games/${id}`,
+        `${this.baseUrl}/games/${id}`,
         {
           withCredentials: true,
           timeout: 10000,
