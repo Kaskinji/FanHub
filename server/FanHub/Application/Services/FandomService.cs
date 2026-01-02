@@ -67,12 +67,13 @@ namespace Application.Services
             return _mapper.Map<List<FandomReadDto>>( fandoms );
         }
 
-        public async Task<List<FandomReadDto>> GetPopularByGameAsync( int gameId, int limit = 20 )
+        public async Task<List<FandomReadDto>> GetPopularByGameAsync( int gameId, int? limit = null )
         {
             List<Fandom> fandoms = await _fandomRepository.GetPopularByGameAsync( gameId, limit );
 
             return _mapper.Map<List<FandomReadDto>>( fandoms );
         }
+
         protected override async Task CheckUnique( Fandom entity )
         {
             bool existing = await _fandomRepository.IsFandomExistAsync( entity );

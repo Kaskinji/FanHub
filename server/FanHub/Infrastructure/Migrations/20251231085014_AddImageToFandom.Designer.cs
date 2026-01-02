@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(FanHubDbContext))]
-    [Migration("20251129144829_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20251231085014_AddImageToFandom")]
+    partial class AddImageToFandom
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -134,8 +134,14 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CoverImage")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("CreatorId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -156,6 +162,8 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreationDate");
+
+                    b.HasIndex("CreatorId");
 
                     b.HasIndex("GameId");
 
@@ -449,11 +457,19 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Fandom", b =>
                 {
+                    b.HasOne("Domain.Entities.User", "Creator")
+                        .WithMany("Fandoms")
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entities.Game", "Game")
                         .WithMany("Fandoms")
                         .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Creator");
 
                     b.Navigation("Game");
                 });
@@ -577,6 +593,8 @@ namespace Infrastructure.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Events");
+
+                    b.Navigation("Fandoms");
 
                     b.Navigation("Notifications");
 

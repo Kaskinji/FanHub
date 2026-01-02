@@ -31,15 +31,12 @@ namespace Application.Services
             _fandomRepository = fandomRepository;
         }
 
-        public async Task CheckEntities( Subscription subscription )
+        public async Task<int?> GetSubscription( int fandomId, int userId )
         {
             Subscription? existingSubscription = await _subscriptionRepository.FindAsync( s =>
-                s.UserId == subscription.UserId && s.FandomId == subscription.FandomId );
+                s.UserId == userId && s.FandomId == fandomId );
 
-            if ( existingSubscription is not null )
-            {
-                throw new ArgumentException( "Пользователь уже подписан на этот фандом" );
-            }
+            return existingSubscription?.Id;
         }
 
         protected override Subscription InitializeEntity( SubscriptionCreateDto dto )
@@ -54,6 +51,14 @@ namespace Application.Services
         {
             await _userRepository.GetByIdAsyncThrow( subscription.UserId );
             await _fandomRepository.GetByIdAsyncThrow( subscription.FandomId );
+
+            Subscription? existingSubscription = await _subscriptionRepository.FindAsync( s =>
+                s.UserId == subscription.UserId && s.FandomId == subscription.FandomId );
+
+            if ( existingSubscription is not null )
+            {
+                throw new ArgumentException( "Пользователь уже подписан на этот фандом" );
+            }
         }
     }
 }

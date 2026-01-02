@@ -15,7 +15,6 @@ namespace Domain.Validators
 
             RuleFor( x => x.Date )
                 .NotEmpty().WithMessage( "Дата подписки обязательна" )
-                //.LessThanOrEqualTo( DateTime.UtcNow ).WithMessage( "Дата подписки не может быть в будущем" )
                 .GreaterThanOrEqualTo( DateTime.UtcNow.AddYears( -1 ) ).WithMessage( "Дата подписки не может быть старше 1 года" );
         }
     }

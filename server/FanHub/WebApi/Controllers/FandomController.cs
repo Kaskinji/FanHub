@@ -51,7 +51,7 @@ public class FandomController : ControllerBase
     [HttpGet( "search/{gameId}/popular" )]
     public async Task<ActionResult<List<FandomReadDto>>> GetPopularFandomsByGame(
        [FromRoute] int gameId,
-       [FromQuery] int limit = 20 )
+       [FromQuery] int? limit = null )
     {
         List<FandomReadDto> fandoms = await _fandomService.GetPopularByGameAsync( gameId, limit );
 

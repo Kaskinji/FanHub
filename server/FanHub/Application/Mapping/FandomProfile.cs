@@ -20,7 +20,7 @@ namespace Application.Mapping
 
             CreateMap<FandomUpdateDto, Fandom>()
             .ForAllMembers( opt => opt.Condition(
-                ( src, dest, srcMember, destMember ) => srcMember is not null
+                ( src, dest, srcMember, destMember ) => srcMember is not null && srcMember != default
             ) );
         }
     }

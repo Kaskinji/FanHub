@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class AddImageToFandom : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -68,10 +69,12 @@ namespace Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     GameId = table.Column<int>(type: "int", nullable: false),
+                    CreatorId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Rules = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Rules = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CoverImage = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -81,7 +84,12 @@ namespace Infrastructure.Migrations
                         column: x => x.GameId,
                         principalTable: "Games",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Fandoms_Users_CreatorId",
+                        column: x => x.CreatorId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -303,6 +311,11 @@ namespace Infrastructure.Migrations
                 column: "CreationDate");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Fandoms_CreatorId",
+                table: "Fandoms",
+                column: "CreatorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Fandoms_GameId",
                 table: "Fandoms",
                 column: "GameId");
@@ -455,10 +468,10 @@ namespace Infrastructure.Migrations
                 name: "Fandoms");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Games");
 
             migrationBuilder.DropTable(
-                name: "Games");
+                name: "Users");
         }
     }
 }

@@ -12,5 +12,7 @@
         public DateTime CreationDate { get; set; }
 
         public string Rules { get; set; } = string.Empty;
+
+        public string? CoverImage { get; set; } = null;
     }
 }

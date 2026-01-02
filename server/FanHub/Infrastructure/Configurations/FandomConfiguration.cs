@@ -27,6 +27,8 @@ public class FandomConfiguration : IEntityTypeConfiguration<Fandom>
         builder.Property( f => f.Rules )
             .IsRequired();
 
+        builder.Property( f => f.CoverImage );
+
         builder.HasMany( f => f.Events )
             .WithOne( e => e.Fandom )
             .HasForeignKey( e => e.FandomId );
