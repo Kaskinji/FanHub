@@ -33,6 +33,7 @@ export class AuthApi {
       this.handleAuthError(error);
     }
   }
+  
   async register(data: RegisterData): Promise<number> {
     try {
       console.log("sending:", data);

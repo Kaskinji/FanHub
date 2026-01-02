@@ -2,15 +2,15 @@ import { useEffect, type FC } from "react";
 import Logo from "../UI/Logo/Logo";
 import Button from "../UI/buttons/Button/Button";
 import SearchInput from "../UI/SearchInput/SearchInput";
-import { Avatar } from "../UI/Avatar/Avatar"; // Импортируем компонент
+import { Avatar } from "../UI/Avatar/Avatar";
 import styles from "../Header/Header.module.scss";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
-import { SERVER_CONFIG } from "../../config/apiConfig";
+import { getImageUrl } from "../../utils/urlUtils";
 
 interface HeaderProps {
   onSearch: (query: string) => void;
-  onSignIn: () => void;
+  onSignIn?: () => void; // Сделаем необязательным
 }
 
 const Header: FC<HeaderProps> = ({ onSearch, onSignIn }) => {
@@ -18,11 +18,22 @@ const Header: FC<HeaderProps> = ({ onSearch, onSignIn }) => {
   const { isAuthenticated, user, isLoading } = useAuth();
 
   const handleLogoClick = () => {
-    navigate(isAuthenticated ? "/main" : "/");
+    navigate("/");
   };
 
   const handleProfileClick = () => {
     navigate("/profile");
+  };
+
+  // Функция для входа
+  const handleSignIn = () => {
+    if (onSignIn) {
+      // Если передали извне - используем кастомную логику
+      onSignIn();
+    } else {
+      // Иначе используем навигацию по умолчанию
+      navigate("/login");
+    }
   };
 
   useEffect(() => {
@@ -71,7 +82,7 @@ const Header: FC<HeaderProps> = ({ onSearch, onSignIn }) => {
               title="Go to profile"
             >
               <Avatar
-                src={`${SERVER_CONFIG.BASE_URL}` + user.avatar}
+                src={user.avatar ? getImageUrl(user.avatar) : undefined}
                 alt={user.name}
                 size="small"
                 onClick={handleProfileClick}
@@ -83,7 +94,7 @@ const Header: FC<HeaderProps> = ({ onSearch, onSignIn }) => {
         ) : (
           <Button
             variant="light"
-            onClick={onSignIn}
+            onClick={handleSignIn}
             className={styles.signInButton}
           >
             Sign in

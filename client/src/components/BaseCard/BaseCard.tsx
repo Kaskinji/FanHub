@@ -1,5 +1,6 @@
 import type { FC, MouseEvent } from "react";
 import styles from "./BaseCard.module.scss";
+import { getImageUrl } from "../../utils/urlUtils";
 
 interface BaseCardProps {
     id: number;
@@ -67,7 +68,7 @@ const BaseCard: FC<BaseCardProps> = ({
             <div className={styles.imageContainer}>
                 {imageUrl ? (
                     <img
-                        src={imageUrl}
+                        src={getImageUrl(imageUrl)}
                         alt={title}
                         className={styles.cardImage}
                         loading="lazy"
