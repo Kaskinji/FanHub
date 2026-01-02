@@ -33,6 +33,7 @@ namespace Infrastructure.Repositories
                 .Where( f => f.Name.ToLower().Contains( searchTerm ) )
                 .ToListAsync();
         }
+
         public async Task<List<Fandom>> GetAllWithStatsAsync()
         {
             return await _entities
@@ -67,9 +68,9 @@ namespace Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<Fandom>> GetPopularByGameAsync( int gameId, int limit = 20 )
+        public async Task<List<Fandom>> GetPopularByGameAsync( int gameId, int? limit = null )
         {
-            return await _entities
+            IQueryable<Fandom> query = _entities
                 .Include( f => f.Subscriptions )
                 .Include( f => f.Posts )
                 .Where( f => f.GameId == gameId )
@@ -81,15 +82,20 @@ namespace Infrastructure.Repositories
                 } )
                 .OrderByDescending( x => x.SubscriptionsCount )
                 .ThenByDescending( x => x.PostsCount )
-                .Select( x => x.Fandom )
-                .Take( limit )
-                .ToListAsync();
+                .Select( x => x.Fandom );
+
+            if ( limit.HasValue )
+            {
+                query = query.Take( limit.Value );
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task<bool> IsFandomExistAsync( Fandom entity )
         {
             return await _entities
-                .AnyAsync( c => c.Name == entity.Name );
+                .AnyAsync( c => c.Name == entity.Name && entity.Id == c.Id );
         }
     }
 }

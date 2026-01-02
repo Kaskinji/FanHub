@@ -27,7 +27,7 @@ namespace Infrastructure.Repositories
         public async Task<bool> IsGameExistAsync( Game entity )
         {
             return await _entities
-                .AnyAsync( c => c.Title == entity.Title );
+                .AnyAsync( c => c.Title == entity.Title && c.Id != entity.Id );
         }
     }
 }

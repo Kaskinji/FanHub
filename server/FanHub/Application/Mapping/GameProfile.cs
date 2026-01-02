@@ -12,7 +12,26 @@ namespace Application.Mapping
 
             CreateMap<GameCreateDto, Game>();
 
-            CreateMap<GameUpdateDto, Game>();
+            CreateMap<GameUpdateDto, Game>()
+                .ForAllMembers( opts => opts.Condition( ( src, dest, srcMember ) =>
+                {
+                    if ( srcMember == null )
+                    {
+                        return false;
+                    }
+
+                    if ( srcMember is DateTime dateTimeValue && dateTimeValue == default )
+                    {
+                        return false;
+                    }
+
+                    if ( srcMember is string stringValue && string.IsNullOrEmpty( stringValue ) )
+                    {
+                        return false;
+                    }
+
+                    return true;
+                } ) );
         }
     }
 }

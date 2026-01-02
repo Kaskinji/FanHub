@@ -8,6 +8,7 @@ namespace Application.Services.Interfaces
         Task<List<FandomReadDto>> SearchByNameAsync( string searchTerm );
         Task<List<FandomReadDto>> SearchByNameAndGameIdAsync( string searchTerm, int gameId );
         Task<List<FandomReadDto>> GetPopularAsync( int limit );
-        Task<List<FandomReadDto>> GetPopularByGameAsync( int gameId, int limit = 20 );
+        Task<List<FandomReadDto>> GetPopularByGameAsync( int gameId, int? limit = null );
+        Task<FandomStatsDto> GetFandomWithStatsById( int id );
     }
 }

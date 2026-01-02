@@ -24,11 +24,13 @@ namespace Domain.Validators
                 .Length( 5, 5000 ).WithMessage( "Правила должны быть от 5 до 5000 символов" )
                 .Must( rules => !string.IsNullOrWhiteSpace( rules ) ).WithMessage( "Правила не могут состоять только из пробелов" );
 
+            RuleFor( x => x.CoverImage )
+                .MaximumLength( 1000 ).WithMessage( "Ссылка на картинку слишком длинная" );
+
             RuleFor( x => x.GameId )
                 .GreaterThan( 0 ).WithMessage( "ID игры должен быть положительным числом" );
 
             RuleFor( x => x.CreationDate )
-                //.LessThanOrEqualTo( DateTime.UtcNow ).WithMessage( "Дата создания не может быть в будущем" )
                 .GreaterThanOrEqualTo( new DateTime( 2000, 1, 1, 0, 0, 0, DateTimeKind.Utc ) ).WithMessage( "Дата создания не может быть раньше 2000 года" )
                 .When( x => x.CreationDate != default );
         }

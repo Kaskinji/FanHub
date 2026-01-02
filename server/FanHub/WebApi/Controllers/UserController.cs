@@ -1,13 +1,10 @@
-﻿using System.Security.Claims;
-using Application.Dto.UserDto;
+﻿using Application.Dto.UserDto;
 using Application.Services.Auth;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using WebApi.Extensions;
-using WebApi.Options;
 
 namespace WebApi.Controllers
 {

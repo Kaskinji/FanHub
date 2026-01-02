@@ -2,13 +2,14 @@
 {
     public class FandomUpdateDto
     {
-        public int GameId { get; set; }
+        public int? GameId { get; set; } = null;
 
-        public string Name { get; set; } = string.Empty;
+        public string? Name { get; set; } = null;
 
-        public string Description { get; set; } = string.Empty;
+        public string? Description { get; set; } = null;
 
-        public string Rules { get; set; } = string.Empty;
-        public int SubscribersCount { get; set; }
+        public string? Rules { get; set; } = null;
+
+        public string? CoverImage { get; set; } = null;
     }
 }

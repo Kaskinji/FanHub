@@ -52,6 +52,17 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
+        [HttpGet( "current/{fandomId}" )]
+        public async Task<ActionResult<int?>> GetCurrentUserSubscriptionId( [FromRoute] int fandomId )
+        {
+            int userId = this.GetCurrentUserId();
+
+            int? id = await _subscriptionService.GetSubscription( fandomId, userId );
+
+            return Ok( id );
+        }
+
+        [Authorize]
         [HttpDelete( "{id}" )]
         public async Task<IActionResult> DeleteSubscription( int id )
         {

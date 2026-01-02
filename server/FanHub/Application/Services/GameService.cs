@@ -32,6 +32,7 @@ namespace Application.Services
             List<Game> games = await _gameRepository.SearchGamesByGenreAsync( searchTerm );
             return _mapper.Map<List<GameReadDto>>( games );
         }
+
         protected async override Task CheckUnique( Game entity )
         {
             bool existing = await _gameRepository.IsGameExistAsync( entity );
