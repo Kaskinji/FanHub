@@ -24,7 +24,7 @@ public class GameController : ControllerBase
         return Ok( games );
     }
 
-    [HttpGet( "/game/name" )]
+    [HttpGet( "game/name" )]
     public async Task<ActionResult<GameReadDto>> GetGameByName(
         [FromQuery] string name )
     {
@@ -32,7 +32,7 @@ public class GameController : ControllerBase
 
         return Ok( games );
     }
-    [HttpGet( "/game/genre" )]
+    [HttpGet( "game/genre" )]
     public async Task<ActionResult<GameReadDto>> GetGameByGenre(
         [FromQuery] string name )
     {
