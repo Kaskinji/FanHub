@@ -4,7 +4,8 @@ export interface FandomPageData {
   description: string;
   coverImage: string;
   rules: string;
-
+  subscribersCount: number;
+  postsCount: number;
   postsPreviews: Array<{
     id: number;
     title: string;

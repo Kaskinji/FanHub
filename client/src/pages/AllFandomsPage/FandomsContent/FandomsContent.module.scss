@@ -1,0 +1,146 @@
+.fandomsSection {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 120px;
+}
+
+.sectionTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.fandomsGrid {
+  display:grid;
+  justify-items: center;
+  margin-left: 50px;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 120px;
+  width: 90%;
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+    
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Стили для карточек фандомов (адаптируем под референс)
+.fandomCard {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  min-height: 90px;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.fandomImage {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.fandomPlaceholder {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  font-weight: 700;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.fandomInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.fandomName {
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 6px 0;
+  line-height: 1.3;
+  
+  // Обрезание длинных названий
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.addFandomButton {
+  background: linear-gradient(90deg, rgb(98, 20, 171), rgb(130, 40, 200));
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  
+  &:hover {
+    background: linear-gradient(90deg, rgb(110, 25, 190), rgb(140, 50, 220));
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(98, 20, 171, 0.3);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.emptyState {
+  text-align: center;
+  padding: 40px 20px;
+  background: rgba(30, 30, 40, 0.3);
+  border-radius: 12px;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.emptyAddButton {
+  margin-top: 20px;
+  background: linear-gradient(90deg, rgb(98, 20, 171), rgb(130, 40, 200));
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: linear-gradient(90deg, rgb(110, 25, 190), rgb(140, 50, 220));
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(98, 20, 171, 0.3);
+  }
+}

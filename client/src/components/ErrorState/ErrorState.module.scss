@@ -1,0 +1,41 @@
+// components/UI/ErrorState/ErrorState.module.scss
+.errorState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  max-width: 500px;
+  margin: auto;
+  background-color: #ff6b6ba7;
+  border: 2px solid #ff6b6b;
+}
+
+.errorText {
+  color: #ffffff;
+  font-size: 16px;
+  margin: 0;
+}
+
+.retryButton {
+  background: rgba(255, 255, 255, 0.871);
+  color: rgb(74, 15, 102);
+  border: 0px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: rgba(236, 207, 255, 0.916);
+  }
+  
+  &:active {
+    transform: scale(0.98);
+  }
+}

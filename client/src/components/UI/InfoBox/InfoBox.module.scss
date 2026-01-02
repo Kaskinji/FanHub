@@ -1,0 +1,23 @@
+// components/UI/InfoBox/InfoBox.module.scss
+.infoBox {
+  background: rgb(255, 255, 255);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 16px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #5e128a;
+  margin-bottom: 12px;
+}
+
+.info {
+  font-size: 16px;
+  line-height: 1.5;
+  color: rgba(26, 5, 39, 0.8);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
