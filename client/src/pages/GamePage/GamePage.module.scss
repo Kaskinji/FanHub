@@ -23,12 +23,24 @@
   display: grid;
   grid-template-columns: 1fr 1.5fr;
   gap: 32px;
+  border-radius: 20px;
+  padding: 24px;
+}
+
+.gameLeft {
+  display: flex;
+  flex-direction: column;
 }
 
 .cardTitle {
   margin-bottom: 20px;
+  margin-left: 20px;
+  overflow: hidden;
+  border-radius: 16px;
+  
+  max-width: 80%;
+  height: auto;
 }
-
 .stats {
   display: flex;
   gap: 30px;

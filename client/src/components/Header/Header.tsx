@@ -2,7 +2,7 @@ import { useEffect, type FC } from "react";
 import Logo from "../UI/Logo/Logo";
 import Button from "../UI/buttons/Button/Button";
 import SearchInput from "../UI/SearchInput/SearchInput";
-import { Avatar } from "../UI/Avatar/Avatar"; // Импортируем компонент
+import { Avatar } from "../UI/Avatar/Avatar"; 
 import styles from "../Header/Header.module.scss";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
