@@ -69,7 +69,7 @@ export default function AllFandomsPage() {
     setShowAddForm(true);
   };
 
-  const handleFandomCreated = (fandomId: number) => {
+  const handleFandomCreated = () => {
     setShowAddForm(false);
     setRefreshTrigger(prev => prev + 1); // Обновляем список
   };

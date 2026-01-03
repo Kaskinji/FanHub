@@ -5,6 +5,23 @@
   height: 100%;
 }
 
+/* Modal overlay used by ManageFandomForm */
+.formContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  overflow-y: auto;
+}
+
 .fandomStats {
   display: flex;
   gap: 20px;
@@ -126,6 +143,27 @@
   &.subscribed:hover {
     background: #8f1283;
     color: white;
+  }
+}
+
+.manageButton {
+  padding: 6px 12px;
+  border-radius: 0px 0px 6px 6px;
+  background: linear-gradient(90deg, rgb(98, 20, 171), rgb(130, 40, 200));
+  color: white;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 8px rgba(98, 20, 171, 0.3);
+
+  &:hover:not(:disabled) {
+    box-shadow: 0 6px 12px rgba(98, 20, 171, 0.3), 0 0 16px rgba(130, 40, 200, 0.3);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 }
 

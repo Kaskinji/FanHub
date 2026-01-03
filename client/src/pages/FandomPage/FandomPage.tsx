@@ -11,11 +11,11 @@ import { subscriptionApi } from "../../api/SubscriptionApi";
 import postIcon from "../../assets/postIcon.svg";
 import subscriberIcon from "../../assets/subscriberIcon.svg";
 import styles from "./FandomPage.module.scss";
+import ManageFandomForm from "./ManageFandomForm/ManageFandomForm";
 import InfoBox from "../../components/UI/InfoBox/InfoBox";
 import ErrorMessage from "../../components/UI/ErrorMessage/ErrorMessage";
 import ErrorState from "../../components/ErrorState/ErrorState";
 
-// Моковые данные для постов и ивентов
 const mockPosts = [
   {
     id: 1,
@@ -77,6 +77,10 @@ const mockEvents = [
 export default function FandomPage() {
   const { id } = useParams<{ id: string }>();
   const [fandomData, setFandomData] = useState<FandomPageData | null>(null);
+  const [initialIsCreator, setInitialIsCreator] = useState<boolean | null>(null);
+  const [initialSubscriptionId, setInitialSubscriptionId] = useState<
+    number | null | undefined
+  >(undefined);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -94,6 +98,27 @@ export default function FandomPage() {
         const fandomStats: FandomStatsDto =
           await fandomApi.getFandomWithStatsById(parseInt(id));
 
+        // Параллельно получаем статус создателя и подписку текущего пользователя,
+        // чтобы избежать мигания кнопки подписки при первоначальном рендере.
+        let creatorResult: boolean | null = null;
+        let subscriptionResult: number | null | undefined = undefined;
+
+        try {
+          creatorResult = await fandomApi.checkCreator(fandomStats.id);
+        } catch (err) {
+          console.error("Error checking creator status:", err);
+          creatorResult = null;
+        }
+
+        try {
+          subscriptionResult = await subscriptionApi.getCurrentUserSubscription(
+            fandomStats.id
+          );
+        } catch (err) {
+          console.error("Error checking subscription:", err);
+          subscriptionResult = undefined;
+        }
+
         // Преобразуем данные из API в формат страницы
         const transformedData: FandomPageData = {
           id: fandomStats.id,
@@ -108,6 +133,8 @@ export default function FandomPage() {
         };
 
         setFandomData(transformedData);
+        setInitialIsCreator(creatorResult);
+        setInitialSubscriptionId(subscriptionResult);
         setError(null);
       } catch (err) {
         setError(
@@ -155,7 +182,11 @@ export default function FandomPage() {
   return (
     <div className={styles.page}>
       <Header onSearch={() => {}} />
-      <Content fandom={fandomData} />
+      <Content
+        fandom={fandomData}
+        initialIsCreator={initialIsCreator}
+        initialSubscriptionId={initialSubscriptionId}
+      />
     </div>
   );
 }
@@ -164,9 +195,11 @@ export default function FandomPage() {
 
 interface ContentProps {
   fandom: FandomPageData;
+  initialIsCreator?: boolean | null;
+  initialSubscriptionId?: number | null | undefined;
 }
 
-function Content({ fandom }: ContentProps) {
+function Content({ fandom, initialIsCreator, initialSubscriptionId }: ContentProps) {
   const navigate = useNavigate();
 
   const handleShowMore = () => {
@@ -180,7 +213,7 @@ function Content({ fandom }: ContentProps) {
 
   return (
     <main className={styles.content}>
-      <FandomCard fandom={fandom} />
+      <FandomCard fandom={fandom} initialIsCreator={initialIsCreator} initialSubscriptionId={initialSubscriptionId} />
       <SectionTitle title="Events" />
       <Events events={fandom.eventsPreviews} />
       <ShowMoreButton variant="light" />
@@ -194,28 +227,48 @@ function Content({ fandom }: ContentProps) {
 /* ================= FANDOM CARD ================= */
 interface FandomCardProps {
   fandom: FandomPageData;
+  initialIsCreator?: boolean | null;
+  initialSubscriptionId?: number | null | undefined;
 }
 
-function FandomCard({ fandom }: FandomCardProps) {
-  const [isSubscribed, setIsSubscribed] = useState(false);
+function FandomCard({ fandom, initialIsCreator, initialSubscriptionId }: FandomCardProps) {
+  const [isSubscribed, setIsSubscribed] = useState<boolean | null>(null);
   const [subscriptionId, setSubscriptionId] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
-  const [subscriptionError, setSubscriptionError] = useState<string | null>(
-    null
-  );
-  const [subscribersCount, setSubscribersCount] = useState(
-    fandom.subscribersCount
-  );
+  const [subscriptionError, setSubscriptionError] = useState<string | null>(null);
+  const [subscribersCount, setSubscribersCount] = useState(fandom.subscribersCount);
+  const [isCreator, setIsCreator] = useState(false);
+  const [showManageForm, setShowManageForm] = useState(false);
+  const [initialCheckDone, setInitialCheckDone] = useState(false);
 
-  // Проверяем подписку пользователя при загрузке
   useEffect(() => {
+    if (initialIsCreator !== undefined) setIsCreator(Boolean(initialIsCreator));
+
+    if (initialSubscriptionId !== undefined) {
+      if (initialSubscriptionId === null) {
+        setIsSubscribed(false);
+        setSubscriptionId(null);
+      } else {
+        setIsSubscribed(true);
+        setSubscriptionId(initialSubscriptionId as number);
+      }
+      setInitialCheckDone(true);
+      return;
+    }
+
+    const checkCreator = async () => {
+      try {
+        const result = await fandomApi.checkCreator(fandom.id);
+        setIsCreator(result);
+      } catch (err) {
+        console.error("Error checking creator status:", err);
+      }
+    };
+
     const checkSubscription = async () => {
       try {
-        const subscription = await subscriptionApi.getCurrentUserSubscription(
-          fandom.id
-        );
-        if (subscription !== null ) {
-          console.log("result:", subscription)
+        const subscription = await subscriptionApi.getCurrentUserSubscription(fandom.id);
+        if (subscription !== null) {
           setIsSubscribed(true);
           setSubscriptionId(subscription);
         } else {
@@ -223,11 +276,14 @@ function FandomCard({ fandom }: FandomCardProps) {
         }
       } catch (err) {
         console.error("Error checking subscription:", err);
+      } finally {
+        setInitialCheckDone(true);
       }
     };
 
+    checkCreator();
     checkSubscription();
-  }, [fandom.id]);
+  }, [fandom.id, initialIsCreator, initialSubscriptionId]);
 
   const handleSubscribe = async () => {
     if (loading) return;
@@ -242,17 +298,13 @@ function FandomCard({ fandom }: FandomCardProps) {
         setSubscriptionId(null);
         setSubscribersCount((prev) => prev - 1);
       } else {
-        const newSubscriptionId = await subscriptionApi.createSubscription({
-          fandomId: fandom.id,
-        });
+        const newSubscriptionId = await subscriptionApi.createSubscription({ fandomId: fandom.id });
         setIsSubscribed(true);
         setSubscriptionId(newSubscriptionId);
         setSubscribersCount((prev) => prev + 1);
       }
     } catch (err) {
-      setSubscriptionError(
-        err instanceof Error ? err.message : "Failed to update subscription"
-      );
+      setSubscriptionError(err instanceof Error ? err.message : "Failed to update subscription");
       console.error("Subscription error:", err);
     } finally {
       setLoading(false);
@@ -262,37 +314,53 @@ function FandomCard({ fandom }: FandomCardProps) {
   return (
     <>
       {subscriptionError && (
-        <ErrorMessage message={subscriptionError} onClose={() => setSubscriptionError(null)}/>
+        <ErrorMessage message={subscriptionError} onClose={() => setSubscriptionError(null)} />
       )}
       <section className={styles.fandomCard}>
         <div className={styles.fandomLeft}>
           <div className={styles.cardTitle}>
-            <TitleCard
-              className={styles.fandomTitleCard}
-              title={fandom.title}
-              image={fandom.coverImage}
-            />
+            <TitleCard className={styles.fandomTitleCard} title={fandom.title} image={fandom.coverImage} />
             <div className={styles.statsWrapper}>
-              <button
-                className={`${styles.subscribeButton} ${isSubscribed ? styles.subscribed : ""}`}
-                onClick={handleSubscribe}
-                disabled={loading}
-              >
-                {loading
-                  ? "Loading..."
-                  : isSubscribed
-                    ? "Unsubscribe"
-                    : "Subscribe"}
-              </button>
+              {isCreator ? (
+                <>
+                  <button className={styles.manageButton} onClick={() => setShowManageForm(true)} disabled={loading}>
+                    Manage Fandom
+                  </button>
+
+                  {showManageForm && (
+                    <div className={styles.formContainer}>
+                      <ManageFandomForm
+                        fandomId={fandom.id}
+                        onCancel={() => setShowManageForm(false)}
+                        onSuccess={() => {
+                          setShowManageForm(false);
+                          window.location.reload();
+                        }}
+                      />
+                    </div>
+                  )}
+                </>
+              ) : (
+                // Не рендерим окончательную кнопку, пока не завершится первоначальная проверка
+                (!initialCheckDone ? (
+                  <button className={styles.subscribeButton} disabled>
+                    Loading...
+                  </button>
+                ) : (
+                  <button
+                    className={`${styles.subscribeButton} ${isSubscribed ? styles.subscribed : ""}`}
+                    onClick={handleSubscribe}
+                    disabled={loading}
+                  >
+                    {loading ? "Loading..." : isSubscribed ? "Unsubscribe" : "Subscribe"}
+                  </button>
+                ))
+              )}
 
               <div className={styles.fandomStats}>
                 <div className={styles.statItem}>
                   <span className={styles.statNumber}>{subscribersCount}</span>
-                  <img
-                    className={styles.statIcon}
-                    src={subscriberIcon}
-                    alt="Subscribers"
-                  />
+                  <img className={styles.statIcon} src={subscriberIcon} alt="Subscribers" />
                 </div>
                 <div className={styles.statItem}>
                   <span className={styles.statNumber}>{fandom.postsCount}</span>

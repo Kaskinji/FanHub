@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { API_CONFIG } from '../config/apiConfig';
+import axios from "axios";
+import { API_CONFIG } from "../config/apiConfig";
 
 export interface FandomReadDto {
   id: number;
@@ -27,7 +27,7 @@ export interface FandomCreateDto {
   gameId: number;
   name: string;
   description: string;
-  coverImage: string;
+  coverImage: string | undefined;
   rules: string;
 }
 
@@ -35,7 +35,7 @@ export interface FandomUpdateDto {
   gameId: number;
   name: string;
   description: string;
-  coverImage: string;
+  coverImage: string | undefined;
   rules: string;
 }
 
@@ -51,14 +51,17 @@ export class FandomApi {
    */
   async getFandoms(): Promise<FandomReadDto[]> {
     try {
-      const response = await axios.get<FandomReadDto[]>(`${this.baseUrl}/fandoms`, {
-        withCredentials: true,
-        timeout: 10000,
-      });
+      const response = await axios.get<FandomReadDto[]>(
+        `${this.baseUrl}/fandoms`,
+        {
+          withCredentials: true,
+          timeout: 10000,
+        }
+      );
 
       return response.data;
     } catch (error) {
-      this.handleFandomError(error, 'Failed to fetch fandoms');
+      this.handleFandomError(error, "Failed to fetch fandoms");
     }
   }
 
@@ -67,10 +70,13 @@ export class FandomApi {
    */
   async getFandomById(id: number): Promise<FandomReadDto> {
     try {
-      const response = await axios.get<FandomReadDto>(`${this.baseUrl}/fandoms/${id}`, {
-        withCredentials: true,
-        timeout: 10000,
-      });
+      const response = await axios.get<FandomReadDto>(
+        `${this.baseUrl}/fandoms/${id}`,
+        {
+          withCredentials: true,
+          timeout: 10000,
+        }
+      );
 
       return response.data;
     } catch (error) {
@@ -83,14 +89,20 @@ export class FandomApi {
    */
   async getFandomWithStatsById(id: number): Promise<FandomStatsDto> {
     try {
-      const response = await axios.get<FandomStatsDto>(`${this.baseUrl}/fandoms/stats/${id}`, {
-        withCredentials: true,
-        timeout: 10000,
-      });
+      const response = await axios.get<FandomStatsDto>(
+        `${this.baseUrl}/fandoms/stats/${id}`,
+        {
+          withCredentials: true,
+          timeout: 10000,
+        }
+      );
 
       return response.data;
     } catch (error) {
-      this.handleFandomError(error, `Failed to fetch fandom stats with ID ${id}`);
+      this.handleFandomError(
+        error,
+        `Failed to fetch fandom stats with ID ${id}`
+      );
     }
   }
 
@@ -99,32 +111,47 @@ export class FandomApi {
    */
   async searchFandomsByName(name: string): Promise<FandomReadDto[]> {
     try {
-      const response = await axios.get<FandomReadDto[]>(`${this.baseUrl}/fandoms/name`, {
-        params: { name },
-        withCredentials: true,
-        timeout: 10000,
-      });
+      const response = await axios.get<FandomReadDto[]>(
+        `${this.baseUrl}/fandoms/name`,
+        {
+          params: { name },
+          withCredentials: true,
+          timeout: 10000,
+        }
+      );
 
       return response.data;
     } catch (error) {
-      this.handleFandomError(error, `Failed to search fandoms by name: ${name}`);
+      this.handleFandomError(
+        error,
+        `Failed to search fandoms by name: ${name}`
+      );
     }
   }
 
   /**
    * Поиск фандомов по названию и игре
    */
-  async searchFandomsByNameAndGame(gameId: number, name?: string): Promise<FandomReadDto[]> {
+  async searchFandomsByNameAndGame(
+    gameId: number,
+    name?: string
+  ): Promise<FandomReadDto[]> {
     try {
-      const response = await axios.get<FandomReadDto[]>(`${this.baseUrl}/fandoms/search/${gameId}`, {
-        params: { name: name || '' },
-        withCredentials: true,
-        timeout: 10000,
-      });
+      const response = await axios.get<FandomReadDto[]>(
+        `${this.baseUrl}/fandoms/search/${gameId}`,
+        {
+          params: { name: name || "" },
+          withCredentials: true,
+          timeout: 10000,
+        }
+      );
 
       return response.data;
     } catch (error) {
-      this.handleFandomError(error, `Failed to search fandoms by game ID ${gameId} and name: ${name}`);
+      this.handleFandomError(
+        error,
+        `Failed to search fandoms by game ID ${gameId} and name: ${name}`
+      );
     }
   }
 
@@ -133,32 +160,69 @@ export class FandomApi {
    */
   async getPopularFandoms(limit: number = 20): Promise<FandomReadDto[]> {
     try {
-      const response = await axios.get<FandomReadDto[]>(`${this.baseUrl}/fandoms/popular`, {
-        params: { limit },
-        withCredentials: true,
-        timeout: 10000,
-      });
+      const response = await axios.get<FandomReadDto[]>(
+        `${this.baseUrl}/fandoms/popular`,
+        {
+          params: { limit },
+          withCredentials: true,
+          timeout: 10000,
+        }
+      );
 
       return response.data;
     } catch (error) {
-      this.handleFandomError(error, `Failed to fetch popular fandoms with limit ${limit}`);
+      this.handleFandomError(
+        error,
+        `Failed to fetch popular fandoms with limit ${limit}`
+      );
     }
   }
 
   /**
    * Получить популярные фандомы по игре
    */
-  async getPopularFandomsByGame(gameId: number, limit: number = 20): Promise<FandomReadDto[]> {
+  async getPopularFandomsByGame(
+    gameId: number,
+    limit: number = 20
+  ): Promise<FandomReadDto[]> {
     try {
-      const response = await axios.get<FandomReadDto[]>(`${this.baseUrl}/fandoms/search/${gameId}/popular`, {
-        params: { limit },
-        withCredentials: true,
-        timeout: 10000,
-      });
+      const response = await axios.get<FandomReadDto[]>(
+        `${this.baseUrl}/fandoms/search/${gameId}/popular`,
+        {
+          params: { limit },
+          withCredentials: true,
+          timeout: 10000,
+        }
+      );
 
       return response.data;
     } catch (error) {
-      this.handleFandomError(error, `Failed to fetch popular fandoms for game ID ${gameId} with limit ${limit}`);
+      this.handleFandomError(
+        error,
+        `Failed to fetch popular fandoms for game ID ${gameId} with limit ${limit}`
+      );
+    }
+  }
+
+  /**
+   * Проверить, является ли текущий пользователь создателем фандома
+   */
+  async checkCreator(fandomId: number): Promise<boolean> {
+    try {
+      const response = await axios.get<boolean>(
+        `${this.baseUrl}/fandoms/${fandomId}/is-creator`,
+        {
+          withCredentials: true,
+          timeout: 10000,
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      this.handleFandomError(
+        error,
+        `Failed to check creator status for fandom ID ${fandomId}`
+      );
     }
   }
 
@@ -167,17 +231,20 @@ export class FandomApi {
    */
   async createFandom(fandomData: FandomCreateDto): Promise<number> {
     try {
-      const response = await axios.post<number>(`${this.baseUrl}/fandoms`, fandomData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        withCredentials: true,
-        timeout: 10000,
-      });
+      const response = await axios.post<number>(
+        `${this.baseUrl}/fandoms`,
+        fandomData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
 
       return response.data;
     } catch (error) {
-      this.handleFandomError(error, 'Failed to create fandom');
+      this.handleFandomError(error, "Failed to create fandom");
     }
   }
 
@@ -188,7 +255,7 @@ export class FandomApi {
     try {
       await axios.put(`${this.baseUrl}/fandoms/${id}`, fandomData, {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         withCredentials: true,
         timeout: 10000,
@@ -223,24 +290,24 @@ export class FandomApi {
 
         switch (status) {
           case 400:
-            throw new Error('Invalid fandom data.');
+            throw new Error("Invalid fandom data.");
           case 401:
-            throw new Error('Unauthorized. Please login again.');
+            throw new Error("Unauthorized. Please login again.");
           case 403:
-            throw new Error('Forbidden. You don\'t have permission.');
+            throw new Error("Forbidden. You don't have permission.");
           case 404:
-            throw new Error('Fandom not found.');
+            throw new Error("Fandom not found.");
           case 409:
-            throw new Error('Fandom with this name already exists.');
+            throw new Error("Fandom with this name already exists.");
           case 422:
-            throw new Error('Validation error. Please check your data.');
+            throw new Error("Validation error. Please check your data.");
           case 500:
-            throw new Error('Server error. Please try again later.');
+            throw new Error("Server error. Please try again later.");
           default:
             throw new Error(message);
         }
       } else if (error.request) {
-        throw new Error('Network error. Please check your connection.');
+        throw new Error("Network error. Please check your connection.");
       }
     }
 
