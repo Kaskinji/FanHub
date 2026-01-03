@@ -3,7 +3,10 @@
     public class FandomReadDto
     {
         public int Id { get; set; }
+
         public int GameId { get; set; }
+
+        public int CreatorId { get; set; }
 
         public string Name { get; set; } = string.Empty;
 

@@ -51,6 +51,13 @@ namespace Application.Services
             return _mapper.Map<List<FandomReadDto>>( fandoms );
         }
 
+        public override async Task<bool> CheckCreator( int creatorId, int entityId )
+        {
+            Fandom fandom = await _fandomRepository.GetByIdAsyncThrow( entityId );
+
+            return fandom.CreatorId == creatorId;
+        }
+
         public async Task<List<FandomReadDto>> SearchByNameAndGameIdAsync( string searchTerm, int gameId )
         {
             List<Fandom> fandoms = await _fandomRepository.SearchByNameAndGameWithStatsAsync(

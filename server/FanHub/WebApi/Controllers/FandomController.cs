@@ -96,6 +96,17 @@ public class FandomController : ControllerBase
     }
 
     [Authorize]
+    [HttpGet( "{fandomId}/is-creator" )]
+    public async Task<ActionResult<bool>> CheckCreatorOfFandom( int fandomId )
+    {
+        int creatorId = this.GetCurrentUserId();
+
+        bool isCreator = await _fandomService.CheckCreator( creatorId, fandomId );
+
+        return Ok( isCreator );
+    }
+
+    [Authorize]
     [HttpPut( "{id}" )]
     public async Task<IActionResult> UpdateFandom( int id, [FromBody] FandomUpdateDto dto )
     {

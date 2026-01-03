@@ -14,12 +14,12 @@ namespace Application.Services
     {
         private readonly ISubscriptionRepository _subscriptionRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IFandomRepository _fandomRepository;
+        private readonly IFandomService _fandomService;
 
         public SubscriptionService(
             ISubscriptionRepository repository,
             IUserRepository userRepository,
-            IFandomRepository fandomRepository,
+            IFandomService fandomService,
             IMapper mapper,
             IValidator<Subscription> validator,
             ILogger<SubscriptionService> logger,
@@ -28,7 +28,7 @@ namespace Application.Services
         {
             _subscriptionRepository = repository;
             _userRepository = userRepository;
-            _fandomRepository = fandomRepository;
+            _fandomService = fandomService;
         }
 
         public async Task<int?> GetSubscription( int fandomId, int userId )
@@ -50,7 +50,7 @@ namespace Application.Services
         protected override async Task ExistEntities( Subscription subscription )
         {
             await _userRepository.GetByIdAsyncThrow( subscription.UserId );
-            await _fandomRepository.GetByIdAsyncThrow( subscription.FandomId );
+            await _fandomService.CheckCreator( subscription.UserId, subscription.FandomId );
 
             Subscription? existingSubscription = await _subscriptionRepository.FindAsync( s =>
                 s.UserId == subscription.UserId && s.FandomId == subscription.FandomId );

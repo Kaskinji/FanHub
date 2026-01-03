@@ -101,6 +101,11 @@ namespace Application.Services
             await _unitOfWork.CommitAsync();
         }
 
+        public virtual async Task<bool> CheckCreator( int creatorId, int entityId )
+        {
+            return await Task.FromResult( false );
+        }
+
         protected virtual TEntity InitializeEntity( TCreateDto createDto )
         {
             TEntity entity = new TEntity();

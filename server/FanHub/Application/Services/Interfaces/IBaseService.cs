@@ -7,5 +7,6 @@
         public Task<TReadDto> GetById( int id );
         public Task<List<TReadDto>> GetAll();
         public Task DeleteAsync( int id );
+        public Task<bool> CheckCreator( int creatorId, int entityId );
     }
 }

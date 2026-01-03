@@ -95,7 +95,7 @@ namespace Infrastructure.Repositories
         public async Task<bool> IsFandomExistAsync( Fandom entity )
         {
             return await _entities
-                .AnyAsync( c => c.Name == entity.Name && entity.Id == c.Id );
+                .AnyAsync( c => c.Name == entity.Name && entity.Id != c.Id );
         }
     }
 }
