@@ -11,7 +11,7 @@ import { subscriptionApi } from "../../api/SubscriptionApi";
 import postIcon from "../../assets/postIcon.svg";
 import subscriberIcon from "../../assets/subscriberIcon.svg";
 import styles from "./FandomPage.module.scss";
-import ManageFandomForm from "./ManageFandomForm/ManageFandomForm";
+import { FandomForm } from "../AllFandomsPage/FandomForm/FandomForm";
 import InfoBox from "../../components/UI/InfoBox/InfoBox";
 import ErrorMessage from "../../components/UI/ErrorMessage/ErrorMessage";
 import ErrorState from "../../components/ErrorState/ErrorState";
@@ -329,7 +329,7 @@ function FandomCard({ fandom, initialIsCreator, initialSubscriptionId }: FandomC
 
                   {showManageForm && (
                     <div className={styles.formContainer}>
-                      <ManageFandomForm
+                      <FandomForm
                         fandomId={fandom.id}
                         onCancel={() => setShowManageForm(false)}
                         onSuccess={() => {
@@ -370,22 +370,12 @@ function FandomCard({ fandom, initialIsCreator, initialSubscriptionId }: FandomC
             </div>
           </div>
         </div>
-        <FandomRight fandom={fandom} />
-      </section>
-    </>
-  );
-}
-
-interface FandomRightProps {
-  fandom: FandomPageData;
-}
-
-function FandomRight({ fandom }: FandomRightProps) {
-  return (
-    <div className={styles.fandomRight}>
+        <div className={styles.fandomRight}>
       <InfoBox title="ℹ️ Description" info={fandom.description} />
       <InfoBox title="⚠️ Rules" info={fandom.rules} />
     </div>
+      </section>
+    </>
   );
 }
 

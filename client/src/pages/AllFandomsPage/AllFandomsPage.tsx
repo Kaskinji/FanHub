@@ -2,27 +2,26 @@
 import { useState, useEffect, useCallback } from "react";
 import Header from "../../components/Header/Header";
 import styles from "../AllFandomsPage/AllFandomsPage.module.scss";
-import { useLocation } from "react-router-dom";
-import type { GameContextData } from "../../types/Game";
+import { useParams } from "react-router-dom";
 import { fandomApi } from "../../api/FandomApi";
+import { gameApi } from "../../api/GameApi";
 import type { FandomReadDto } from "../../api/FandomApi";
 import { Top } from "./Top/Top.tsx";
 import { FandomsContent } from "./FandomsContent/FandomsContent.tsx";
-import { AddFandomForm } from "./AddFandomForm/AddFandomForm.tsx";
+import { FandomForm } from "./FandomForm/FandomForm";
 
 export default function AllFandomsPage() {
-  const location = useLocation();
-  const gameData = location.state as GameContextData;
+  const { gameId: gameIdParam } = useParams<{ gameId?: string }>();
+  const gameId = gameIdParam ? parseInt(gameIdParam, 10) : undefined;
 
   const [fandoms, setFandoms] = useState<FandomReadDto[]>([]);
+  const [selectedGame, setSelectedGame] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-  const selectedGame = gameData?.gameTitle;
-  const gameId = gameData?.gameId;
 
   const loadFandoms = useCallback(async () => {
     try {
@@ -54,12 +53,30 @@ export default function AllFandomsPage() {
   }, [gameId, searchQuery]);
 
   useEffect(() => {
+    // Если в URL указан gameId, подгружаем название игры для шапки
+    const loadGameTitle = async () => {
+      if (!gameId) {
+        setSelectedGame(null);
+        return;
+      }
+
+      try {
+        const game = await gameApi.getGameById(gameId);
+        setSelectedGame(game.title);
+      } catch (err) {
+        console.error("Failed to load game title:", err);
+        setSelectedGame(null);
+      }
+    };
+
+    loadGameTitle();
+
     const debounceTimer = setTimeout(() => {
       loadFandoms();
     }, 300);
 
     return () => clearTimeout(debounceTimer);
-  }, [loadFandoms, refreshTrigger]);
+  }, [loadFandoms, refreshTrigger, gameId]);
 
   const handleSearch = useCallback((query: string) => {
     setSearchQuery(query);
@@ -83,7 +100,7 @@ export default function AllFandomsPage() {
       {/* Форма добавления фандома (рендерится на этой странице) */}
         {showAddForm && (
           <div className={styles.formContainer}>
-            <AddFandomForm
+            <FandomForm
               gameId={gameId}
               onCancel={handleCancelForm}
               onSuccess={handleFandomCreated}
@@ -94,18 +111,16 @@ export default function AllFandomsPage() {
       <main className={styles.content}>
         <Top
           onSearch={handleSearch}
-          gameTitle={selectedGame}
+          gameTitle={selectedGame || ""}
           gameId={gameId}
           searchQuery={searchQuery}
         />
-        
-        
         
         <FandomsContent
           fandoms={fandoms}
           loading={loading}
           error={error}
-          gameId={gameId}
+          gameTitle={selectedGame}
           onAddFandomClick={handleAddFandomClick}
         />
       </main>

@@ -2,8 +2,9 @@ import { useState, useRef, useEffect, type ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { fandomApi, type FandomReadDto, type FandomCreateDto } from "../../../api/FandomApi";
 import { imageApi } from "../../../api/ImageApi";
-import styles from "../AddFandomForm/AddFandomForm.module.scss";
+import styles from "./FandomForm.module.scss";
 import { getImageUrl } from "../../../utils/urlUtils";
+import Modal from "../../../components/UI/Modal/Modal";
 
 interface FandomFormProps {
   gameId?: number;
@@ -158,19 +159,22 @@ export const FandomForm = ({
     }
   };
 
-  const handleDelete = async () => {
-    if (!isEditMode || !fandomId) return;
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this fandom? This action cannot be undone."
-    );
-    if (!confirmed) return;
+  const handleDelete = () => {
+    if (!isEditMode || !fandomId) return;
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!isEditMode || !fandomId) return;
 
     setLoading(true);
     setError(null);
     try {
       await fandomApi.deleteFandom(fandomId);
-      navigate(`/allfandoms`);
+      setShowDeleteConfirm(false);
+      navigate(`/allfandoms/${formData.gameId}`);
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Failed to delete fandom";
@@ -310,6 +314,35 @@ export const FandomForm = ({
             </button>
           </div>
         </form>
+
+        {showDeleteConfirm && (
+          <Modal
+            isOpen={showDeleteConfirm}
+            onClose={() => setShowDeleteConfirm(false)}
+            title="Confirm Deletion"
+          >
+            <p className={styles.deleteConfirmText}>Are you sure you want to delete this fandom? This action cannot be undone.</p>
+            <div className={styles.deleteConfirmActions}>
+              <button
+                type="button"
+                className={styles.submitButton}
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={loading}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className={styles.deleteButton}
+                onClick={confirmDelete}
+                disabled={loading}
+              >
+                Delete
+              </button>
+            </div>
+          </Modal>
+        )}
+
       </div>
     </div>
   );

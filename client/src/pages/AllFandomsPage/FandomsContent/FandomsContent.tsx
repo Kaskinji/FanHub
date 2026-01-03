@@ -10,7 +10,7 @@ interface FandomsProps {
   fandoms: FandomReadDto[];
   loading: boolean;
   error: string | null;
-  gameId?: number;
+  gameTitle?: string | null;
   onAddFandomClick?: () => void; // Колбек для открытия формы
 }
 
@@ -18,7 +18,7 @@ export const FandomsContent = ({
   fandoms, 
   loading, 
   error, 
-  gameId,
+  gameTitle,
   onAddFandomClick 
 }: FandomsProps) => {
   const convertToPreview = (fandom: FandomReadDto): FandomPreview => ({
@@ -68,20 +68,10 @@ export const FandomsContent = ({
       {/* Пустое состояние */}
       {!hasFandoms ? (
         <div className={styles.emptyState}>
-          <p>No fandoms found{gameId ? " for this game" : ""}.</p>
+          <p>No fandoms found</p>
           <p className={styles.emptySubtext}>
-            {gameId
-              ? "Be the first to create a fandom for this game!"
-              : "Create a new fandom to get started."}
+              Be the first who'll create a fandom for <strong>{`${gameTitle}`}!</strong>
           </p>
-          {onAddFandomClick && (
-            <button
-              className={styles.emptyAddButton}
-              onClick={onAddFandomClick}
-            >
-              Create Fandom
-            </button>
-          )}
         </div>
       ) : (
         /* Список фандомов */

@@ -90,12 +90,7 @@ export default function GamePage() {
 
   const handleShowMore = () => {
     if (gameData) {
-      navigate(`/allfandoms`, {
-        state: { 
-          gameId: gameData.id,
-          gameTitle: gameData.title 
-        } as GameData
-      });
+      navigate(`/allfandoms/${gameData.id}`);
     }
   };
 
