@@ -1,29 +1,11 @@
 import axios from "axios";
-import { SERVER_CONFIG } from "../config/apiConfig";
+import { API_CONFIG} from "../config/apiConfig";
 
 export class ImageApi {
   private readonly baseUrl: string;
 
-  constructor(baseUrl: string = SERVER_CONFIG.BASE_URL) {
+  constructor(baseUrl: string = API_CONFIG.BASE_URL) {
     this.baseUrl = baseUrl;
-  }
-
-  /**
-   * Получить картинку по name
-   */
-  async getImage(imageName: string): Promise<string | undefined> {
-    try {
-      const response = await axios.get(`${this.baseUrl}/images/${imageName}`, {
-        responseType: 'blob'
-      });
-      
-      const imageUrl = URL.createObjectURL(response.data);
-      console.log('Image loaded successfully');
-      return imageUrl;
-    } catch (error) {
-      console.error('Failed to get image:', error);
-      return undefined;
-    }
   }
 
   async uploadImage(image: File): Promise<string> {

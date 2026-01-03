@@ -100,7 +100,7 @@
   color: white;
   border: none;
   padding: 10px 20px;
-  border-radius: 6px;
+  border-radius:  0 0 6px 6px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -121,26 +121,18 @@
 .emptyState {
   text-align: center;
   padding: 40px 20px;
-  background: rgba(30, 30, 40, 0.3);
   border-radius: 12px;
-  border: 1px dashed rgba(255, 255, 255, 0.1);
 }
 
-.emptyAddButton {
-  margin-top: 20px;
-  background: linear-gradient(90deg, rgb(98, 20, 171), rgb(130, 40, 200));
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    background: linear-gradient(90deg, rgb(110, 25, 190), rgb(140, 50, 220));
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(98, 20, 171, 0.3);
+.emptySubtext {
+  margin-top: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 20px;
+  strong {
+    font-weight: 600;
+    color: rgb(216, 196, 255);
+    text-shadow: 
+      0 6px 6px rgba(130, 40, 200, 0.6),
   }
 }
+

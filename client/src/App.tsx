@@ -23,7 +23,7 @@ const App: FC = () => {
             <Route path="/" element={<MainPage onSearch={() => {}} />} />
             <Route path="/game/:id" element={<GamePage />} />
             <Route path="/fandom/:id" element={<FandomPage />} />
-            <Route path="/allfandoms" element={<AllFandomsPage />} />
+            <Route path="/allfandoms/:gameId?" element={<AllFandomsPage />} />
             <Route path="/allgames" element={<AllGamesPage />} />
             <Route path="/posts" element={<PostsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
