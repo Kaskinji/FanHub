@@ -14,6 +14,20 @@ public class EventProfile : Profile
 
         CreateMap<EventCreateDto, Event>();
 
-        CreateMap<EventUpdateDto, Event>();
+        CreateMap<EventUpdateDto, Event>()
+            .ForMember( dest => dest.Title,
+                opt => opt.Condition( ( src, dest, srcMember ) =>
+                    srcMember is not null && !string.IsNullOrWhiteSpace( srcMember ) ) )
+            .ForMember( dest => dest.Description,
+                opt => opt.Condition( ( src, dest, srcMember ) =>
+                    srcMember is not null && !string.IsNullOrWhiteSpace( srcMember ) ) )
+            .ForMember( dest => dest.StartDate,
+                opt => opt.Condition( ( src, dest, srcMember ) =>
+                    src.StartDate.HasValue && src.StartDate.Value != default ) )
+            .ForMember( dest => dest.EndDate,
+                opt => opt.Condition( ( src, dest, srcMember ) =>
+                    src.EndDate != default ) )
+            .ForMember( dest => dest.ImageUrl,
+                opt => opt.MapFrom( src => src.ImageUrl ) );
     }
 }

@@ -17,15 +17,15 @@ namespace Domain.Validators
 
             RuleFor( x => x.Content )
                 .NotEmpty().WithMessage( "Содержимое поста обязательно" )
-                .Length( 10, 5000 ).WithMessage( "Содержимое должно быть от 10 до 5000 символов" );
+                .Length( 4, 5000 ).WithMessage( "Содержимое должно быть от 4 до 5000 символов" );
 
             RuleFor( x => x.MediaContent )
                 .MaximumLength( 1000 ).WithMessage( "Ссылка на медиа-контент не может превышать 1000 символов" );
-            //.Must( UrlValidator.ValidateMediaWithVideoUrl ).WithMessage( "Некорректная ссылка на медиа-контент" );
 
             RuleFor( x => x.PostDate )
-                //.LessThanOrEqualTo( DateTime.Now ).WithMessage( "Дата публикации не может быть в будущем" )
-                .GreaterThanOrEqualTo( DateTime.Now.AddYears( -1 ) ).WithMessage( "Дата публикации не может быть старше 1 года" );
+                .LessThanOrEqualTo( x => DateTime.UtcNow.AddMinutes( 1 ) )
+                .WithMessage( "Дата публикации не может быть в будущем" )
+                .When( x => x.PostDate != default(DateTime) );
 
             RuleFor( x => x.UserId )
                 .GreaterThan( 0 ).WithMessage( "ID пользователя должен быть больше 0" );

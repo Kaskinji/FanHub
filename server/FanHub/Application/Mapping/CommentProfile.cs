@@ -10,9 +10,12 @@ namespace Application.Mapping
         {
             CreateMap<Comment, CommentReadDto>();
 
-            CreateMap<CommentCreateDto, Comment>()
-                .ForMember( dest => dest.CommentDate, opt => opt.Ignore() ); // Игнорируем!
-            CreateMap<CommentUpdateDto, Comment>();
+            CreateMap<CommentCreateDto, Comment>();
+
+            CreateMap<CommentUpdateDto, Comment>()
+                .ForMember( dest => dest.Content,
+                    opt => opt.Condition( ( src, dest, srcMember ) =>
+                        srcMember is not null && !string.IsNullOrWhiteSpace( ( string )srcMember ) ) );
 
             CreateMap<Comment, CommentShowDto>()
                 .ForMember( dest => dest.AuthorName,

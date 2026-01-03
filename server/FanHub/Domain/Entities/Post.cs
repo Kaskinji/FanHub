@@ -14,7 +14,7 @@ public class Post : Entity
 
     public DateTime PostDate { get; set; }
 
-    public string MediaContent { get; set; } = string.Empty;
+    public string? MediaContent { get; set; } = null;
 
     public User User { get; set; } = null!;
     public Fandom Fandom { get; set; } = null!;

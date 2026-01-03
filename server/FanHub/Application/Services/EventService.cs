@@ -14,10 +14,10 @@ namespace Application.Services
     {
         private readonly IEventRepository _eventRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IFandomRepository _fandomRepository;
+        private readonly IFandomService _fandomService;
         public EventService( IEventRepository repository,
             IUserRepository userRepository,
-            IFandomRepository fandomRepository,
+            IFandomService fandomService,
             IMapper mapper,
             IValidator<Event> validator,
             ILogger<EventService> logger,
@@ -26,7 +26,7 @@ namespace Application.Services
         {
             _eventRepository = repository;
             _userRepository = userRepository;
-            _fandomRepository = fandomRepository;
+            _fandomService = fandomService;
         }
 
         public override async Task<List<EventReadDto>> GetAll()
@@ -44,7 +44,7 @@ namespace Application.Services
 
         protected override async Task ExistEntities( Event eventEntity )
         {
-            await _fandomRepository.GetByIdAsyncThrow( eventEntity.FandomId );
+            await _fandomService.CheckCreator( eventEntity.OrganizerId, eventEntity.FandomId );
 
             await _userRepository.GetByIdAsyncThrow( eventEntity.OrganizerId );
         }

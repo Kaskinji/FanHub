@@ -15,11 +15,8 @@ namespace Domain.Validators
 
             RuleFor( x => x.Description )
                 .NotEmpty().WithMessage( "Описание события обязательно" )
-                .Length( 10, 500 ).WithMessage( "Описание должно быть от 10 до 500 символов" )
+                .Length( 4, 500 ).WithMessage( "Описание должно быть от 4 до 500 символов" )
                 .Must( desc => !string.IsNullOrWhiteSpace( desc ) ).WithMessage( "Описание не может состоять только из пробелов" );
-
-            RuleFor( x => x.StartDate )
-                .LessThan( DateTime.Now ).WithMessage( "Дата начала события не может быть в прошлом" );
 
             RuleFor( x => x.EndDate )
                 .GreaterThanOrEqualTo( x => x.StartDate ).WithMessage( "Дата окончания события должна быть позже даты начала" );

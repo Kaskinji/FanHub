@@ -13,7 +13,7 @@ public class Event : Entity
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
 
-    public string ImageUrl { get; set; } = string.Empty;
+    public string? ImageUrl { get; set; } = null;
 
     public Fandom Fandom { get; set; } = null!;
     public User Organizer { get; set; } = null!;
