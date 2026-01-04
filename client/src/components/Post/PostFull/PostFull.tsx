@@ -1,5 +1,6 @@
 // components/Post/PostFull.tsx
 import {  type FC } from "react";
+import { FirstLetter } from "../../UI/FirstLetter/FirstLetter";
 import styles from "./PostFull.module.scss";
 import type { Post, Comment as CommentType } from "../../../types/Post";
 import PostComments from "../PostComments/PostComments";
@@ -50,7 +51,7 @@ const PostFull: FC<PostFullProps> = ({
                 <img src={post.author.avatar} alt={post.author.username} />
               ) : (
                 <div className={styles.avatarPlaceholder}>
-                  {post.author.username.charAt(0).toUpperCase()}
+                  <FirstLetter text={post.author.username} fontSize="1.2rem" />
                 </div>
               )}
             </div>

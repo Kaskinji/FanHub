@@ -6,6 +6,7 @@ import RegisterPage from "./pages/RegisterPage/RegisterPage.tsx";
 import MainPage from "./pages/MainPage/MainPage.tsx";
 import GamePage from "./pages/GamePage/GamePage.tsx";
 import FandomPage from "./pages/FandomPage/FandomPage.tsx";
+import FandomEventsPage from "./pages/FandomEventsPage/FandomEventsPage";
 import AllFandomsPage from "./pages/AllFandomsPage/AllFandomsPage.tsx";
 import AllGamesPage from "./pages/AllGamesPage/AllGamesPage.tsx";
 import PostsPage from "./pages/PostsPage/PostsPage.tsx";
@@ -23,6 +24,7 @@ const App: FC = () => {
             <Route path="/" element={<MainPage onSearch={() => {}} />} />
             <Route path="/game/:id" element={<GamePage />} />
             <Route path="/fandom/:id" element={<FandomPage />} />
+            <Route path="/fandom/:id/events" element={<FandomEventsPage />} />
             <Route path="/allfandoms/:gameId?" element={<AllFandomsPage />} />
             <Route path="/allgames" element={<AllGamesPage />} />
             <Route path="/posts" element={<PostsPage />} />

@@ -1,5 +1,6 @@
 // components/Post/Comment.tsx
 import type { FC } from "react";
+import { FirstLetter } from "../../UI/FirstLetter/FirstLetter";
 import styles from "./Comment.module.scss";
 import type { Comment as CommentType } from "../../../types/Post";
 
@@ -33,7 +34,7 @@ const Comment: FC<CommentProps> = ({ comment, onReply, className }) => {
             />
           ) : (
             <div className={styles.avatarPlaceholder}>
-              {comment.author.username.charAt(0).toUpperCase()}
+              <FirstLetter text={comment.author.username} fontSize="1.1rem" />
             </div>
           )}
         </div>

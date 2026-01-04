@@ -1,5 +1,6 @@
 // TitleCard.tsx
 import type { FC } from "react";
+import { FirstLetter } from "../UI/FirstLetter/FirstLetter";
 import styles from "./TitleCard.module.scss"
 import { getImageUrl } from "../../utils/urlUtils";
 
@@ -16,7 +17,6 @@ export const TitleCard: FC<TitleCardProps> = ({
   className,
   coverStyle
 }) => {
-  const firstLetter = title.charAt(0).toUpperCase();
   const hasImage = image && image.trim() !== "";
 
   return (
@@ -39,7 +39,7 @@ export const TitleCard: FC<TitleCardProps> = ({
           className={styles.placeholder}
           style={hasImage ? { display: "none" } : undefined}
         >
-          {firstLetter}
+          <FirstLetter text={title} fontSize="80px" />
         </div>
       </div>
     </div>

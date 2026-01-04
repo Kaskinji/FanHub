@@ -1,17 +1,42 @@
-// components/UI/InfoBox/InfoBox.module.scss
 .infoBox {
   background: rgb(255, 255, 255);
   border-radius: 12px;
-  padding: 20px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .title {
   font-size: 18px;
   font-weight: 600;
   color: #5e128a;
-  margin-bottom: 12px;
+  margin: 20px 20px 12px 20px;
+  flex-shrink: 0;
+}
+
+.infoContent {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 20px 20px 20px;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(94, 18, 138, 0.3);
+    border-radius: 5px;
+
+    &:hover {
+      background: rgba(94, 18, 138, 0.5);
+    }
+  }
 }
 
 .info {
@@ -20,4 +45,5 @@
   color: rgba(26, 5, 39, 0.8);
   white-space: pre-wrap;
   word-break: break-word;
+  margin: 0;
 }

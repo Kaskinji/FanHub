@@ -5,13 +5,16 @@ import styles from './InfoBox.module.scss';
 interface InfoBoxProps {
   title: string;
   info: string;
+  className?: string;
 }
 
-const InfoBox: React.FC<InfoBoxProps> = ({ title, info }) => {
+const InfoBox: React.FC<InfoBoxProps> = ({ title, info, className }) => {
   return (
-    <div className={styles.infoBox}>
+    <div className={`${styles.infoBox} ${className || ''}`}>
       <h3 className={styles.title}>{title}</h3>
-      <p className={styles.info}>{info}</p>
+      <div className={styles.infoContent}>
+        <p className={styles.info}>{info}</p>
+      </div>
     </div>
   );
 };

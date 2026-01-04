@@ -1,4 +1,5 @@
 import { type FC, useState, useMemo } from 'react';
+import { FirstLetter } from '../FirstLetter/FirstLetter';
 import styles from './Avatar.module.scss';
 
 interface AvatarProps {
@@ -38,18 +39,12 @@ export const Avatar: FC<AvatarProps> = ({
     return sizes[size] || sizes.medium;
   }, [size]);
   
-  const getInitial = () => {
-    if (!alt) return '?';
-    return alt.charAt(0).toUpperCase();
-  };
-  
   const shouldShowImage = src && !imageError;
   
   const style = typeof size === 'number' 
     ? {
         width: `${dimensions.width}px`,
-        height: `${dimensions.height}px`,
-        fontSize: `${dimensions.fontSize}px`
+        height: `${dimensions.height}px`
       }
     : {};
   return (
@@ -69,7 +64,14 @@ export const Avatar: FC<AvatarProps> = ({
         />
       ) : (
         <div className={styles.placeholder}>
-          {getInitial()}
+          {alt ? (
+            <FirstLetter 
+              text={alt} 
+              fontSize={dimensions.fontSize} 
+            />
+          ) : (
+            '?'
+          )}
         </div>
       )}
     </div>

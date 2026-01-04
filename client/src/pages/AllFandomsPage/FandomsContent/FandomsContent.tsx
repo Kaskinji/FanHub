@@ -2,6 +2,7 @@
 import type { FandomReadDto } from "../../../api/FandomApi";
 import ErrorState from "../../../components/ErrorState/ErrorState";
 import SectionTitle from "../../../components/UI/SectionTitle/SectionTitle";
+import { AddButton } from "../../../components/UI/buttons/AddButton/AddButton";
 import type { FandomPreview } from "../../../types/Fandom";
 import FandomCard from "../../MainPage/FandomCard/FandomCard";
 import styles from "./FandomsContent.module.scss";
@@ -56,12 +57,10 @@ export const FandomsContent = ({
       <div className={styles.sectionHeader}>
         <SectionTitle title={`Fandoms ${hasFandoms ? `(${fandoms.length})` : ''}`} />
         {onAddFandomClick && (
-          <button
-            className={styles.addFandomButton}
+          <AddButton
+            text="Add"
             onClick={onAddFandomClick}
-          >
-            + Add Fandom
-          </button>
+          />
         )}
       </div>
 

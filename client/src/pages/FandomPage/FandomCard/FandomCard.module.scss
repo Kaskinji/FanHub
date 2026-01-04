@@ -1,0 +1,135 @@
+.fandomCard {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 32px;
+}
+
+.fandomTitleCard {
+  border-radius: 15px 15px 15px 0px;
+}
+
+.fandomLeft {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardTitle {
+  margin-bottom: 20px;
+}
+
+.subscribeButton {
+  width: 50px;
+  border-radius: 0px 0px 10px 10px;
+  background-color: #ffffff;
+  color: rgb(89, 20, 121);
+  border: none;
+  padding: 6px 32px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: fit-content;
+  align-self: flex-start;
+
+  &:hover {
+    background-color: #d6bdec;
+  }
+  &:active {
+    background-color: #6a11b2f6;
+    color: white;
+  }
+  &.subscribed {
+    background: rgb(98, 20, 171);
+    color: white;
+  }
+  &.subscribed:hover {
+    background: #8f1283;
+    color: white;
+  }
+}
+
+.description {
+  max-height: 400px;
+  min-height: 400px;
+}
+
+.rules {
+  max-height: 400px;
+  min-height: 400px;
+}
+
+.manageButton {
+  padding: 6px 12px;
+  border-radius: 0px 0px 6px 6px;
+  background: linear-gradient(90deg, rgb(98, 20, 171), rgb(130, 40, 200));
+  color: white;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 8px rgba(98, 20, 171, 0.3);
+
+  &:hover:not(:disabled) {
+    box-shadow:
+      0 6px 12px rgba(98, 20, 171, 0.3),
+      0 0 16px rgba(130, 40, 200, 0.3);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.fandomRight {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.fandomStats {
+  display: flex;
+  gap: 20px;
+  margin-left: auto;
+}
+
+.statsWrapper {
+  display: flex;
+  width: 100%;
+  padding-right: 30px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.statItem {
+  display: flex;
+  align-items: center;
+}
+
+.statNumber {
+  font-weight: bold;
+  color: #fff;
+  padding-right: 10px;
+}
+
+.statIcon {
+  width: 25px;
+  filter: invert(100%);
+}
+
+.formContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  overflow-y: auto;
+}

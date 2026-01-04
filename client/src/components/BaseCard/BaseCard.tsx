@@ -1,4 +1,5 @@
 import type { FC, MouseEvent } from "react";
+import { FirstLetter } from "../UI/FirstLetter/FirstLetter";
 import styles from "./BaseCard.module.scss";
 import { getImageUrl } from "../../utils/urlUtils";
 
@@ -50,11 +51,6 @@ const BaseCard: FC<BaseCardProps> = ({
         .filter(Boolean)
         .join(" ");
 
-    const getPlaceholderContent = () => {
-        if (placeholderChar) return placeholderChar;
-        return title.charAt(0).toUpperCase();
-    };
-
     return (
         <div
             className={cardClasses}
@@ -78,7 +74,11 @@ const BaseCard: FC<BaseCardProps> = ({
                     />
                 ) : (
                     <div className={styles.cardPlaceholder}>
-                        {getPlaceholderContent()}
+                        {placeholderChar ? (
+                            placeholderChar
+                        ) : (
+                            <FirstLetter text={title} fontSize="3.5rem" />
+                        )}
                     </div>
                 )}
             </div>
