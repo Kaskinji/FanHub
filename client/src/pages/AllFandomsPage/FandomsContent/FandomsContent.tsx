@@ -26,7 +26,7 @@ export const FandomsContent = ({
   const convertToPreview = (fandom: FandomReadDto): FandomPreview => ({
     id: fandom.id,
     name: fandom.name,
-    imageUrl: getImageUrl(fandom.coverImage), 
+    imageUrl: fandom.coverImage ? getImageUrl(fandom.coverImage) : undefined, 
   });
 
   if (loading) {

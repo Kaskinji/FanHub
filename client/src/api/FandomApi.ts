@@ -7,7 +7,7 @@ export interface FandomReadDto {
   name: string;
   description: string;
   creationDate: string;
-  coverImage: string;
+  coverImage?: string;
   rules: string;
 }
 
@@ -17,7 +17,7 @@ export interface FandomStatsDto {
   name: string;
   description: string;
   creationDate: string;
-  coverImage: string;
+  coverImage?: string;
   rules: string;
   subscribersCount: number;
   postsCount: number;

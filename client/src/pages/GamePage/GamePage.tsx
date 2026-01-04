@@ -1,10 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import Header from "../../components/Header/Header";
-import ShowMoreButton from "../../components/UI/buttons/ShowMoreButton/ShowMoreButton";
-import SectionTitle from "../../components/UI/SectionTitle/SectionTitle";
 import styles from "./GamePage.module.scss";
-import { TitleCard } from "../../components/TitleCard/TitleCard";
 import Button from "../../components/UI/buttons/Button/Button";
 import type { GameReadDto } from "../../api/GameApi";
 import { gameApi } from "../../api/GameApi";
@@ -12,18 +9,17 @@ import type { GamePageData } from "../../types/GamePageData";
 import { useAuth } from "../../hooks/useAuth";
 import GameForm from "../AllGamesPage/GameForm/GameForm";
 import { Role } from "../../types/enums/Roles";
-import postIcon from "../../assets/postIcon.svg";
-import fandomIcon from "../../assets/fandom.svg"
 import { fandomApi } from "../../api/FandomApi";
 import type { FandomReadDto } from "../../api/FandomApi";
 import type { FandomPreview } from "../../types/Fandom";
 import { getImageUrl } from "../../utils/urlUtils";
+import { Content } from "./Content/Content";
 
-interface GameLocationState {
+type GameLocationState = {
   game: GameReadDto;
-}
+};
 
-export default function GamePage() {
+const GamePage = () => {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const navigate = useNavigate();
@@ -36,11 +32,7 @@ export default function GamePage() {
   const { user } = useAuth();
   const isAdmin = user?.role === Role.Admin;
 
-  useEffect(() => {
-    loadGameData();
-  }, [id, location.state]);
-
-  const loadGameData = async () => {
+  const loadGameData = useCallback(async () => {
   try {
     setLoading(true);
     setError(null);
@@ -83,7 +75,11 @@ export default function GamePage() {
   } finally {
     setLoading(false);
   }
-};
+}, [id, location.state]);
+
+  useEffect(() => {
+    loadGameData();
+  }, [loadGameData]);
 
   const formatGameData = (game: GameReadDto, fandoms: FandomReadDto[]): GamePageData => {
 
@@ -92,7 +88,7 @@ export default function GamePage() {
     gameId: fandom.gameId,
     name: fandom.name,
     description: fandom.description,
-    imageUrl: getImageUrl(fandom.coverImage) || '/images/default-fandom.jpg',
+    imageUrl: fandom.coverImage ? getImageUrl(fandom.coverImage) : undefined,
     creationDate: fandom.creationDate,
     rules: fandom.rules,
     subscribersCount: 0, 
@@ -136,7 +132,7 @@ export default function GamePage() {
     navigate('/games');
   };
 
-  const handleGameUpdated = (gameId: number) => {
+  const handleGameUpdated = () => {
     setShowGameForm(false);
     loadGameData();
   };
@@ -209,187 +205,6 @@ export default function GamePage() {
       />
     </div>
   );
-}
+};
 
-/* ================= CONTENT ================= */
-interface ContentProps {
-  game: GamePageData;
-  onShowMore: () => void;
-  isAdmin: boolean;
-  onEditGame: () => void;
-}
-
-function Content({ game, onShowMore,  isAdmin, onEditGame }: ContentProps) {
-  return (
-    <main className={styles.content}>
-      <GameCard 
-        game={game} 
-        isAdmin={isAdmin}
-        onEditGame={onEditGame} />
-      <SectionTitle title="Fandoms" />
-      <Fandoms fandoms={game.fandoms} />
-      {game.fandoms.length > 0 && (
-        <ShowMoreButton 
-          variant="light" 
-          onClick={onShowMore}
-        />
-      )}
-    </main>
-  );
-}
-
-/* ================= GAME CARD ================= */
-interface GameCardProps {
-  game: GamePageData;
-  isAdmin: boolean;
-  onEditGame: () => void;
-}
-
-function GameCard({ game, isAdmin, onEditGame }: GameCardProps) {
-  return (
-    <section className={styles.gameCard}>
-      <div className={styles.gameLeft}>
-        <div className={styles.cardTitle}>
-            <TitleCard className={styles.gameTitleCard} title={game.title} image={game.coverImage} />
-            <div className={styles.statsWrapper}>
-              {/* Кнопка управления для админа */}
-              {isAdmin && (
-                <button 
-                  className={styles.manageButton} 
-                  onClick={onEditGame}
-                >
-                  Manage Game
-                </button>
-              )}
-              
-              {/* Статистика */}
-              <div className={styles.gameStats}>
-                <div className={styles.statItem}>
-                  <span className={styles.statNumber}>{game.stats.fandoms}</span>
-                  <img 
-                    className={styles.statIcon}
-                    src={fandomIcon}
-                    alt="Fandoms" 
-                  />
-                </div>
-                <div className={styles.statItem}>
-                  <span className={styles.statNumber}>{game.stats.posts}</span>
-                  <img 
-                    className={styles.statIcon}
-                    src={postIcon}
-                    alt="Posts" 
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        
-    
-      </div>
-      <GameRight game={game} />
-    </section>
-  );
-}
-
-interface GameRightProps {
-  game: GamePageData;
-}
-
-function GameRight({ game }: GameRightProps) {
-  return (
-    <div className={styles.gameRight}>
-      <div className={styles.infoBox}>
-        <h3 className={styles.infoTitle}>About the game:</h3>
-        <p>{game.description}</p>
-      </div>
-
-      <div className={styles.infoBox}>
-        <div className={styles.detailBox}>
-          <p className={styles.infoTitle}>
-            Genre:
-          </p>
-          <p className={styles.detailText}>
-            {game.details.genre}
-          </p>
-        </div>
-        <div className={styles.detailBox}>
-          <p className={styles.infoTitle}>
-            Publisher:
-          </p>
-          <p className={styles.detailText}>
-            {game.details.publisher}
-          </p>
-        </div>
-        <div className={styles.detailBox}>
-          <p className={styles.infoTitle}>
-            Developer:
-          </p>
-          <p className={styles.detailText}>
-            {game.details.developer}
-          </p>
-        </div>
-        <div className={styles.detailBox}>
-          <p className={styles.infoTitle}>
-            Release date:
-          </p>
-          <p className={styles.detailText}>
-            {game.details.releaseDate}
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ================= FANDOMS ================= */
-interface FandomsProps {
-  fandoms: GamePageData['fandoms'];
-}
-
-function Fandoms({ fandoms }: FandomsProps) {
-  if (fandoms.length === 0) {
-    return (
-      <div className={styles.noFandoms}>
-        <p>No fandoms yet. Be the first to create one!</p>
-      </div>
-    );
-  }
-
-  return (
-    <section className={styles.fandoms}>
-      {fandoms.map((fandom) => (
-        <FandomCard
-          key={fandom.id}
-          title={fandom.name}
-          text={fandom.description}
-          image={fandom.imageUrl}
-        />
-      ))}
-    </section>
-  );
-}
-
-interface FandomCardProps {
-  title: string;
-  text: string;
-  image: string;
-}
-
-function FandomCard({ title, text, image }: FandomCardProps) {
-  return (
-    <div className={styles.fandomCard}>
-      <img 
-        src={image} 
-        alt={title} 
-        className={styles.fandomImage}
-        onError={(e) => {
-          (e.target as HTMLImageElement).src = '/images/default-fandom.jpg';
-        }}
-      />
-      <div className={styles.fandomInfo}>
-        <h4 className={styles.fandomTitle}>{title}</h4>
-        <p className={styles.fandomDescription}>{text}</p>
-      </div>
-    </div>
-  );
-}
+export default GamePage;

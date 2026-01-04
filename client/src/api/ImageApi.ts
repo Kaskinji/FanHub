@@ -25,19 +25,20 @@ export class ImageApi {
     );
 
     return response.data; // Вернется имя файла (string)
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Детальная отладка
+    const axiosError = error as { response?: { status?: number; data?: unknown; headers?: unknown }; message?: string };
     console.error('Upload failed:', {
-      status: error.response?.status,
-      data: error.response?.data,
-      headers: error.response?.headers
+      status: axiosError.response?.status,
+      data: axiosError.response?.data,
+      headers: axiosError.response?.headers
     });
     
-    throw new Error(`Failed to upload image: ${error.response?.data || error.message}`);
+    throw new Error(`Failed to upload image: ${axiosError.response?.data || axiosError.message || 'Unknown error'}`);
   }
 }
 
-    /**
+  /**
    * Удалить картинку по name
    */
   async deleteImage(imageName: string): Promise<void> {
