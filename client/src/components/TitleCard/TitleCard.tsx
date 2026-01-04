@@ -46,13 +46,3 @@ export const TitleCard: FC<TitleCardProps> = ({
   );
 };
 
-// Использование
-<TitleCard 
-  title="Game Title" 
-  image="/cover.jpg" 
-  coverStyle={{ 
-    border: '3px solid red', 
-    borderRadius: '12px',
-    boxShadow: '0 0 20px rgba(255, 0, 0, 0.3)'
-  }}
-/>

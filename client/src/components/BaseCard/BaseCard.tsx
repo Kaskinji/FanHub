@@ -64,7 +64,7 @@ const BaseCard: FC<BaseCardProps> = ({
             <div className={styles.imageContainer}>
                 {imageUrl ? (
                     <img
-                        src={getImageUrl(imageUrl)}
+                        src={imageUrl}
                         alt={title}
                         className={styles.cardImage}
                         loading="lazy"

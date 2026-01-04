@@ -6,6 +6,7 @@ import { AddButton } from "../../../components/UI/buttons/AddButton/AddButton";
 import type { FandomPreview } from "../../../types/Fandom";
 import FandomCard from "../../MainPage/FandomCard/FandomCard";
 import styles from "./FandomsContent.module.scss";
+import { getImageUrl } from "../../../utils/urlUtils";
 
 interface FandomsProps {
   fandoms: FandomReadDto[];
@@ -25,7 +26,7 @@ export const FandomsContent = ({
   const convertToPreview = (fandom: FandomReadDto): FandomPreview => ({
     id: fandom.id,
     name: fandom.name,
-    imageUrl: fandom.coverImage, 
+    imageUrl: getImageUrl(fandom.coverImage), 
   });
 
   if (loading) {

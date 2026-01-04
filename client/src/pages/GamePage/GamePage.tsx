@@ -9,6 +9,15 @@ import Button from "../../components/UI/buttons/Button/Button";
 import type { GameReadDto } from "../../api/GameApi";
 import { gameApi } from "../../api/GameApi";
 import type { GamePageData } from "../../types/GamePageData";
+import { useAuth } from "../../hooks/useAuth";
+import GameForm from "../AllGamesPage/GameForm/GameForm";
+import { Role } from "../../types/enums/Roles";
+import postIcon from "../../assets/postIcon.svg";
+import fandomIcon from "../../assets/fandom.svg"
+import { fandomApi } from "../../api/FandomApi";
+import type { FandomReadDto } from "../../api/FandomApi";
+import type { FandomPreview } from "../../types/Fandom";
+import { getImageUrl } from "../../utils/urlUtils";
 
 interface GameLocationState {
   game: GameReadDto;
@@ -22,67 +31,92 @@ export default function GamePage() {
   const [gameData, setGameData] = useState<GamePageData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showGameForm, setShowGameForm] = useState(false);
+
+  const { user } = useAuth();
+  const isAdmin = user?.role === Role.Admin;
 
   useEffect(() => {
     loadGameData();
   }, [id, location.state]);
 
   const loadGameData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
+  try {
+    setLoading(true);
+    setError(null);
 
-      const state = location.state as GameLocationState | undefined;
-      if (state?.game) {
-        console.log('Using game from navigation state:', state.game);
-        const formattedGame = formatGameData(state.game);
-        setGameData(formattedGame);
-        setLoading(false);
-        return;
-      }
+    let gameId: number;
+    const state = location.state as GameLocationState | undefined;
 
+    // Получаем ID игры
+    if (state?.game) {
+      console.log('Using game from navigation state:', state.game);
+      gameId = state.game.id;
+    } else {
       if (!id) {
         throw new Error('Game ID is missing');
       }
 
-      const gameId = parseInt(id, 10);
-      if (isNaN(gameId)) {
+      const parsedId = parseInt(id, 10);
+      if (isNaN(parsedId)) {
         throw new Error('Invalid game ID');
       }
-
-      console.log('Loading game by ID:', gameId);
-      const game = await gameApi.getGameById(gameId);
-      const formattedGame = formatGameData(game);
-      setGameData(formattedGame);
-
-    } catch (err) {
-      console.error('Error loading game:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Failed to load game';
-      setError(errorMessage);
-    } finally {
-      setLoading(false);
+      gameId = parsedId;
     }
-  };
 
-  const formatGameData = (game: GameReadDto): GamePageData => {
-    return {
-      id: game.id,
-      title: game.title,
-      description: game.description,
-      coverImage: gameApi.getGameImageUrl(game.coverImage ),
-      stats: {
-        fandoms: 1, 
-        posts: 0,  
-      },
-      details: {
-        genre: game.genre,
-        publisher: game.publisher,
-        developer: game.developer,
-        releaseDate: new Date(game.releaseDate).toLocaleDateString('ru-RU'),
-      },
-      fandoms: [] 
-    };
+    console.log('Loading game by ID:', gameId);
+    
+    // Параллельно загружаем игру и фандомы
+    const [gameResponse, fandomsResponse] = await Promise.all([
+      gameApi.getGameById(gameId),
+      fandomApi.searchFandomsByNameAndGame(gameId)
+    ]);
+    
+    // Форматируем данные
+    const formattedGame = formatGameData(gameResponse, fandomsResponse);
+    setGameData(formattedGame);
+
+  } catch (err) {
+    console.error('Error loading game:', err);
+    const errorMessage = err instanceof Error ? err.message : 'Failed to load game';
+    setError(errorMessage);
+  } finally {
+    setLoading(false);
+  }
+};
+
+  const formatGameData = (game: GameReadDto, fandoms: FandomReadDto[]): GamePageData => {
+
+  const formattedFandoms: FandomPreview[] = fandoms.map(fandom => ({
+    id: fandom.id,
+    gameId: fandom.gameId,
+    name: fandom.name,
+    description: fandom.description,
+    imageUrl: getImageUrl(fandom.coverImage) || '/images/default-fandom.jpg',
+    creationDate: fandom.creationDate,
+    rules: fandom.rules,
+    subscribersCount: 0, 
+    postsCount: 0      
+  }));
+
+  return {
+    id: game.id,
+    title: game.title,
+    description: game.description,
+    coverImage: game.coverImage,
+    stats: {
+      fandoms: fandoms.length,
+      posts: 0,
+    },
+    details: {
+      genre: game.genre,
+      publisher: game.publisher,
+      developer: game.developer,
+      releaseDate: new Date(game.releaseDate).toLocaleDateString('ru-RU'),
+    },
+    fandoms: formattedFandoms
   };
+};
 
   const handleSearch = (query: string) => {
     console.log("Search in game:", query);
@@ -100,6 +134,11 @@ export default function GamePage() {
 
   const handleBackToGames = () => {
     navigate('/games');
+  };
+
+  const handleGameUpdated = (gameId: number) => {
+    setShowGameForm(false);
+    loadGameData();
   };
 
   if (loading) {
@@ -153,9 +192,20 @@ export default function GamePage() {
   return (
     <div className={styles.page}>
       <Header onSearch={handleSearch} onSignIn={() => {}} />
+         {showGameForm && (
+        <div className={styles.formContainer}>
+          <GameForm
+            gameId={gameData.id}
+            onCancel={() => setShowGameForm(false)}
+            onSuccess={handleGameUpdated}
+          />
+        </div>
+      )}
       <Content 
         game={gameData} 
         onShowMore={handleShowMore}
+        isAdmin={isAdmin}
+        onEditGame={() => setShowGameForm(true)}
       />
     </div>
   );
@@ -165,18 +215,25 @@ export default function GamePage() {
 interface ContentProps {
   game: GamePageData;
   onShowMore: () => void;
+  isAdmin: boolean;
+  onEditGame: () => void;
 }
 
-function Content({ game, onShowMore }: ContentProps) {
+function Content({ game, onShowMore,  isAdmin, onEditGame }: ContentProps) {
   return (
     <main className={styles.content}>
-      <GameCard game={game} />
+      <GameCard 
+        game={game} 
+        isAdmin={isAdmin}
+        onEditGame={onEditGame} />
       <SectionTitle title="Fandoms" />
       <Fandoms fandoms={game.fandoms} />
-      <ShowMoreButton 
-        variant="light" 
-        onClick={onShowMore}
-      />  
+      {game.fandoms.length > 0 && (
+        <ShowMoreButton 
+          variant="light" 
+          onClick={onShowMore}
+        />
+      )}
     </main>
   );
 }
@@ -184,35 +241,50 @@ function Content({ game, onShowMore }: ContentProps) {
 /* ================= GAME CARD ================= */
 interface GameCardProps {
   game: GamePageData;
+  isAdmin: boolean;
+  onEditGame: () => void;
 }
 
-function GameCard({ game }: GameCardProps) {
+function GameCard({ game, isAdmin, onEditGame }: GameCardProps) {
   return (
     <section className={styles.gameCard}>
       <div className={styles.gameLeft}>
         <div className={styles.cardTitle}>
-          <TitleCard title={game.title} image={game.coverImage} />
-        </div>
+            <TitleCard className={styles.gameTitleCard} title={game.title} image={game.coverImage} />
+            <div className={styles.statsWrapper}>
+              {/* Кнопка управления для админа */}
+              {isAdmin && (
+                <button 
+                  className={styles.manageButton} 
+                  onClick={onEditGame}
+                >
+                  Manage Game
+                </button>
+              )}
+              
+              {/* Статистика */}
+              <div className={styles.gameStats}>
+                <div className={styles.statItem}>
+                  <span className={styles.statNumber}>{game.stats.fandoms}</span>
+                  <img 
+                    className={styles.statIcon}
+                    src={fandomIcon}
+                    alt="Fandoms" 
+                  />
+                </div>
+                <div className={styles.statItem}>
+                  <span className={styles.statNumber}>{game.stats.posts}</span>
+                  <img 
+                    className={styles.statIcon}
+                    src={postIcon}
+                    alt="Posts" 
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         
-        <div className={styles.stats}>
-          <div className={styles.stat}>
-            <strong>
-              {game.stats.fandoms >= 1000
-                ? `${Math.floor(game.stats.fandoms / 1000)}K`
-                : game.stats.fandoms}
-            </strong>
-            <span>Fandoms</span>
-          </div>
-
-          <div className={styles.stat}>
-            <strong>
-              {game.stats.posts >= 1000
-                ? `${Math.floor(game.stats.posts / 1000)}K`
-                : game.stats.posts}
-            </strong>
-            <span>posts</span>
-          </div>
-        </div>
+    
       </div>
       <GameRight game={game} />
     </section>
@@ -288,9 +360,9 @@ function Fandoms({ fandoms }: FandomsProps) {
       {fandoms.map((fandom) => (
         <FandomCard
           key={fandom.id}
-          title={fandom.title}
+          title={fandom.name}
           text={fandom.description}
-          image={fandom.image}
+          image={fandom.imageUrl}
         />
       ))}
     </section>

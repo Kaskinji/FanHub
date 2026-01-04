@@ -1,4 +1,3 @@
-// AllFandomsPage.tsx
 import { useState, useEffect, useCallback } from "react";
 import Header from "../../components/Header/Header";
 import styles from "../AllFandomsPage/AllFandomsPage.module.scss";
