@@ -8,10 +8,9 @@ import GameCard from "../MainPage/GameCard/GameCard";
 import { useGames } from "../../hooks/useGames";
 import { useEffect, useState } from "react";
 import type { GameReadDto } from "../../api/GameApi";
-import type { GameCreateDto } from "../../api/GameApi";
-import GameFormModal from "../../components/GameForm/GameFormModal";
-import { gameApi } from "../../api/GameApi";
 import { useAuth } from "../../hooks/useAuth";
+import { Role } from "../../types/enums/Roles";
+import GameForm from "../../pages/AllGamesPage/GameForm/GameForm";
 
 
 export default function AllGamesPage() {
@@ -31,8 +30,10 @@ export default function AllGamesPage() {
     clearError
   } = useGames();
 
-  const { isAdmin } = useAuth();
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const { user } = useAuth();
+  const isAdmin = user?.role === Role.Admin;
+  const [showGameForm, setShowGameForm] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   useEffect(() => {
     loadGames();
@@ -47,9 +48,9 @@ export default function AllGamesPage() {
     filterByGenre(genre);
   };
 
-  const handleAddGame = async (gameData: GameCreateDto) => {
-    await gameApi.createGame(gameData);
-    await loadGames();
+  const handleGameCreated = () => {
+    setShowGameForm(false);
+    setRefreshTrigger(prev => prev + 1);
   };
 
   if (error) {
@@ -72,6 +73,14 @@ export default function AllGamesPage() {
   return (
     <div className={styles.page}>
       <Header onSearch={handleSearch} onSignIn={() => {}} />
+        {showGameForm && (
+        <div className={styles.formContainer}>
+          <GameForm
+            onCancel={() => setShowGameForm(false)}
+            onSuccess={handleGameCreated}
+          />
+        </div>
+      )}
       <Content 
         games={games}
         gamesData={gamesData}
@@ -84,12 +93,7 @@ export default function AllGamesPage() {
         onGenreSelect={handleGenreSelect}
         onToggleFilter={toggleGenreFilter}
         onResetFilters={resetFilters}
-        onOpenAddModal={() => setIsAddModalOpen(true)}
-      />
-       <GameFormModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onSubmit={handleAddGame}
+        onAddGameClick={() => setShowGameForm(true)}
       />
     </div>
   );
@@ -108,7 +112,7 @@ interface ContentProps {
   onGenreSelect: (genre: string) => void;
   onToggleFilter: () => void;
   onResetFilters: () => void;
-  onOpenAddModal: () => void;
+  onAddGameClick: () => void;
 }
 function Content({   
   games, 
@@ -122,7 +126,7 @@ function Content({
   onGenreSelect,
   onToggleFilter,
   onResetFilters,
-  onOpenAddModal    
+  onAddGameClick   
 }: ContentProps) {
   return (
     <main className={styles.content}>
@@ -130,8 +134,6 @@ function Content({
         onSearch={onSearch}
         onToggleFilter={onToggleFilter}
         showGenreFilter={showGenreFilter}
-        isAdmin={isAdmin}
-        onOpenAddModal={onOpenAddModal}
       />
       
       {/* Фильтр по жанрам (показывается/скрывается) */}
@@ -154,6 +156,8 @@ function Content({
         games={games}
         gamesData={gamesData} // ← Передаем
         loading={loading}
+        isAdmin={isAdmin}
+        onAddGameClick={onAddGameClick}
       />
     </main>
   );
@@ -223,24 +227,14 @@ interface TopProps {
   onSearch: (query: string) => void;
   onToggleFilter: () => void;
   showGenreFilter: boolean;
-  isAdmin: boolean;
-  onOpenAddModal: () => void;
 }
 
-function Top({ onSearch, onToggleFilter, showGenreFilter,  isAdmin, onOpenAddModal }: TopProps) {
+function Top({ onSearch, onToggleFilter, showGenreFilter }: TopProps) {
   return (
     <div className={styles.top}>
       <div className={styles.topHeader}>
-        <h1 className={styles.pageTitle}>All Games</h1>
-        {isAdmin && (
-            <Button
-              variant="light"
-              onClick={onOpenAddModal}
-              className={styles.addButton}
-            >
-              Add Game
-            </Button>
-          )}
+        <h1 className={styles.pageTitle}></h1>
+       
         <div className={styles.controls}>
           <Button
             variant={"light"}
@@ -268,12 +262,14 @@ interface AllGamesProps {
   games: GamePreview[];
   gamesData: GameReadDto[]; // ← Добавляем полные данные
   loading: boolean;
+   isAdmin: boolean;
+  onAddGameClick: () => void;
 }
-function Games({ games, gamesData, loading }: AllGamesProps) {
+function Games({ games, gamesData, loading,  isAdmin, onAddGameClick  }: AllGamesProps) {
   if (loading) {
     return (
       <section className={styles.gamesSection}>
-        <SectionTitle title="Games" />
+        
         <div className={styles.loadingContainer}>
           <div className={styles.loadingSpinner}></div>
           <p>Loading games...</p>
@@ -293,7 +289,18 @@ function Games({ games, gamesData, loading }: AllGamesProps) {
   }
   return (
     <section className={styles.gamesSection}>
+      <div className={styles.sectionHeader}>
       <SectionTitle title="Games" />
+        {isAdmin && (
+            <Button
+              variant="light"
+              onClick={onAddGameClick}
+              className={styles.addButton}
+            >
+            + Add Game
+            </Button>
+          )}
+      </div>
       <div className={styles.gamesGrid}>
         {games.map((gamePreview) => {
           const gameFull = gamesData.find(g => g.id === gamePreview.id);
