@@ -1,5 +1,7 @@
-﻿using Application.Dto.PostDto;
+﻿using Application.Dto.FandomDto;
+using Application.Dto.PostDto;
 using Application.Services.Interfaces;
+using Application.Tools;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Extensions;
@@ -16,6 +18,7 @@ namespace Application.Services
         private readonly ICategoryRepository _categoryRepository;
         private readonly IUserRepository _userRepository;
         private readonly IPostRepository _postRepository;
+        private readonly IImageTools _imageTools;
 
         public PostService( IPostRepository repository,
             IFandomRepository fandomRepository,
@@ -24,12 +27,14 @@ namespace Application.Services
             IMapper mapper,
             IValidator<Post> validator,
             ILogger<PostService> logger,
-            IUnitOfWork unitOfWork ) : base( repository, mapper, validator, logger, unitOfWork )
+            IUnitOfWork unitOfWork,
+            IImageTools imageTools ) : base( repository, mapper, validator, logger, unitOfWork )
         {
             _fandomRepository = fandomRepository;
             _categoryRepository = categoryRepository;
             _userRepository = userRepository;
             _postRepository = repository;
+            _imageTools = imageTools;
         }
 
         public override async Task<List<PostReadDto>> GetAll()
@@ -86,6 +91,7 @@ namespace Application.Services
 
             return _mapper.Map<List<PostReadDto>>( posts );
         }
+
         protected override Post InitializeEntity( PostCreateDto dto )
         {
             Post entity = new();
@@ -95,11 +101,31 @@ namespace Application.Services
             return entity;
         }
 
+        protected override Task CleanupBeforeUpdate( Post entity, PostUpdateDto updateDto )
+        {
+            if ( entity.MediaContent != updateDto.MediaContent && !string.IsNullOrEmpty( entity.MediaContent ) )
+            {
+                _imageTools.DeleteImage( entity.MediaContent );
+            }
+
+            return Task.CompletedTask;
+        }
+
         protected override async Task CheckUnique( Post post )
         {
             await _fandomRepository.GetByIdAsyncThrow( post.FandomId );
             await _userRepository.GetByIdAsyncThrow( post.UserId );
             await _categoryRepository.GetByIdAsyncThrow( post.CategoryId );
+        }
+
+        protected override Task CleanupBeforeDelete( Post entity )
+        {
+            if ( !string.IsNullOrEmpty( entity.MediaContent ) )
+            {
+                _imageTools.DeleteImage( entity.MediaContent );
+            }
+
+            return Task.CompletedTask;
         }
     }
 }

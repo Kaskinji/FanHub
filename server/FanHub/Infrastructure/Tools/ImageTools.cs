@@ -59,14 +59,19 @@ namespace Infrastructure.Tools
             throw new KeyNotFoundException( $"Image '{fileName}' not found." );
         }
 
-        public void DeleteImage( string imageName )
+        public void DeleteImage( string imageUrl )
         {
-            if ( string.IsNullOrEmpty( imageName ) )
+            if ( string.IsNullOrEmpty( imageUrl ) )
             {
-                throw new ArgumentException( "Image name is empty." );
+                throw new ArgumentException( "Image URL is empty." );
             }
 
-            string fileName = Path.GetFileName( imageName );
+            string fileName = Path.GetFileName( imageUrl );
+
+            if ( !imageUrl.StartsWith( "/images/" ) )
+            {
+                logger.LogWarning( "Image URL doesn't start with /images/: {ImageUrl}", imageUrl );
+            }
 
             string folderPath = Path.GetFullPath( fileToolsOptions.Value.StorageUrl );
             string filePath = Path.Combine( folderPath, fileName );
@@ -74,10 +79,11 @@ namespace Infrastructure.Tools
             if ( File.Exists( filePath ) )
             {
                 File.Delete( filePath );
+                logger.LogInformation( "Image deleted: {FilePath}", filePath );
             }
             else
             {
-                throw new KeyNotFoundException( $"Image '{fileName}' not found." );
+                throw new KeyNotFoundException( $"Image '{fileName}' not found at path: {filePath}" );
             }
         }
     }

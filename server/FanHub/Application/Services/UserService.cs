@@ -1,6 +1,8 @@
-﻿using Application.Dto.UserDto;
+﻿using Application.Dto.PostDto;
+using Application.Dto.UserDto;
 using Application.PasswordHasher;
 using Application.Services.Interfaces;
+using Application.Tools;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
@@ -14,17 +16,20 @@ namespace Application.Services
 {
     public class UserService : BaseService<User, UserCreateDto, UserReadDto, UserUpdateDto>, IUserService
     {
-        private IPasswordHasher _hasher;
+        private readonly IPasswordHasher _hasher;
+        private readonly IImageTools _imageTools;
 
         public UserService( IUserRepository userRepository,
             IMapper mapper,
             IValidator<User> validator,
             IPasswordHasher hasher,
             ILogger<UserService> logger,
-            IUnitOfWork unitOfWork
+            IUnitOfWork unitOfWork,
+            IImageTools imageTools
            ) : base( userRepository, mapper, validator, logger, unitOfWork )
         {
             _hasher = hasher;
+            _imageTools = imageTools;
         }
 
         public async Task<int?> GetUserIdByCredentialsAsync( string login, string password )
@@ -71,6 +76,16 @@ namespace Application.Services
             return entity;
         }
 
+        protected override Task CleanupBeforeUpdate( User entity, UserUpdateDto updateDto )
+        {
+            if ( entity.Avatar != updateDto.Avatar && !string.IsNullOrEmpty( entity.Avatar ) )
+            {
+                _imageTools.DeleteImage( entity.Avatar );
+            }
+
+            return Task.CompletedTask;
+        }
+
         protected override async Task CheckUnique( User entity )
         {
             User? existing = await _repository.FindAsync( u =>
@@ -88,6 +103,16 @@ namespace Application.Services
             {
                 throw new ArgumentException( "Пользователь с таким именем уже существует" );
             }
+        }
+
+        protected override Task CleanupBeforeDelete( User entity )
+        {
+            if ( !string.IsNullOrEmpty( entity.Avatar ) )
+            {
+                _imageTools.DeleteImage( entity.Avatar );
+            }
+
+            return Task.CompletedTask;
         }
     }
 }

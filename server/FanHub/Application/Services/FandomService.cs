@@ -1,5 +1,7 @@
-﻿using Application.Dto.FandomDto;
+﻿using Application.Dto.EventDto;
+using Application.Dto.FandomDto;
 using Application.Services.Interfaces;
+using Application.Tools;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Extensions;
@@ -15,6 +17,7 @@ namespace Application.Services
         private readonly IFandomRepository _fandomRepository;
         private readonly IGameRepository _gameRepository;
         private readonly ISubscriptionRepository _subscriptionRepository;
+        private readonly IImageTools _imageTools;
 
         public FandomService( IFandomRepository fandomRepository,
             IGameRepository gameRepository,
@@ -23,11 +26,14 @@ namespace Application.Services
             IMapper mapper,
             IValidator<Fandom> validator,
             ILogger<FandomService> logger,
-            IUnitOfWork unitOfWork ) : base( fandomRepository, mapper, validator, logger, unitOfWork )
+            IUnitOfWork unitOfWork
+,
+            IImageTools imageTools ) : base( fandomRepository, mapper, validator, logger, unitOfWork )
         {
             _fandomRepository = fandomRepository;
             _gameRepository = gameRepository;
             _subscriptionRepository = subscriptionRepository;
+            _imageTools = imageTools;
         }
 
         public override async Task<FandomReadDto> GetById( int id )
@@ -107,6 +113,26 @@ namespace Application.Services
         public async Task<FandomStatsDto> GetFandomWithStatsById( int id )
         {
             return _mapper.Map<FandomStatsDto>( await _fandomRepository.GetByIdWithStatsAsync( id ) );
+        }
+
+        protected override Task CleanupBeforeUpdate( Fandom entity, FandomUpdateDto updateDto )
+        {
+            if ( entity.CoverImage != updateDto.CoverImage && !string.IsNullOrEmpty( entity.CoverImage ) )
+            {
+                _imageTools.DeleteImage( entity.CoverImage );
+            }
+
+            return Task.CompletedTask;
+        }
+
+        protected override Task CleanupBeforeDelete( Fandom entity )
+        {
+            if ( !string.IsNullOrEmpty( entity.CoverImage )  )
+            {
+                _imageTools.DeleteImage( entity.CoverImage );
+            }
+
+            return Task.CompletedTask;
         }
     }
 }

@@ -1,5 +1,7 @@
-﻿using Application.Dto.GameDto;
+﻿using Application.Dto.FandomDto;
+using Application.Dto.GameDto;
 using Application.Services.Interfaces;
+using Application.Tools;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Foundations;
@@ -12,13 +14,17 @@ namespace Application.Services
     public class GameService : BaseService<Game, GameCreateDto, GameReadDto, GameUpdateDto>, IGameService
     {
         private readonly IGameRepository _gameRepository;
+        private IImageTools _imageTools;
+
         public GameService( IGameRepository repository,
             IMapper mapper,
             IValidator<Game> validator,
             ILogger<GameService> logger,
-            IUnitOfWork unitOfWork ) : base( repository, mapper, validator, logger, unitOfWork )
+            IUnitOfWork unitOfWork,
+            IImageTools imageTools ) : base( repository, mapper, validator, logger, unitOfWork )
         {
             _gameRepository = repository;
+            _imageTools = imageTools;
         }
 
         public async Task<List<GameReadDto>> SearchGamesByNameAsync( string searchTerm )
@@ -41,6 +47,26 @@ namespace Application.Services
             {
                 throw new ArgumentException( "A game with that name already exists." );
             }
+        }
+
+        protected override Task CleanupBeforeUpdate( Game entity, GameUpdateDto updateDto )
+        {
+            if ( entity.CoverImage != updateDto.CoverImage && string.IsNullOrEmpty( entity.CoverImage ) )
+            {
+                _imageTools.DeleteImage( entity.CoverImage );
+            }
+
+            return Task.CompletedTask;
+        }
+
+        protected override Task CleanupBeforeDelete( Game entity )
+        {
+            if ( !string.IsNullOrEmpty( entity.CoverImage ) )
+            {
+                _imageTools.DeleteImage( entity.CoverImage );
+            }
+
+            return Task.CompletedTask;
         }
     }
 }

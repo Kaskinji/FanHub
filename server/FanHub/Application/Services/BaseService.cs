@@ -60,6 +60,8 @@ namespace Application.Services
 
             _logger.LogTrace( $"{typeof( TEntity ).Name} with id '{id}' was deleted." );
 
+            await CleanupBeforeDelete( entity );
+
             _repository.Delete( entity );
 
             await _unitOfWork.CommitAsync();
@@ -85,6 +87,8 @@ namespace Application.Services
         public virtual async Task Update( int id, TUpdateDto dto )
         {
             TEntity entity = await _repository.GetByIdAsyncThrow( id );
+
+            await CleanupBeforeUpdate( entity, dto );
 
             _mapper.Map( dto, entity );
 
@@ -119,6 +123,16 @@ namespace Application.Services
         }
 
         protected virtual Task ExistEntities( TEntity entity )
+        {
+            return Task.CompletedTask;
+        }
+
+        protected virtual Task CleanupBeforeDelete( TEntity entity )
+        {
+            return Task.CompletedTask;
+        }
+
+        protected virtual Task CleanupBeforeUpdate( TEntity entity, TUpdateDto updateDto )
         {
             return Task.CompletedTask;
         }

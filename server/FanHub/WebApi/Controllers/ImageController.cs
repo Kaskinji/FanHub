@@ -27,15 +27,5 @@ namespace WebApi.Controllers
 
             return Ok( result );
         }
-
-        [Authorize]
-        [HttpDelete( "{fileName}" )]
-        public IActionResult DeleteImage(
-            [FromRoute] string fileName )
-        {
-            _imageHelperTools.DeleteImage( fileName );
-
-            return Ok();
-        }
     }
 }

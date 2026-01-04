@@ -7,6 +7,7 @@ using FluentValidation;
 using Domain.Extensions;
 using Microsoft.Extensions.Logging;
 using Domain.Foundations;
+using Application.Tools;
 
 namespace Application.Services
 {
@@ -15,18 +16,22 @@ namespace Application.Services
         private readonly IEventRepository _eventRepository;
         private readonly IUserRepository _userRepository;
         private readonly IFandomService _fandomService;
+        private readonly IImageTools _imageTools;
+
         public EventService( IEventRepository repository,
             IUserRepository userRepository,
             IFandomService fandomService,
             IMapper mapper,
             IValidator<Event> validator,
             ILogger<EventService> logger,
-            IUnitOfWork unitOfWork )
+            IUnitOfWork unitOfWork,
+            IImageTools imageTools )
         : base( repository, mapper, validator, logger, unitOfWork )
         {
             _eventRepository = repository;
             _userRepository = userRepository;
             _fandomService = fandomService;
+            _imageTools = imageTools;
         }
 
         public override async Task<List<EventReadDto>> GetAll()
@@ -47,6 +52,26 @@ namespace Application.Services
             await _fandomService.CheckCreator( eventEntity.OrganizerId, eventEntity.FandomId );
 
             await _userRepository.GetByIdAsyncThrow( eventEntity.OrganizerId );
+        }
+
+        protected override Task CleanupBeforeUpdate( Event entity, EventUpdateDto updateDto )
+        {
+            if ( entity.ImageUrl != updateDto.ImageUrl && !string.IsNullOrEmpty( entity.ImageUrl ) )
+            {
+                _imageTools.DeleteImage( entity.ImageUrl );
+            }
+
+            return Task.CompletedTask;
+        }
+
+        protected override Task CleanupBeforeDelete( Event entity )
+        {
+            if ( !string.IsNullOrEmpty( entity.ImageUrl ) )
+            {
+                _imageTools.DeleteImage( entity.ImageUrl );
+            }
+
+            return Task.CompletedTask;
         }
     }
 }

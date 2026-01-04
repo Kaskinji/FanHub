@@ -26,7 +26,7 @@ public class EventProfile : Profile
                     src.StartDate.HasValue && src.StartDate.Value != default ) )
             .ForMember( dest => dest.EndDate,
                 opt => opt.Condition( ( src, dest, srcMember ) =>
-                    src.EndDate != default ) )
+                    src.EndDate.HasValue && src.EndDate != default ) )
             .ForMember( dest => dest.ImageUrl,
                 opt => opt.MapFrom( src => src.ImageUrl ) );
     }
