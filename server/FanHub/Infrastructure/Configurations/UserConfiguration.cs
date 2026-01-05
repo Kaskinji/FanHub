@@ -50,7 +50,7 @@ namespace Infrastructure.Configurations
                 .WithOne( c => c.User )
                 .HasForeignKey( c => c.UserId );
 
-            builder.HasMany( u => u.Notifications )
+            builder.HasMany( u => u.NotificationsViewed )
                 .WithOne( n => n.User )
                 .HasForeignKey( n => n.UserId );
 

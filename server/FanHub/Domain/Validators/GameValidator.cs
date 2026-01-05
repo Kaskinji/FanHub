@@ -37,7 +37,6 @@ namespace Domain.Validators
             RuleFor( x => x.CoverImage )
                 .NotEmpty().WithMessage( "Обложка игры обязательна" )
                 .MaximumLength( 1000 ).WithMessage( "Путь к обложке не может превышать 1000 символов" );
-            //.Must( UrlValidator.ValidateImageUrl ).WithMessage( "Некорректный URL обложки" );
 
             RuleFor( x => x.Genre )
                 .NotEmpty().WithMessage( "Жанр обязателен" )

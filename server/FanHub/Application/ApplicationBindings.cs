@@ -20,9 +20,10 @@ namespace Application
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<IEventService, EventService>();
-            services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IFandomNotificationService, FandomNotificationService>();
             services.AddScoped<IReactionService, ReactionService>();
             services.AddScoped<ISubscriptionService, SubscriptionService>();
+            services.AddScoped<INotificationViewedService, NotificationViewedService>();
             services.AddScoped<IAuthService, AuthService>();
 
             services.AddValidatorsFromAssemblyContaining<CategoryValidator>();
@@ -35,6 +36,7 @@ namespace Application
             services.AddValidatorsFromAssemblyContaining<NotificationValidator>();
             services.AddValidatorsFromAssemblyContaining<ReactionValidator>();
             services.AddValidatorsFromAssemblyContaining<SubscriptionValidator>();
+            services.AddValidatorsFromAssemblyContaining<NotificationViewedValidator>();
 
             services.AddAutoMapper( typeof( CategoryProfile ).Assembly );
             services.AddAutoMapper( typeof( FandomProfile ).Assembly );
@@ -46,6 +48,7 @@ namespace Application
             services.AddAutoMapper( typeof( NotificationProfile ).Assembly );
             services.AddAutoMapper( typeof( ReactionProfile ).Assembly );
             services.AddAutoMapper( typeof( SubscriptionProfile ).Assembly );
+            services.AddAutoMapper( typeof( NotificationViewedProfile ).Assembly );
 
             return services;
         }

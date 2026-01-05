@@ -8,6 +8,8 @@ using Domain.Extensions;
 using Microsoft.Extensions.Logging;
 using Domain.Foundations;
 using Application.Tools;
+using Application.Dto.NotificationDto;
+using Domain.Enums;
 
 namespace Application.Services
 {
@@ -72,6 +74,16 @@ namespace Application.Services
             }
 
             return Task.CompletedTask;
+        }
+
+        protected override async Task AfterCreate( Event entity )
+        {
+            await _fandomService.Notify( new FandomNotificationCreateDto
+            {
+                FandomId = entity.FandomId,
+                NotifierId = entity.Id,
+                Type = FandomNotificationType.NewEvent,
+            } );
         }
     }
 }

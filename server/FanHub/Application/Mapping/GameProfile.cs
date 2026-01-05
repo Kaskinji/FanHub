@@ -15,7 +15,7 @@ namespace Application.Mapping
             CreateMap<GameUpdateDto, Game>()
                 .ForAllMembers( opts => opts.Condition( ( src, dest, srcMember ) =>
                 {
-                    if ( srcMember == null )
+                    if ( srcMember is null )
                     {
                         return false;
                     }

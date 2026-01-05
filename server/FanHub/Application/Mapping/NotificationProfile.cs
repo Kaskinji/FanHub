@@ -8,11 +8,11 @@ namespace Application.Mapping
     {
         public NotificationProfile()
         {
-            CreateMap<Notification, NotificationReadDto>();
+            CreateMap<FandomNotification, FandomNotificationReadDto>();
 
-            CreateMap<NotificationCreateDto, Notification>();
+            CreateMap<FandomNotificationCreateDto, FandomNotification>();
 
-            CreateMap<NotificationUpdateDto, Notification>();
+            CreateMap<FandomNotificationUpdateDto, FandomNotification>();
         }
     }
 }

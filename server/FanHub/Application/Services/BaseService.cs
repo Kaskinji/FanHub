@@ -51,6 +51,8 @@ namespace Application.Services
 
             await _unitOfWork.CommitAsync();
 
+            await AfterCreate( entity );
+
             return entity.Id;
         }
 
@@ -133,6 +135,11 @@ namespace Application.Services
         }
 
         protected virtual Task CleanupBeforeUpdate( TEntity entity, TUpdateDto updateDto )
+        {
+            return Task.CompletedTask;
+        }
+
+        protected virtual Task AfterCreate( TEntity entity )
         {
             return Task.CompletedTask;
         }

@@ -16,12 +16,11 @@ public class User : Entity
 
     public UserRole Role { get; set; }
 
-
     public ICollection<Fandom> Fandoms { get; set; } = new List<Fandom>();
     public ICollection<Reaction> Reactions { get; set; } = new List<Reaction>();
     public ICollection<Event> Events { get; set; } = new List<Event>();
     public ICollection<Comment> Comments { get; set; } = new List<Comment>();
-    public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+    public ICollection<NotificationViewed> NotificationsViewed { get; set; } = new List<NotificationViewed>();
     public ICollection<Subscription> Subscriptions { get; set; } = new List<Subscription>();
     public ICollection<Post> Posts { get; set; } = new List<Post>();
 }
