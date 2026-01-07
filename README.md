@@ -39,3 +39,7 @@ Backend:
 Frontend:
  - **Язык:** Typescript
  - **Фреймворк:** React
+
+#### ER-диаграмма
+
+![FanHubERD](https://github.com/user-attachments/assets/43649526-bc89-477c-8d4a-2f71fa0d90cc)
