@@ -8,26 +8,29 @@ import CommentCreator from "../Comment/CommentCreator/CommentCreator";
 interface PostCommentsProps {
   comments: CommentType[];
   postId: number;
-  onAddComment: (content: string) => Promise<void>;
+  onAddComment?: (content: string) => Promise<void>;
   isAddingComment?: boolean;
+  isLoadingComments?: boolean;
 }
 
 const PostComments: FC<PostCommentsProps> = ({
   comments,
   postId,
   onAddComment,
-  isAddingComment = false
+  isAddingComment = false,
+  isLoadingComments = false
 }) => {
   const [replyingTo, setReplyingTo] = useState<number | null>(null);
 
   const handleAddComment = async (content: string) => {
-    await onAddComment(content);
-    setReplyingTo(null);
+    if (onAddComment) {
+      await onAddComment(content);
+      setReplyingTo(null);
+    }
   };
 
   const handleReply = (commentId: number) => {
     setReplyingTo(commentId);
-    // Можно передать информацию о reply в CommentCreator через props
   };
 
   return (
@@ -36,16 +39,20 @@ const PostComments: FC<PostCommentsProps> = ({
         Comments ({comments.length})
       </h3>
       
-      {/* Форма создания комментария */}
-      <CommentCreator
-        onSubmit={handleAddComment}
-        isSubmitting={isAddingComment}
-        replyingTo={replyingTo ? comments.find(c => c.id === replyingTo) : null}
-      />
+      {onAddComment && (
+        <CommentCreator
+          onSubmit={handleAddComment}
+          isSubmitting={isAddingComment}
+          replyingTo={replyingTo ? comments.find(c => c.id === replyingTo) : null}
+        />
+      )}
       
-      {/* Список комментариев */}
       <div className={styles.commentsList}>
-        {comments.length === 0 ? (
+        {isLoadingComments ? (
+          <div className={styles.loading}>
+            Loading comments...
+          </div>
+        ) : comments.length === 0 ? (
           <div className={styles.noComments}>
             There are no comments yet. Be the first!
           </div>

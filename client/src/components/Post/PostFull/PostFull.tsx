@@ -9,8 +9,12 @@ interface PostFullProps {
   post: Post;
   comments: CommentType[];
   onClose: () => void;
-  onAddComment: (content: string) => Promise<void>;
+  onAddComment?: (content: string) => Promise<void>;
+  onReaction?: (postId: number, reactionType: "like" | "dislike") => void;
   isAddingComment?: boolean;
+  isLoadingComments?: boolean;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
 const PostFull: FC<PostFullProps> = ({
@@ -18,8 +22,14 @@ const PostFull: FC<PostFullProps> = ({
   comments,
   onClose,
   onAddComment,
-  isAddingComment = false
+  onReaction,
+  isAddingComment = false,
+  isLoadingComments = false,
+  onEdit,
+  onDelete,
 }) => {
+  const currentUserId = Number(localStorage.getItem('user_id'));
+  const isAuthor = currentUserId && post.author.id === currentUserId;
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("ru-RU", {
@@ -31,9 +41,10 @@ const PostFull: FC<PostFullProps> = ({
     });
   };
 
-  const handleReaction = (type: string) => {
-    // Отправка реакции на бэкенд
-    console.log(`Reacted with ${type}`);
+  const handleReaction = (type: "like" | "dislike") => {
+    if (onReaction && post.id && post.id > 0) {
+      onReaction(post.id, type);
+    }
   };
 
   return (
@@ -43,7 +54,6 @@ const PostFull: FC<PostFullProps> = ({
           ✕
         </button>
         
-        {/* Заголовок и мета-информация */}
         <header className={styles.header}>
           <div className={styles.authorInfo}>
             <div className={styles.avatar}>
@@ -61,17 +71,39 @@ const PostFull: FC<PostFullProps> = ({
             </div>
           </div>
           
-          <div className={styles.category}>{post.category}</div>
+          <div className={styles.headerRight}>
+            <div className={styles.category}>{post.category}</div>
+            {isAuthor && (onEdit || onDelete) && (
+              <div className={styles.postActions}>
+                {onEdit && (
+                  <button
+                    className={styles.editButton}
+                    onClick={onEdit}
+                    title="Edit post"
+                  >
+                    ✏️
+                  </button>
+                )}
+                {onDelete && (
+                  <button
+                    className={styles.deleteButton}
+                    onClick={onDelete}
+                    title="Delete post"
+                  >
+                    🗑️
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
         </header>
         
-        {/* Изображение поста */}
         {post.image && (
           <div className={styles.postImage}>
             <img src={post.image} alt={post.title} />
           </div>
         )}
         
-        {/* Контент поста */}
         <article className={styles.content}>
           <h1 className={styles.title}>{post.title}</h1>
           <div className={styles.text}>
@@ -80,27 +112,35 @@ const PostFull: FC<PostFullProps> = ({
           
         </article>
         
-        {/* Реакции */}
         <div className={styles.reactions}>
-          {post.reactions.map((reaction) => (
-            <button
-              key={reaction.type}
-              className={`${styles.reactionButton} ${
-                reaction.userReacted ? styles.active : ''
-              }`}
-              onClick={() => handleReaction(reaction.type)}
-            >
-              {getReactionEmoji(reaction.type)} {reaction.count}
-            </button>
-          ))}
+          {(['like', 'dislike'] as const).map((reactionType) => {
+            const reaction = post.reactions.find((r) => r.type === reactionType) || {
+              type: reactionType,
+              count: 0,
+              userReacted: false,
+            };
+            
+            return (
+              <button
+                key={reactionType}
+                className={`${styles.reactionButton} ${
+                  reaction.userReacted ? styles.active : ''
+                }`}
+                onClick={() => handleReaction(reactionType)}
+                disabled={!onReaction}
+              >
+                {getReactionEmoji(reactionType)} {reaction.count}
+              </button>
+            );
+          })}
         </div>
         
-        {/* Комментарии */}
         <PostComments
           comments={comments}
           postId={post.id}
           onAddComment={onAddComment}
           isAddingComment={isAddingComment}
+          isLoadingComments={isLoadingComments}
         />
       </div>
     </div>
@@ -110,7 +150,7 @@ const PostFull: FC<PostFullProps> = ({
 const getReactionEmoji = (type: string) => {
   const emojis: Record<string, string> = {
     like: '👍',
-    fire: '🔥'
+    dislike: '👎'
   };
   return emojis[type] || '👍';
 };

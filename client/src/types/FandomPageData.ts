@@ -9,7 +9,7 @@ export interface FandomPageData {
   postsPreviews: Array<{
     id: number;
     title: string;
-    image: string;
+    image: string | null;
     author: {
         id: number;
         username: string;
@@ -26,6 +26,6 @@ export interface FandomPageData {
 }
 
 export interface Reaction {
-  type: 'like' | 'fire'; 
+  type: 'like' | 'dislike'; 
   count: number;
 }

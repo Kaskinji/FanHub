@@ -4,27 +4,11 @@
   font-family: sans-serif;
 }
 
-.addButton {
-  background: linear-gradient(90deg, rgb(98, 20, 171), rgb(130, 40, 200));
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius:  0 0 6px 6px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-  
-  &:hover {
-    background: linear-gradient(90deg, rgb(110, 25, 190), rgb(140, 50, 220));
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(98, 20, 171, 0.3);
-  }
-  
-  &:active {
-    transform: translateY(0);
-  }
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 40px;
 }
 /* ================= CONTENT ================= */
 .content {
@@ -538,7 +522,7 @@
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(10px);
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   z-index: 1000;
   padding: 20px;

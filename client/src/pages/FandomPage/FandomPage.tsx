@@ -7,56 +7,12 @@ import type { FandomPageData } from "../../types/FandomPageData";
 import type { FandomContextData } from "../../types/Fandom";
 import { fandomApi, type FandomStatsDto } from "../../api/FandomApi";
 import { subscriptionApi } from "../../api/SubscriptionApi";
+import { postApi } from "../../api/PostApi";
 import { FandomCard } from "./FandomCard/FandomCard";
 import { Posts } from "./Posts/Posts";
 import { Events } from "./Events/Events";
 import ErrorState from "../../components/ErrorState/ErrorState";
 import styles from "./FandomPage.module.scss";
-
-const mockPosts = [
-  {
-    id: 1,
-    title: "Guide for 100% completion",
-    image: "/images/geralt.jpg",
-    author: {
-      id: 101,
-      username: "GeraltOfRivia",
-      avatar: "/images/geralt-avatar.jpg",
-    },
-    reactions: [
-      { type: "like" as const, count: 42 },
-      { type: "fire" as const, count: 15 },
-    ],
-  },
-  {
-    id: 2,
-    title: "The best decks for gwent",
-    image: "/images/geralt2.jpg",
-    author: {
-      id: 102,
-      username: "Plotva",
-      avatar: "/images/plotva-avatar.jpg",
-    },
-    reactions: [
-      { type: "like" as const, count: 89 },
-      { type: "fire" as const, count: 32 },
-    ],
-  },
-  {
-    id: 3,
-    title: "Top 10 alcohol in Novigrad",
-    image: "/images/geralt3.jpg",
-    author: {
-      id: 103,
-      username: "Zoltan",
-      avatar: "/images/zoltan-avatar.jpg",
-    },
-    reactions: [
-      { type: "like" as const, count: 156 },
-      { type: "fire" as const, count: 45 },
-    ],
-  },
-];
 
 
 export default function FandomPage() {
@@ -102,17 +58,29 @@ export default function FandomPage() {
           subscriptionResult = undefined;
         }
 
-        // Преобразуем данные из API в формат страницы
+        // Загружаем популярные посты для фандома
+        let postsPreviews: FandomPageData["postsPreviews"] = [];
+        try {
+          const posts = await postApi.getPopularPostsByFandom(
+            fandomStats.id,
+            3
+          );
+          postsPreviews = await postApi.adaptToPostPreviews(posts);
+        } catch (err) {
+          console.error("Error fetching posts:", err);
+          // Если не удалось загрузить посты, оставляем пустой массив
+          postsPreviews = [];
+        }
         const transformedData: FandomPageData = {
           id: fandomStats.id,
           title: fandomStats.name,
           description: fandomStats.description,
-          coverImage: fandomStats.coverImage,
+          coverImage: fandomStats.coverImage || "",
           rules: fandomStats.rules,
           subscribersCount: fandomStats.subscribersCount,
           postsCount: fandomStats.postsCount,
-          postsPreviews: mockPosts, // Используем моковые посты
-          eventsPreviews: [], // События теперь получаются в компоненте Events
+          postsPreviews: postsPreviews,
+          eventsPreviews: [],
         };
 
         setFandomData(transformedData);
@@ -188,7 +156,11 @@ export default function FandomPage() {
         <Events fandomId={fandomData.id} />
         <ShowMoreButton variant="light" onClick={handleShowEvents} />
         <SectionTitle title="Popular Posts" />
-        <Posts posts={fandomData.postsPreviews} />
+        <Posts 
+          posts={fandomData.postsPreviews} 
+          fandomId={fandomData.id}
+          fandomName={fandomData.title}
+        />
         <ShowMoreButton variant="light" onClick={handleShowMore} />
       </main>
     </div>

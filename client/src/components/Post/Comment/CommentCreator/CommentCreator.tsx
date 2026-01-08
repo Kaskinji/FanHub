@@ -17,7 +17,6 @@ const CommentCreator: FC<CommentCreatorProps> = ({
   const [commentText, setCommentText] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Используем useCallback для предотвращения ререндеров
   const focusTextarea = useCallback(() => {
     if (textareaRef.current) {
       textareaRef.current.focus();
@@ -28,18 +27,14 @@ const CommentCreator: FC<CommentCreatorProps> = ({
     }
   }, []);
 
-  // Обработчик изменения replyingTo
   const handleReplyingToChange = useCallback(() => {
     if (replyingTo) {
       const newText = `@${replyingTo.author.username} `;
       setCommentText(newText);
-      
-      // Используем setTimeout для асинхронного фокуса
       setTimeout(focusTextarea, 0);
     }
   }, [replyingTo, focusTextarea]);
 
-  // Используем useEffect только для вызова функции
   React.useEffect(() => {
     handleReplyingToChange();
   }, [handleReplyingToChange]);
@@ -54,8 +49,6 @@ const CommentCreator: FC<CommentCreatorProps> = ({
 
   return (
     <form className={styles.commentCreator} onSubmit={handleSubmit}>
-
-      
       <textarea
         ref={textareaRef}
         className={styles.commentTextarea}
