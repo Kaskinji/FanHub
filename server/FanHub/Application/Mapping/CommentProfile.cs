@@ -18,12 +18,10 @@ namespace Application.Mapping
                         srcMember is not null && !string.IsNullOrWhiteSpace( ( string )srcMember ) ) );
 
             CreateMap<Comment, CommentShowDto>()
-                .ForMember( dest => dest.AuthorName,
-                    opt => opt.MapFrom( src => src.User != null ? src.User.Username : "Unknown" ) )
                 .ForMember( dest => dest.AuthorAvatar,
                     opt => opt.MapFrom( src => src.User != null ? src.User.Avatar : string.Empty ) )
                 .ForMember( dest => dest.AuthorUsername,
-                    opt => opt.MapFrom( src => src.User != null ? src.User.Login : string.Empty ) );
+                    opt => opt.MapFrom( src => src.User != null ? src.User.Username : string.Empty ) );
         }
     }
 }

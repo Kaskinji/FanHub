@@ -38,6 +38,8 @@ namespace Application.Services
         }
         public async Task<List<CommentShowDto>> GetCommentsByPostIdAsync( int postId )
         {
+            await _postRepository.GetByIdAsyncThrow( postId );
+
             List<Comment> comments = await _commentRepository.GetCommentsByPostIdAsync( postId );
 
             return _mapper.Map<List<CommentShowDto>>( comments );

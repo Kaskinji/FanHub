@@ -20,17 +20,12 @@ namespace Infrastructure.Repositories
         }
         public async Task<List<Comment>> GetCommentsByPostIdAsync( int postId )
         {
-            bool postExists = await _entities.AnyAsync( p => p.Id == postId );
-            if ( !postExists )
-            {
-                throw new KeyNotFoundException( $"Post {postId} not exist" );
-            }
-
             return await _entities
                 .Include( c => c.User )
                 .Include( c => c.Post )
                 .Where( c => c.PostId == postId )
                 .OrderByDescending( c => c.CommentDate )
+                .AsNoTracking()
                 .ToListAsync();
         }
     }
