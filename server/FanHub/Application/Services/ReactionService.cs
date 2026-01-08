@@ -1,4 +1,6 @@
-﻿using Application.Dto.ReactionDto;
+﻿using Application.Dto.PostDto;
+using System.Collections.Generic;
+using Application.Dto.ReactionDto;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
@@ -14,6 +16,7 @@ namespace Application.Services
     {
         private IPostRepository _postRepository;
         private IUserRepository _userRepository;
+        private IReactionRepository _reactionRepository;
 
         public ReactionService( IReactionRepository repository,
             IPostRepository postRepository,
@@ -23,10 +26,17 @@ namespace Application.Services
             ILogger<ReactionService> logger,
             IUnitOfWork unitOfWork ) : base( repository, mapper, validator, logger, unitOfWork )
         {
+            _reactionRepository = repository;
             _postRepository = postRepository;
             _userRepository = userRepository;
         }
 
+        public async Task<IReadOnlyList<ReactionReadDto>> GetByPostId( int postId )
+        {
+            List<Reaction> reactions = await _reactionRepository.GetReactionsByPostIdAsync( postId );
+
+            return _mapper.Map<List<ReactionReadDto>>( reactions );
+        }
         protected override Reaction InitializeEntity( ReactionCreateDto dto )
         {
             Reaction entity = new();

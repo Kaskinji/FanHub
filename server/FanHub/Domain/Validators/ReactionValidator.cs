@@ -15,8 +15,8 @@ namespace Domain.Validators
                 .GreaterThan( 0 ).WithMessage( "Post ID должен быть положительным числом" );
 
             RuleFor( x => x.Date )
-                .NotEmpty().WithMessage( "Дата реакции обязательна" )
-                .GreaterThanOrEqualTo( DateTime.UtcNow.AddMinutes( 1 ) ).WithMessage( "Дата реакции не может быть в будущем" );
+                .NotEmpty().WithMessage( "Дата реакции обязательна" );
+            //.GreaterThanOrEqualTo( DateTime.UtcNow.AddMinutes( 1 ) ).WithMessage( "Дата реакции не может быть в будущем" );
 
             RuleFor( x => x.Type )
                 .IsInEnum().WithMessage( "Некорректный тип реакции" )

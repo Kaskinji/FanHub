@@ -30,8 +30,9 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
-        [HttpGet( "/post/{postId}" )]
-        public async Task<ActionResult<CommentReadDto>> GetByPostId( int postId )
+        [HttpGet( "post/{postId}" )]
+        public async Task<ActionResult<IReadOnlyList<CommentShowDto>>> GetByPostId( [FromRoute]
+        int postId )
         {
             IReadOnlyList<CommentShowDto> comments = await _commentService.GetCommentsByPostIdAsync( postId );
 

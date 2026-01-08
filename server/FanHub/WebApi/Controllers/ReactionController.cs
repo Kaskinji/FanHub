@@ -39,6 +39,16 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
+        [HttpGet( "post/{postId}" )]
+        public async Task<ActionResult<IReadOnlyList<ReactionReadDto>>> GetReactionsByPostId(
+             [FromRoute] int postId )
+        {
+            IReadOnlyList<ReactionReadDto> reactions = await _reactionService.GetByPostId( postId );
+
+            return Ok( reactions );
+        }
+
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<int>> CreateReaction( [FromBody] WebApi.Contracts.ReactionDto.ReactionCreateDto dto )
         {
