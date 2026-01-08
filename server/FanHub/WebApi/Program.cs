@@ -18,6 +18,7 @@ public class Program
         builder.Services.AddInfrastructure( builder.Configuration );
         builder.Services.AddApplication();
         builder.Services.AddControllers();
+        builder.Services.AddSignalR();
 
         builder.Services.AddEndpointsApiExplorer();
 
@@ -42,8 +43,9 @@ public class Program
         builder.Services.AddAutoMapper( typeof( WebApi.Mapping.PostProfile ).Assembly );
         builder.Services.AddAutoMapper( typeof( WebApi.Mapping.ReactionProfile ).Assembly );
         builder.Services.AddAutoMapper( typeof( WebApi.Mapping.SubscriptionProfile ).Assembly );
-
         builder.Services.AddJwtAuthAndSwagger( builder.Configuration );
+
+        builder.Services.AddScoped<Application.Services.Interfaces.INotificationHubService, WebApi.Services.NotificationHubService>();
 
         builder.Services.AddCors( options =>
         {
@@ -114,6 +116,7 @@ public class Program
         app.UseAuthorization();
 
         app.MapControllers();
+        app.MapHub<WebApi.Hubs.NotificationHub>( "/notificationHub" );
 
         app.UseMiddleware<ExceptionMiddleware>();
 

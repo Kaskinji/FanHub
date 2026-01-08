@@ -8,6 +8,8 @@ using Domain.Extensions;
 using Microsoft.Extensions.Logging;
 using Domain.Foundations;
 using Application.Tools;
+using Application.Dto.NotificationDto;
+using Domain.Enums;
 
 namespace Application.Services
 {
@@ -54,24 +56,30 @@ namespace Application.Services
             await _userRepository.GetByIdAsyncThrow( eventEntity.OrganizerId );
         }
 
-        protected override Task CleanupBeforeUpdate( Event entity, EventUpdateDto updateDto )
+        protected override async Task CleanupBeforeUpdate( Event entity, EventUpdateDto updateDto )
         {
             if ( entity.ImageUrl != updateDto.ImageUrl && !string.IsNullOrEmpty( entity.ImageUrl ) )
             {
-                _imageTools.DeleteImage( entity.ImageUrl );
+                await _imageTools.TryDeleteImageAsync( entity.ImageUrl );
             }
-
-            return Task.CompletedTask;
         }
 
-        protected override Task CleanupBeforeDelete( Event entity )
+        protected override async Task CleanupBeforeDelete( Event entity )
         {
             if ( !string.IsNullOrEmpty( entity.ImageUrl ) )
             {
-                _imageTools.DeleteImage( entity.ImageUrl );
+                await _imageTools.TryDeleteImageAsync( entity.ImageUrl );
             }
+        }
 
-            return Task.CompletedTask;
+        protected override async Task AfterCreate( Event entity )
+        {
+            await _fandomService.Notify( new FandomNotificationCreateDto
+            {
+                FandomId = entity.FandomId,
+                NotifierId = entity.Id,
+                Type = FandomNotificationType.NewEvent,
+            } );
         }
     }
 }

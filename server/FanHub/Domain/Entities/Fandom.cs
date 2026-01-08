@@ -23,4 +23,5 @@ public class Fandom : Entity
     public ICollection<Post> Posts { get; set; } = new List<Post>();
     public ICollection<Event> Events { get; set; } = new List<Event>();
     public ICollection<Subscription> Subscriptions { get; set; } = new List<Subscription>();
+    public ICollection<FandomNotification> Notifications { get; set; } = new List<FandomNotification>();
 }

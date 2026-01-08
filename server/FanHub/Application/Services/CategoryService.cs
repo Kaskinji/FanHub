@@ -35,14 +35,12 @@ namespace Application.Services
             return _mapper.Map<List<CategoryReadDto>>( category );
         }
 
-        protected override Task CleanupBeforeUpdate( Category entity, CategoryUpdateDto updateDto )
+        protected override async Task CleanupBeforeUpdate( Category entity, CategoryUpdateDto updateDto )
         {
             if ( entity.Icon != updateDto.Icon && !string.IsNullOrEmpty( entity.Icon ) )
             {
-                _imageTools.DeleteImage( entity.Icon );
+                await _imageTools.TryDeleteImageAsync( entity.Icon );
             }
-
-            return Task.CompletedTask;
         }
 
         protected override async Task CheckUnique( Category entity )
@@ -55,14 +53,12 @@ namespace Application.Services
             }
         }
 
-        protected override Task CleanupBeforeDelete( Category entity )
+        protected override async Task CleanupBeforeDelete( Category entity )
         {
             if ( !string.IsNullOrEmpty( entity.Icon ) )
             {
-                _imageTools.DeleteImage( entity.Icon );
+                await _imageTools.TryDeleteImageAsync( entity.Icon );
             }
-
-            return Task.CompletedTask;
         }
     }
 }

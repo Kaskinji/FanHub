@@ -1,9 +1,11 @@
 ﻿using Application.Dto.FandomDto;
+using Application.Dto.NotificationDto;
 using Application.Dto.PostDto;
 using Application.Services.Interfaces;
 using Application.Tools;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Extensions;
 using Domain.Foundations;
 using Domain.Repositories;
@@ -14,14 +16,14 @@ namespace Application.Services
 {
     public class PostService : BaseService<Post, PostCreateDto, PostReadDto, PostUpdateDto>, IPostService
     {
-        private readonly IFandomRepository _fandomRepository;
+        private readonly IFandomService _fandomService;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IUserRepository _userRepository;
         private readonly IPostRepository _postRepository;
         private readonly IImageTools _imageTools;
 
         public PostService( IPostRepository repository,
-            IFandomRepository fandomRepository,
+            IFandomService fandomService,
             ICategoryRepository categoryRepository,
             IUserRepository userRepository,
             IMapper mapper,
@@ -30,7 +32,7 @@ namespace Application.Services
             IUnitOfWork unitOfWork,
             IImageTools imageTools ) : base( repository, mapper, validator, logger, unitOfWork )
         {
-            _fandomRepository = fandomRepository;
+            _fandomService = fandomService;
             _categoryRepository = categoryRepository;
             _userRepository = userRepository;
             _postRepository = repository;
@@ -101,31 +103,37 @@ namespace Application.Services
             return entity;
         }
 
-        protected override Task CleanupBeforeUpdate( Post entity, PostUpdateDto updateDto )
+        protected override async Task CleanupBeforeUpdate( Post entity, PostUpdateDto updateDto )
         {
             if ( entity.MediaContent != updateDto.MediaContent && !string.IsNullOrEmpty( entity.MediaContent ) )
             {
-                _imageTools.DeleteImage( entity.MediaContent );
+                await _imageTools.TryDeleteImageAsync( entity.MediaContent );
             }
-
-            return Task.CompletedTask;
         }
 
         protected override async Task CheckUnique( Post post )
         {
-            await _fandomRepository.GetByIdAsyncThrow( post.FandomId );
+            await _fandomService.GetById( post.FandomId );
             await _userRepository.GetByIdAsyncThrow( post.UserId );
             await _categoryRepository.GetByIdAsyncThrow( post.CategoryId );
         }
 
-        protected override Task CleanupBeforeDelete( Post entity )
+        protected override async Task CleanupBeforeDelete( Post entity )
         {
             if ( !string.IsNullOrEmpty( entity.MediaContent ) )
             {
-                _imageTools.DeleteImage( entity.MediaContent );
+                await _imageTools.TryDeleteImageAsync( entity.MediaContent );
             }
+        }
 
-            return Task.CompletedTask;
+        protected override async Task AfterCreate( Post entity )
+        {
+            await _fandomService.Notify( new FandomNotificationCreateDto
+            {
+                FandomId = entity.FandomId,
+                NotifierId = entity.Id,
+                Type = FandomNotificationType.NewPost,
+            } );
         }
     }
 }

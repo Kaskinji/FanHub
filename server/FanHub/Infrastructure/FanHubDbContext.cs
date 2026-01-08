@@ -24,7 +24,8 @@ public class FanHubDbContext : DbContext
     public DbSet<Comment> Comments { get; set; }
     public DbSet<Reaction> Reactions { get; set; }
     public DbSet<Subscription> Subscriptions { get; set; }
-    public DbSet<Notification> Notifications { get; set; }
+    public DbSet<FandomNotification> Notifications { get; set; }
+    public DbSet<NotificationViewed> NotificationViews { get; set; }
     public DbSet<Category> Categories { get; set; }
 
     protected override void OnModelCreating( ModelBuilder modelBuilder )
@@ -39,7 +40,8 @@ public class FanHubDbContext : DbContext
         modelBuilder.ApplyConfiguration( new CommentConfiguration() );
         modelBuilder.ApplyConfiguration( new ReactionConfiguration() );
         modelBuilder.ApplyConfiguration( new SubscriptionConfiguration() );
-        modelBuilder.ApplyConfiguration( new NotificationConfiguration() );
+        modelBuilder.ApplyConfiguration( new FandomNotificationConfiguration() );
+        modelBuilder.ApplyConfiguration( new NotificationViewedConfiguration() );
         modelBuilder.ApplyConfiguration( new CategoryConfiguration() );
     }
 

@@ -59,7 +59,7 @@ namespace Infrastructure.Tools
             throw new KeyNotFoundException( $"Image '{fileName}' not found." );
         }
 
-        public void DeleteImage( string imageUrl )
+        public async Task DeleteImageAsync( string imageUrl )
         {
             if ( string.IsNullOrEmpty( imageUrl ) )
             {
@@ -76,14 +76,42 @@ namespace Infrastructure.Tools
             string folderPath = Path.GetFullPath( fileToolsOptions.Value.StorageUrl );
             string filePath = Path.Combine( folderPath, fileName );
 
-            if ( File.Exists( filePath ) )
+            bool exists = await Task.Run( () => File.Exists( filePath ) );
+
+            if ( !exists )
             {
-                File.Delete( filePath );
+                logger.LogWarning( "Image not found for deletion: {FilePath}", filePath );
+                throw new FileNotFoundException( $"Image '{fileName}' not found at path: {filePath}" );
+            }
+
+            try
+            {
+                await Task.Run( () => File.Delete( filePath ) );
                 logger.LogInformation( "Image deleted: {FilePath}", filePath );
             }
-            else
+            catch ( IOException ex ) when ( ex is DirectoryNotFoundException or FileNotFoundException )
             {
-                throw new KeyNotFoundException( $"Image '{fileName}' not found at path: {filePath}" );
+                logger.LogTrace( "Image already deleted: {FilePath}", filePath );
+                throw new FileNotFoundException( $"Image '{fileName}' not found", ex );
+            }
+            catch ( IOException ex )
+            {
+                logger.LogError( ex, "IO error when deleting image: {FilePath}", filePath );
+                throw;
+            }
+        }
+
+        public async Task<bool> TryDeleteImageAsync( string imagePath )
+        {
+            try
+            {
+                await DeleteImageAsync( imagePath );
+                return true;
+            }
+            catch ( Exception ex )
+            {
+                logger.LogWarning( ex, "Failed to delete image {ImagePath}", imagePath );
+                return false;
             }
         }
     }

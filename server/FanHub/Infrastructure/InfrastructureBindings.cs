@@ -41,6 +41,7 @@ namespace Infrastructure
             services.AddScoped<IReactionRepository, ReactionRepository>();
             services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<INotificationViewedRepository, NotificationViewedRepository>();
 
             services.AddScoped<DataSeeder>();
 

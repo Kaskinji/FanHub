@@ -1,5 +1,6 @@
 ﻿using Application.Dto.EventDto;
 using Application.Dto.FandomDto;
+using Application.Dto.NotificationDto;
 using Application.Services.Interfaces;
 using Application.Tools;
 using AutoMapper;
@@ -14,12 +15,13 @@ namespace Application.Services
 {
     public class FandomService : BaseService<Fandom, FandomCreateDto, FandomReadDto, FandomUpdateDto>, IFandomService
     {
+        private readonly IFandomNotificationService _notificationService;
         private readonly IFandomRepository _fandomRepository;
         private readonly IGameRepository _gameRepository;
-        private readonly ISubscriptionRepository _subscriptionRepository;
         private readonly IImageTools _imageTools;
 
-        public FandomService( IFandomRepository fandomRepository,
+        public FandomService( IFandomNotificationService notificationService,
+            IFandomRepository fandomRepository,
             IGameRepository gameRepository,
             ISubscriptionRepository subscriptionRepository,
             IPostRepository postRepository,
@@ -32,7 +34,7 @@ namespace Application.Services
         {
             _fandomRepository = fandomRepository;
             _gameRepository = gameRepository;
-            _subscriptionRepository = subscriptionRepository;
+            _notificationService = notificationService;
             _imageTools = imageTools;
         }
 
@@ -62,6 +64,11 @@ namespace Application.Services
             Fandom fandom = await _fandomRepository.GetByIdAsyncThrow( entityId );
 
             return fandom.CreatorId == creatorId;
+        }
+
+        public async Task Notify( FandomNotificationCreateDto dto )
+        {
+            await _notificationService.Notify( dto );
         }
 
         public async Task<List<FandomReadDto>> SearchByNameAndGameIdAsync( string searchTerm, int gameId )
@@ -115,24 +122,20 @@ namespace Application.Services
             return _mapper.Map<FandomStatsDto>( await _fandomRepository.GetByIdWithStatsAsync( id ) );
         }
 
-        protected override Task CleanupBeforeUpdate( Fandom entity, FandomUpdateDto updateDto )
+        protected override async Task CleanupBeforeUpdate( Fandom entity, FandomUpdateDto updateDto )
         {
             if ( entity.CoverImage != updateDto.CoverImage && !string.IsNullOrEmpty( entity.CoverImage ) )
             {
-                _imageTools.DeleteImage( entity.CoverImage );
+                await _imageTools.TryDeleteImageAsync( entity.CoverImage );
             }
-
-            return Task.CompletedTask;
         }
 
-        protected override Task CleanupBeforeDelete( Fandom entity )
+        protected override async Task CleanupBeforeDelete( Fandom entity )
         {
-            if ( !string.IsNullOrEmpty( entity.CoverImage )  )
+            if ( !string.IsNullOrEmpty( entity.CoverImage ) )
             {
-                _imageTools.DeleteImage( entity.CoverImage );
+                await _imageTools.TryDeleteImageAsync( entity.CoverImage );
             }
-
-            return Task.CompletedTask;
         }
     }
 }

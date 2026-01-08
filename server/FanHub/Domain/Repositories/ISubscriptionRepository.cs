@@ -6,6 +6,7 @@ namespace Domain.Repositories
     {
         Task<int> CountSubscribersAsync( int fandomId );
         Task<List<Subscription>> GetSubscriptionsByFandomAsync( int fandomId );
+        Task<List<Subscription>> GetSubscriptionsByUserIdAsync( int userId );
 
     }
 }

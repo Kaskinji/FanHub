@@ -41,6 +41,10 @@ public class FandomConfiguration : IEntityTypeConfiguration<Fandom>
             .WithOne( s => s.Fandom )
             .HasForeignKey( s => s.FandomId );
 
+        builder.HasMany( f => f.Notifications )
+            .WithOne( s => s.Fandom )
+            .HasForeignKey( s => s.FandomId );
+
         builder.HasIndex( f => f.GameId );
         builder.HasIndex( f => f.Name );
         builder.HasIndex( f => f.CreationDate );

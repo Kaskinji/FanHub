@@ -32,7 +32,16 @@ namespace WebApi.Bindings
                     {
                         OnMessageReceived = context =>
                         {
-                            context.Token = context.Request.Cookies[ cookieOptions!.JwtCookieName ];
+                            string? accessToken = context.Request.Query[ "access_token" ];
+
+                            if ( !string.IsNullOrEmpty( accessToken ) )
+                            {
+                                context.Token = accessToken;
+                            }
+                            else
+                            {
+                                context.Token = context.Request.Cookies[ cookieOptions!.JwtCookieName ];
+                            }
 
                             return Task.CompletedTask;
                         }

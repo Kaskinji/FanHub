@@ -49,24 +49,20 @@ namespace Application.Services
             }
         }
 
-        protected override Task CleanupBeforeUpdate( Game entity, GameUpdateDto updateDto )
+        protected override async Task CleanupBeforeUpdate( Game entity, GameUpdateDto updateDto )
         {
             if ( entity.CoverImage != updateDto.CoverImage && string.IsNullOrEmpty( entity.CoverImage ) )
             {
-                _imageTools.DeleteImage( entity.CoverImage );
+                await _imageTools.TryDeleteImageAsync( entity.CoverImage );
             }
-
-            return Task.CompletedTask;
         }
 
-        protected override Task CleanupBeforeDelete( Game entity )
+        protected override async Task CleanupBeforeDelete( Game entity )
         {
             if ( !string.IsNullOrEmpty( entity.CoverImage ) )
             {
-                _imageTools.DeleteImage( entity.CoverImage );
+                await _imageTools.TryDeleteImageAsync( entity.CoverImage );
             }
-
-            return Task.CompletedTask;
         }
     }
 }

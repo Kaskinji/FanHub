@@ -17,7 +17,7 @@ namespace Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.19")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -171,6 +171,44 @@ namespace Infrastructure.Migrations
                     b.ToTable("Fandoms");
                 });
 
+            modelBuilder.Entity("Domain.Entities.FandomNotification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FandomId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NotifierId")
+                        .HasColumnType("int");
+
+                    b.Property<byte>("Type")
+                        .HasColumnType("tinyint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt")
+                        .HasDatabaseName("IX_FandomNotifications_CreatedAt");
+
+                    b.HasIndex("FandomId")
+                        .HasDatabaseName("IX_FandomNotifications_FandomId");
+
+                    b.HasIndex("NotifierId")
+                        .HasDatabaseName("IX_FandomNotifications_NotifierId");
+
+                    b.HasIndex("FandomId", "CreatedAt")
+                        .IsDescending(false, true)
+                        .HasDatabaseName("IX_FandomNotifications_FandomId_CreatedAt");
+
+                    b.ToTable("FandomNotification", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Entities.Game", b =>
                 {
                     b.Property<int>("Id")
@@ -220,7 +258,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("Games");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Notification", b =>
+            modelBuilder.Entity("Domain.Entities.NotificationViewed", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -228,29 +266,34 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                    b.Property<bool>("IsHidden")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
-                    b.Property<int?>("EventId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PostId")
+                    b.Property<int>("NotificationId")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("ViewedAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("EventId");
+                    b.HasIndex("IsHidden");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex("NotificationId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notifications");
+                    b.HasIndex("ViewedAt");
+
+                    b.HasIndex("NotificationId", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("NotificationViews");
                 });
 
             modelBuilder.Entity("Domain.Entities.Post", b =>
@@ -469,25 +512,32 @@ namespace Infrastructure.Migrations
                     b.Navigation("Game");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Notification", b =>
+            modelBuilder.Entity("Domain.Entities.FandomNotification", b =>
                 {
-                    b.HasOne("Domain.Entities.Event", "Event")
-                        .WithMany()
-                        .HasForeignKey("EventId");
-
-                    b.HasOne("Domain.Entities.Post", "Post")
-                        .WithMany()
-                        .HasForeignKey("PostId");
-
-                    b.HasOne("Domain.Entities.User", "User")
+                    b.HasOne("Domain.Entities.Fandom", "Fandom")
                         .WithMany("Notifications")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("FandomId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Event");
+                    b.Navigation("Fandom");
+                });
 
-                    b.Navigation("Post");
+            modelBuilder.Entity("Domain.Entities.NotificationViewed", b =>
+                {
+                    b.HasOne("Domain.Entities.FandomNotification", "Notification")
+                        .WithMany("NotificationsViewed")
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.User", "User")
+                        .WithMany("NotificationsViewed")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Notification");
 
                     b.Navigation("User");
                 });
@@ -566,9 +616,16 @@ namespace Infrastructure.Migrations
                 {
                     b.Navigation("Events");
 
+                    b.Navigation("Notifications");
+
                     b.Navigation("Posts");
 
                     b.Navigation("Subscriptions");
+                });
+
+            modelBuilder.Entity("Domain.Entities.FandomNotification", b =>
+                {
+                    b.Navigation("NotificationsViewed");
                 });
 
             modelBuilder.Entity("Domain.Entities.Game", b =>
@@ -591,7 +648,7 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("Fandoms");
 
-                    b.Navigation("Notifications");
+                    b.Navigation("NotificationsViewed");
 
                     b.Navigation("Posts");
 
