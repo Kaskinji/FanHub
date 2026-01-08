@@ -2,7 +2,8 @@ import Header from "../../components/Header/Header";
 import SearchInput from "../../components/UI/SearchInput/SearchInput";
 import SectionTitle from "../../components/UI/SectionTitle/SectionTitle";
 import styles from "../AllGamesPage/AllGamesPage.module.scss";
-import Button from "../../components/UI/buttons/Button/Button"
+import Button from "../../components/UI/buttons/Button/Button";
+import { AddButton } from "../../components/UI/buttons/AddButton/AddButton";
 import type { GamePreview } from "../../types/AllGamesPageData";
 import GameCard from "../MainPage/GameCard/GameCard";
 import { useGames } from "../../hooks/useGames";
@@ -290,16 +291,13 @@ function Games({ games, gamesData, loading,  isAdmin, onAddGameClick  }: AllGame
   return (
     <section className={styles.gamesSection}>
       <div className={styles.sectionHeader}>
-      <SectionTitle title="Games" />
+        <SectionTitle title="Games" />
         {isAdmin && (
-            <Button
-              variant="light"
-              onClick={onAddGameClick}
-              className={styles.addButton}
-            >
-            + Add Game
-            </Button>
-          )}
+          <AddButton
+            text="Add"
+            onClick={onAddGameClick}
+          />
+        )}
       </div>
       <div className={styles.gamesGrid}>
         {games.map((gamePreview) => {

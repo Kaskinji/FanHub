@@ -32,7 +32,7 @@ export interface Comment {
 }
 
 export interface Reaction {
-  type: 'like' | 'fire' | 'heart' | 'laugh' | 'sad';
+  type: 'like' | 'dislike';
   count: number;
   userReacted?: boolean;
 }
@@ -40,4 +40,5 @@ export interface Reaction {
 export interface PostsContextData {
   fandomId: number;
   fandomName: string;
+  postId?: number; // Опциональный ID поста для автоматического открытия
 }

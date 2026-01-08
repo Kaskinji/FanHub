@@ -6,10 +6,11 @@ import type { Post } from "../../../types/Post";
 interface PostPreviewProps {
   post: Post;
   onClick: (postId: number) => void;
+  onReaction?: (postId: number, reactionType: "like" | "dislike") => void;
   className?: string;
 }
 
-const PostPreview: FC<PostPreviewProps> = ({ post, onClick, className }) => {
+const PostPreview: FC<PostPreviewProps> = ({ post, onClick, onReaction, className }) => {
   const getInitials = (username: string) => {
     return username
       .split(' ')
@@ -19,7 +20,23 @@ const PostPreview: FC<PostPreviewProps> = ({ post, onClick, className }) => {
       .slice(0, 2);
   };
 
-  const totalReactions = post.reactions.reduce((sum, r) => sum + r.count, 0);
+  const getReactionEmoji = (type: string) => {
+    const emojis: Record<string, string> = {
+      like: '👍',
+      dislike: '👎'
+    };
+    return emojis[type] || '👍';
+  };
+
+  const handleReactionClick = (e: React.MouseEvent, reactionType: "like" | "dislike" ) => {
+    e.stopPropagation();
+    if (onReaction) {
+      onReaction(post.id, reactionType);
+    }
+  };
+
+  const likeReaction = post.reactions.find(r => r.type === 'like') || { type: 'like' as const, count: 0, userReacted: false };
+  const dislikeReaction = post.reactions.find(r => r.type === 'dislike') || { type: 'dislike' as const, count: 0, userReacted: false };
 
   return (
     <div 
@@ -35,9 +52,12 @@ const PostPreview: FC<PostPreviewProps> = ({ post, onClick, className }) => {
       <div className={styles.content}>
         <h3 className={styles.title}>{post.title}</h3>
         
-        {post.excerpt && (
-          <p className={styles.excerpt}>{post.excerpt}</p>
-        )}
+        <div className={styles.excerptContainer}>
+          {post.excerpt && (
+            <p className={styles.excerpt}>{post.excerpt}</p>
+          )}
+          <span className={styles.category}>{post.category}</span>
+        </div>
         
         <div className={styles.meta}>
           <div className={styles.author}>
@@ -54,11 +74,26 @@ const PostPreview: FC<PostPreviewProps> = ({ post, onClick, className }) => {
           </div>
           
           <div className={styles.stats}>
-            <span className={styles.reactions}>
-              {totalReactions > 0 && `${totalReactions}`}
-            </span>
+            <div className={styles.reactions} onClick={(e) => e.stopPropagation()}>
+              <button
+                className={`${styles.reactionButton} ${likeReaction.userReacted ? styles.active : ''}`}
+                onClick={onReaction ? (e) => handleReactionClick(e, 'like') : undefined}
+                disabled={!onReaction}
+                title="Like"
+              >
+                {getReactionEmoji('like')} {likeReaction.count}
+              </button>
+              <button
+                className={`${styles.reactionButton} ${dislikeReaction.userReacted ? styles.active : ''}`}
+                onClick={onReaction ? (e) => handleReactionClick(e, 'dislike') : undefined}
+                disabled={!onReaction}
+                title="Dislike"
+              >
+                {getReactionEmoji('dislike')} {dislikeReaction.count}
+              </button>
+            </div>
             <span className={styles.comments}>
-              {post.commentCount}
+              💬 {post.commentCount}
             </span>
           </div>
         </div>

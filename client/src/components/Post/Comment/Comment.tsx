@@ -24,7 +24,6 @@ const Comment: FC<CommentProps> = ({ comment, onReply, className }) => {
 
   return (
     <div className={`${styles.comment} ${className || ''}`}>
-      {/* Аватар автора */}
       <div className={styles.authorSection}>
         <div className={styles.avatar}>
           {comment.author.avatar ? (
@@ -40,7 +39,6 @@ const Comment: FC<CommentProps> = ({ comment, onReply, className }) => {
         </div>
       </div>
 
-      {/* Содержимое комментария */}
       <div className={styles.contentSection}>
         <div className={styles.commentHeader}>
           <span className={styles.username}>{comment.author.username}</span>
@@ -51,7 +49,6 @@ const Comment: FC<CommentProps> = ({ comment, onReply, className }) => {
           {comment.content}
         </div>
 
-        {/* Действия */}
         <div className={styles.commentActions}>
           {comment.reactions && comment.reactions.length > 0 && (
             <div className={styles.reactions}>
@@ -62,18 +59,8 @@ const Comment: FC<CommentProps> = ({ comment, onReply, className }) => {
               ))}
             </div>
           )}
-          
-          {/* {onReply && (
-            <button 
-              className={styles.replyButton}
-              onClick={() => onReply(comment.id)}
-            >
-              Ответить
-            </button>
-          )} */}
         </div>
 
-        {/* Вложенные комментарии */}
         {comment.replies && comment.replies.length > 0 && (
           <div className={styles.replies}>
             {comment.replies.map((reply) => (
@@ -94,7 +81,7 @@ const Comment: FC<CommentProps> = ({ comment, onReply, className }) => {
 const getReactionEmoji = (type: string) => {
   const emojis: Record<string, string> = {
     like: '👍',
-    fire: '🔥',
+    dislike: '👎',
   };
   return emojis[type] || '👍';
 };

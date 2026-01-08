@@ -5,13 +5,15 @@ import Header from "../../components/Header/Header";
 import Logo from "../../components/UI/Logo/Logo";
 import styles from "./MainPage.module.scss";
 import SearchInput from "../../components/UI/SearchInput/SearchInput";
-import type { Fandom } from "../../types/Fandom";
+import type { FandomPreview } from "../../types/Fandom";
 import type { GamePreview } from "../../types/AllGamesPageData";
 import GameCard from "../MainPage/GameCard/GameCard";
 import FandomCard from "./FandomCard/FandomCard";
 import SectionTitle from "../../components/UI/SectionTitle/SectionTitle";
 import ShowMoreButton from "../../components/UI/buttons/ShowMoreButton/ShowMoreButton";
 import { gameApi } from "../../api/GameApi";
+import { fandomApi } from "../../api/FandomApi";
+import { getImageUrl } from "../../utils/urlUtils";
 
 type MainPageProps = {
   onSearch: () => void;
@@ -21,17 +23,11 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [games, setGames] = useState<GamePreview[]>([]);
+  const [fandoms, setFandoms] = useState<FandomPreview[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingFandoms, setLoadingFandoms] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const MOCK_FANDOMS: Fandom[] = [
-    { id: 1, name: "Minecrafters", description: "" },
-    { id: 2, name: "HN fans", description: "" },
-    { id: 3, name: "Dota 2 Fans", description: "" },
-    { id: 4, name: "The Witcher", description: "" },
-    { id: 5, name: "TF enjoyers", description: "" },
-    { id: 6, name: "GTA lovers", description: "" },
-  ];
+  const [fandomsError, setFandomsError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadGames = async () => {
@@ -60,6 +56,35 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
     loadGames();
   }, []);
 
+  useEffect(() => {
+    const loadFandoms = async () => {
+      try {
+        setLoadingFandoms(true);
+        setFandomsError(null);
+        
+        // Загружаем топ 6 популярных фандомов
+        const fandomsData = await fandomApi.getPopularFandoms(6);
+        
+        // Преобразуем FandomReadDto в FandomPreview
+        const fandomPreviews: FandomPreview[] = fandomsData.map((fandom) => ({
+          id: fandom.id,
+          name: fandom.name,
+          imageUrl: fandom.coverImage ? getImageUrl(fandom.coverImage) : undefined,
+        }));
+        
+        setFandoms(fandomPreviews);
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'Failed to load fandoms';
+        setFandomsError(errorMessage);
+        console.error('Error loading fandoms for main page:', err);
+      } finally {
+        setLoadingFandoms(false);
+      }
+    };
+
+    loadFandoms();
+  }, []);
+
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     console.log("Searching for:", query);
@@ -69,7 +94,7 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
     navigate("/login");
   };
 
-  const filteredFandoms = MOCK_FANDOMS.filter((fandom) =>
+  const filteredFandoms = fandoms.filter((fandom) =>
     fandom.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -147,11 +172,37 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
         </section>
         <section className={styles.fandomsSection}>
           <SectionTitle title="Top Fandoms" />
-          <div className={styles.fandomsGrid}>
-            {filteredFandoms.map((fandom) => (
-              <FandomCard key={fandom.id} {...fandom} />
-            ))}
-          </div>
+          
+          {loadingFandoms ? (
+            <div className={styles.loadingContainer}>
+              <p>Loading fandoms...</p>
+            </div>
+          ) : fandomsError ? (
+            <div className={styles.errorContainer}>
+              <p className={styles.errorText}>{fandomsError}</p>
+              <button 
+                className={styles.retryButton}
+                onClick={() => window.location.reload()}
+              >
+                Retry
+              </button>
+            </div>
+          ) : filteredFandoms.length === 0 ? (
+            <div className={styles.noGames}>
+              <p>No fandoms found</p>
+            </div>
+          ) : (
+            <div className={styles.fandomsGrid}>
+              {filteredFandoms.map((fandom) => (
+                <FandomCard 
+                  key={fandom.id} 
+                  id={fandom.id}
+                  name={fandom.name}
+                  imageUrl={fandom.imageUrl}
+                />
+              ))}
+            </div>
+          )}
         </section>
       </main>
     </div>

@@ -68,6 +68,12 @@ export class UserApi {
 
       return response.data;
     } catch (error) {
+      // Для 401 (Unauthorized) выбрасываем специальную ошибку, которую можно обработать
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
+        const unauthorizedError = new Error('UNAUTHORIZED') as Error & { status?: number };
+        unauthorizedError.status = 401;
+        throw unauthorizedError;
+      }
       this.handleUserError(error, `Failed to fetch user with ID ${id}`);
     }
   }
