@@ -1,0 +1,228 @@
+.searchDropdown {
+    position: absolute;
+    top: calc(100% + 0px);
+    left: 0;
+    right: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 1000;
+    overflow: hidden;
+
+    // Стилизация скроллбара
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+    }
+}
+
+// Темная тема
+.searchDropdownDark {
+    background-color: #59119d;
+
+    &::-webkit-scrollbar-track {
+        background: rgba(64, 10, 114, 0.3);
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgb(189, 67, 255);
+
+        &:hover {
+            background: rgb(200, 80, 255);
+        }
+    }
+}
+
+// Светлая тема
+.searchDropdownLight {
+    background: white;
+    border: 2px solid rgba(64, 10, 114, 0.3);
+
+    &::-webkit-scrollbar-track {
+        background: rgba(64, 10, 114, 0.1);
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(64, 10, 114, 0.4);
+
+        &:hover {
+            background: rgba(64, 10, 114, 0.6);
+        }
+    }
+}
+
+.searchResults {
+    padding: 8px;
+    overflow: hidden;
+}
+
+.searchResultItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-left: 0;
+    margin-right: 0;
+    border-bottom: 1px solid transparent;
+    
+    &:first-child {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        margin-top: 0;
+    }
+
+    &:last-child {
+        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+
+    &:not(:last-child) {
+        border-bottom-color: currentColor;
+    }
+}
+
+// Темная тема - hover для элемента и разделитель
+.searchDropdownDark .searchResultItem {
+    &:hover {
+        background: rgba(73, 16, 126, 0.5);
+        transform:scale(1.002);
+    }
+
+    &:not(:last-child) {
+        border-bottom-color: rgba(189, 67, 255, 0.3);
+    }
+}
+
+// Светлая тема - hover для элемента и разделитель
+.searchDropdownLight .searchResultItem {
+    &:hover {
+        background: rgba(64, 10, 114, 0.1);
+        transform:scale(1.002);
+
+    }
+
+    &:not(:last-child) {
+        border-bottom-color: rgba(64, 10, 114, 0.2);
+    }
+}
+
+.searchResultImage {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+// Темная тема - граница изображения
+.searchDropdownDark .searchResultImage {
+    border: 2px solid rgba(189, 67, 255, 0.3);
+}
+
+// Светлая тема - граница изображения
+.searchDropdownLight .searchResultImage {
+    border: 2px solid rgba(64, 10, 114, 0.2);
+}
+
+.searchResultPlaceholder {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgb(98, 20, 171), rgb(113, 31, 175));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+// Темная тема - граница placeholder
+.searchDropdownDark .searchResultPlaceholder {
+    border: 2px solid rgba(189, 67, 255, 0.3);
+}
+
+// Светлая тема - граница placeholder
+.searchDropdownLight .searchResultPlaceholder {
+    border: 2px solid rgba(64, 10, 114, 0.2);
+}
+
+.searchResultInfo {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+// Темная тема - заголовок
+.searchDropdownDark .searchResultTitle {
+    color: white;
+}
+
+// Светлая тема - заголовок
+.searchDropdownLight .searchResultTitle {
+    color: #400A72;
+}
+
+.searchResultTitle {
+    font-weight: 600;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+// Темная тема - жанр
+.searchDropdownDark .searchResultGenre {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+// Светлая тема - жанр
+.searchDropdownLight .searchResultGenre {
+    color: rgba(64, 10, 114, 0.7);
+}
+
+.searchResultGenre {
+    font-size: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+// Темная тема - загрузка и нет результатов
+.searchDropdownDark .searchLoading,
+.searchDropdownDark .searchNoResults {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+// Светлая тема - загрузка и нет результатов
+.searchDropdownLight .searchLoading,
+.searchDropdownLight .searchNoResults {
+    color: rgba(64, 10, 114, 0.7);
+}
+
+.searchLoading,
+.searchNoResults {
+    padding: 20px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+

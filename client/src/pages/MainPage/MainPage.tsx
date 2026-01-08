@@ -1,19 +1,20 @@
 import type { FC } from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import Logo from "../../components/UI/Logo/Logo";
 import styles from "./MainPage.module.scss";
 import SearchInput from "../../components/UI/SearchInput/SearchInput";
-import type { FandomPreview } from "../../types/Fandom";
+import type { Fandom, FandomPreview } from "../../types/Fandom";
 import type { GamePreview } from "../../types/AllGamesPageData";
 import GameCard from "../MainPage/GameCard/GameCard";
 import FandomCard from "./FandomCard/FandomCard";
 import SectionTitle from "../../components/UI/SectionTitle/SectionTitle";
 import ShowMoreButton from "../../components/UI/buttons/ShowMoreButton/ShowMoreButton";
-import { gameApi } from "../../api/GameApi";
-import { fandomApi } from "../../api/FandomApi";
-import { getImageUrl } from "../../utils/urlUtils";
+import { gameApi, type GameReadDto } from "../../api/GameApi";
+
+import SearchDropdown from "../../components/UI/SearchDropdown/SearchDropdown";
+
 
 type MainPageProps = {
   onSearch: () => void;
@@ -27,7 +28,25 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
   const [loading, setLoading] = useState(true);
   const [loadingFandoms, setLoadingFandoms] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [fandomsError, setFandomsError] = useState<string | null>(null);
+// <<<<<<< HEAD
+//   const [fandomsError, setFandomsError] = useState<string | null>(null);
+// =======
+  
+  // Состояния для поиска игр
+  const [searchResults, setSearchResults] = useState<GameReadDto[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const searchTimeoutRef = useRef<number | null>(null);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
+
+  const MOCK_FANDOMS: Fandom[] = [
+    { id: 1, name: "Minecrafters", description: "", imageUrl: "" },
+    { id: 2, name: "HN fans", description: "", imageUrl: "" },
+    { id: 3, name: "Dota 2 Fans", description: "", imageUrl: "" },
+    { id: 4, name: "The Witcher", description: "", imageUrl: "" },
+    { id: 5, name: "TF enjoyers", description: "", imageUrl: "" },
+    { id: 6, name: "GTA lovers", description: "", imageUrl: "" },
+  ];
+
 
   useEffect(() => {
     const loadGames = async () => {
@@ -56,51 +75,133 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
     loadGames();
   }, []);
 
+// <<<<<<< HEAD
+//   useEffect(() => {
+//     const loadFandoms = async () => {
+//       try {
+//         setLoadingFandoms(true);
+//         setFandomsError(null);
+        
+//         // Загружаем топ 6 популярных фандомов
+//         const fandomsData = await fandomApi.getPopularFandoms(6);
+        
+//         // Преобразуем FandomReadDto в FandomPreview
+//         const fandomPreviews: FandomPreview[] = fandomsData.map((fandom) => ({
+//           id: fandom.id,
+//           name: fandom.name,
+//           imageUrl: fandom.coverImage ? getImageUrl(fandom.coverImage) : undefined,
+//         }));
+        
+//         setFandoms(fandomPreviews);
+//       } catch (err) {
+//         const errorMessage = err instanceof Error ? err.message : 'Failed to load fandoms';
+//         setFandomsError(errorMessage);
+//         console.error('Error loading fandoms for main page:', err);
+//       } finally {
+//         setLoadingFandoms(false);
+//       }
+//     };
+
+//     loadFandoms();
+//   }, []);
+
+//   const handleSearch = (query: string) => {
+// =======
+  // Поиск игр с debounce
+  const performSearch = useCallback(async (query: string) => {
+    if (!query.trim()) {
+      setSearchResults([]);
+      return;
+    }
+
+    setIsSearching(true);
+    try {
+      const results = await gameApi.searchGamesByName(query);
+      setSearchResults(results);
+    } catch (error) {
+      console.error("Error searching games:", error);
+      setSearchResults([]);
+    } finally {
+      setIsSearching(false);
+    }
+  }, []);
+
+  // Обработчик изменения поискового запроса
+  const handleSearchChange = useCallback((query: string) => {
+    setSearchQuery(query);
+    
+    // Очищаем предыдущий таймаут
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    // Устанавливаем новый таймаут для debounce (300ms)
+    searchTimeoutRef.current = setTimeout(() => {
+      performSearch(query);
+    }, 300);
+  }, [performSearch]);
+
+  // Обработчик отправки формы поиска
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleSearchSubmit = useCallback((query: string) => {
+    onSearch();
+    setSearchQuery("");
+    setSearchResults([]);
+  }, [onSearch]);
+
+  // Обработчик поиска для Header
+  const handleSearch = useCallback(() => {
+    // Просто вызываем onSearch для Header
+    onSearch();
+  }, [onSearch]);
+
+  // Обработчик клика на результат поиска
+  const handleGameClick = useCallback((game: GameReadDto) => {
+    navigate(`/game/${game.id}`, {
+      state: { game }
+    });
+    setSearchQuery("");
+    setSearchResults([]);
+  }, [navigate]);
+
+  // Закрытие выпадающего списка при клике вне его
   useEffect(() => {
-    const loadFandoms = async () => {
-      try {
-        setLoadingFandoms(true);
-        setFandomsError(null);
-        
-        // Загружаем топ 6 популярных фандомов
-        const fandomsData = await fandomApi.getPopularFandoms(6);
-        
-        // Преобразуем FandomReadDto в FandomPreview
-        const fandomPreviews: FandomPreview[] = fandomsData.map((fandom) => ({
-          id: fandom.id,
-          name: fandom.name,
-          imageUrl: fandom.coverImage ? getImageUrl(fandom.coverImage) : undefined,
-        }));
-        
-        setFandoms(fandomPreviews);
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Failed to load fandoms';
-        setFandomsError(errorMessage);
-        console.error('Error loading fandoms for main page:', err);
-      } finally {
-        setLoadingFandoms(false);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target as Node)) {
+        setSearchQuery("");
+        setSearchResults([]);
       }
     };
 
-    loadFandoms();
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    console.log("Searching for:", query);
-  };
+  // Очистка таймаута при размонтировании
+  useEffect(() => {
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleSignIn = () => {
     navigate("/login");
   };
 
-  const filteredFandoms = fandoms.filter((fandom) =>
-    fandom.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+// <<<<<<< HEAD
+//   const filteredFandoms = fandoms.filter((fandom) =>
+//     fandom.name.toLowerCase().includes(searchQuery.toLowerCase())
+//   );
 
-  const filteredGames = games.filter((game) =>
-    game.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+//   const filteredGames = games.filter((game) =>
+//     game.name.toLowerCase().includes(searchQuery.toLowerCase())
+//   );
+// =======
+
 
   const handleShowMore = () => {
     navigate(`/allgames`);
@@ -121,14 +222,27 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
           
           <p className={styles.heroSubtitle}>Find your community</p>
           <div className={styles.centerSection}>
-            <SearchInput
-              placeholder="Search games"
-              variant="secondary"
-              size="large"
-              withIcon={true}
-              className={styles.heroSearch}
-              onSearch={onSearch}
-            />
+            <div className={styles.searchContainer} ref={searchContainerRef}>
+              <SearchInput
+                placeholder="Search games"
+                variant="secondary"
+                size="large"
+                theme="light"
+                withIcon={true}
+                className={styles.heroSearch}
+                onSearch={handleSearchSubmit}
+                value={searchQuery}
+                onChange={handleSearchChange}
+                isDropdownOpen={searchQuery.trim().length > 0}
+              />
+              <SearchDropdown
+                isOpen={searchQuery.trim().length > 0}
+                isSearching={isSearching}
+                searchResults={searchResults}
+                onGameClick={handleGameClick}
+                theme="light"
+              />
+            </div>
           </div>
         </section>
         <section className={styles.gameSection}>
@@ -148,14 +262,14 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
                 Retry
               </button>
             </div>
-          ) : filteredGames.length === 0 ? (
+          ) : games.length === 0 ? (
             <div className={styles.noGames}>
               <p>No games found</p>
             </div>
           ) : (
             <>
               <div className={styles.gamesGrid}>
-                {filteredGames.map((game) => (
+                {games.map((game) => (
                    <GameCard
                     key={game.id}
                     gamePreview={game}
@@ -172,6 +286,7 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
         </section>
         <section className={styles.fandomsSection}>
           <SectionTitle title="Top Fandoms" />
+{/* <<<<<<< HEAD
           
           {loadingFandoms ? (
             <div className={styles.loadingContainer}>
@@ -203,6 +318,13 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
               ))}
             </div>
           )}
+======= */}
+          <div className={styles.fandomsGrid}>
+            {MOCK_FANDOMS.map((fandom) => (
+              <FandomCard key={fandom.id} {...fandom} />
+            ))}
+          </div>
+
         </section>
       </main>
     </div>

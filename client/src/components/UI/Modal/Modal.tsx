@@ -18,7 +18,7 @@ const Modal: FC<ModalProps> = ({
   children, 
   className 
 }) => {
-  // Закрытие по ESC
+  // Закрытие по ESC и блокировка скролла wrapper
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -26,13 +26,22 @@ const Modal: FC<ModalProps> = ({
 
     if (isOpen) {
       document.addEventListener("keydown", handleEscape);
-      document.body.style.overflow = "hidden"; // Блокируем скролл
+      
+      // Блокируем скролл на wrapper
+      const wrapper = document.getElementById("app-wrapper");
+      if (wrapper) {
+        wrapper.style.overflow = "hidden";
+      }
+      
+      return () => {
+        document.removeEventListener("keydown", handleEscape);
+        
+        // Восстанавливаем скролл wrapper
+        if (wrapper) {
+          wrapper.style.overflow = "auto";
+        }
+      };
     }
-
-    return () => {
-      document.removeEventListener("keydown", handleEscape);
-      document.body.style.overflow = "unset";
-    };
   }, [isOpen, onClose]);
 
   // Обработка клика по оверлею

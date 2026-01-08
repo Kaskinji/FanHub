@@ -77,8 +77,13 @@
     font-family: "Baloo 2";
     display: flex;
     border-radius: 50px;
-    transition: all 0.3s ease;
     background-color: white;
+
+    &.searchFormDropdownOpen {
+        border-radius: 20px;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
 }
 
 .searchInput {
@@ -98,6 +103,11 @@
     &:focus {
         outline: none;
     }
+
+    &.searchInputDropdownOpen {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
 }
 .searchFormLight {
     background-color: white;
@@ -111,12 +121,12 @@
         }
     }
         &:focus-within {
-        background: rgba(255, 255, 255, 0.874);
+        background: rgba(255, 255, 255, 0.936);
         border-color: rgba(255, 255, 255, 0.4);
     }
 
     &:hover {
-        background: rgba(255, 255, 255, 0.916);
+        background: rgba(255, 255, 255, 0.985);
     }
 }
 
@@ -129,14 +139,17 @@
         &::placeholder {
             color: rgba(255, 255, 255, 0.6);
         }
-    }
+    }   
+        &:focus {
+            background-color: #400A72;
+        }
         &:focus-within {
-        background: rgba(255, 255, 255, 0.25);
+        background: rgb(95, 19, 153);
         border-color: rgba(255, 255, 255, 0.4);
     }
 
     &:hover {
-        background: rgba(255, 255, 255, 0.2);
+        background-color: #6b1f9d;
     }
 }
 

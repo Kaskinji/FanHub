@@ -17,20 +17,22 @@ const App: FC = () => {
   return (
     <AuthProvider>
       <Router>
-        <Layout>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/registration" element={<RegisterPage />} />
-            <Route path="/" element={<MainPage onSearch={() => {}} />} />
-            <Route path="/game/:id" element={<GamePage />} />
-            <Route path="/fandom/:id" element={<FandomPage />} />
-            <Route path="/fandom/:id/events" element={<FandomEventsPage />} />
-            <Route path="/allfandoms/:gameId?" element={<AllFandomsPage />} />
-            <Route path="/allgames" element={<AllGamesPage />} />
-            <Route path="/posts" element={<PostsPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-          </Routes>
-        </Layout>
+        <div id="app-wrapper">
+          <Layout>
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/registration" element={<RegisterPage />} />
+              <Route path="/" element={<MainPage onSearch={() => {}} />} />
+              <Route path="/game/:id" element={<GamePage />} />
+              <Route path="/fandom/:id" element={<FandomPage />} />
+              <Route path="/fandom/:id/events" element={<FandomEventsPage />} />
+              <Route path="/allfandoms/:gameId?" element={<AllFandomsPage />} />
+              <Route path="/allgames" element={<AllGamesPage />} />
+              <Route path="/posts" element={<PostsPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+            </Routes>
+          </Layout>
+        </div>
       </Router>
     </AuthProvider>
   );
