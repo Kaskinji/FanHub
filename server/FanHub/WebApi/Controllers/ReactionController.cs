@@ -52,7 +52,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<int>> CreateReaction( [FromBody] WebApi.Contracts.ReactionDto.ReactionCreateDto dto )
         {
-            var createDto = _mapper.Map<ReactionCreateDto>( dto );
+            ReactionCreateDto createDto = _mapper.Map<ReactionCreateDto>( dto );
 
             createDto.UserId = this.GetCurrentUserId();
 

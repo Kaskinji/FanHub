@@ -1,6 +1,4 @@
-﻿using Application.Dto.PostDto;
-using System.Collections.Generic;
-using Application.Dto.ReactionDto;
+﻿using Application.Dto.ReactionDto;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
