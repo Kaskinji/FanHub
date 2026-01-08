@@ -17,8 +17,8 @@
 
 .modal {
   background: rgb(38, 18, 77);
-  border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
   width: 100%;
   max-width: 600px;
   max-height: 90vh;
@@ -32,14 +32,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 24px;
-  background: #41118f;
+  padding: 16px 20px;
+  background: #400A72;
+  border-bottom: 2px solid rgb(189, 67, 255);
   color: white;
 }
 
 .modalTitle {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 600;
 }
 
@@ -48,14 +49,15 @@
   border: none;
   color: white;
   font-size: 24px;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
+  line-height: 1;
   
   &:hover {
     background: rgba(255, 255, 255, 0.3);
@@ -68,9 +70,28 @@
 }
 
 .modalContent {
-  padding: 24px;
+  padding: 12px;
   overflow-y: auto;
   flex: 1;
+  background: rgb(38, 18, 77);
+
+  // Scrollbar styling
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  }
 }
 
 // Анимации
@@ -110,7 +131,7 @@
   }
   
   .modalContent {
-    padding: 20px;
+    padding: 12px;
   }
 }
 

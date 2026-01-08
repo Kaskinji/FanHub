@@ -21,8 +21,35 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  width: 100%;
+/* Глобальная структура для управления скроллом */
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+#root {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#app-wrapper {
+    height: 100%;
+    position: relative;
+    overflow-y: scroll; /* Скроллбар всегда виден, чтобы избежать сдвига */
+    overflow-x: hidden;
+}
+
+/* Стили для печати */
+@media print {
+    html, body {
+        height: auto;
+        overflow: visible;
+    }
+    
+    #app-wrapper {
+        height: auto;
+        overflow: visible;
+    }
 }

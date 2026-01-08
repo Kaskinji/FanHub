@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import Logo from "../../components/UI/Logo/Logo";
@@ -12,6 +12,8 @@ import FandomCard from "./FandomCard/FandomCard";
 import SectionTitle from "../../components/UI/SectionTitle/SectionTitle";
 import ShowMoreButton from "../../components/UI/buttons/ShowMoreButton/ShowMoreButton";
 import { gameApi } from "../../api/GameApi";
+import type { GameReadDto } from "../../api/GameApi";
+import SearchDropdown from "../../components/UI/SearchDropdown/SearchDropdown";
 
 type MainPageProps = {
   onSearch: () => void;
@@ -23,14 +25,20 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
   const [games, setGames] = useState<GamePreview[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  // Состояния для поиска игр
+  const [searchResults, setSearchResults] = useState<GameReadDto[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const searchTimeoutRef = useRef<number | null>(null);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
 
   const MOCK_FANDOMS: Fandom[] = [
-    { id: 1, name: "Minecrafters", description: "" },
-    { id: 2, name: "HN fans", description: "" },
-    { id: 3, name: "Dota 2 Fans", description: "" },
-    { id: 4, name: "The Witcher", description: "" },
-    { id: 5, name: "TF enjoyers", description: "" },
-    { id: 6, name: "GTA lovers", description: "" },
+    { id: 1, name: "Minecrafters", description: "", imageUrl: "" },
+    { id: 2, name: "HN fans", description: "", imageUrl: "" },
+    { id: 3, name: "Dota 2 Fans", description: "", imageUrl: "" },
+    { id: 4, name: "The Witcher", description: "", imageUrl: "" },
+    { id: 5, name: "TF enjoyers", description: "", imageUrl: "" },
+    { id: 6, name: "GTA lovers", description: "", imageUrl: "" },
   ];
 
   useEffect(() => {
@@ -60,22 +68,93 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
     loadGames();
   }, []);
 
-  const handleSearch = (query: string) => {
+  // Поиск игр с debounce
+  const performSearch = useCallback(async (query: string) => {
+    if (!query.trim()) {
+      setSearchResults([]);
+      return;
+    }
+
+    setIsSearching(true);
+    try {
+      const results = await gameApi.searchGamesByName(query);
+      setSearchResults(results);
+    } catch (error) {
+      console.error("Error searching games:", error);
+      setSearchResults([]);
+    } finally {
+      setIsSearching(false);
+    }
+  }, []);
+
+  // Обработчик изменения поискового запроса
+  const handleSearchChange = useCallback((query: string) => {
     setSearchQuery(query);
-    console.log("Searching for:", query);
-  };
+    
+    // Очищаем предыдущий таймаут
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    // Устанавливаем новый таймаут для debounce (300ms)
+    searchTimeoutRef.current = setTimeout(() => {
+      performSearch(query);
+    }, 300);
+  }, [performSearch]);
+
+  // Обработчик отправки формы поиска
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleSearchSubmit = useCallback((query: string) => {
+    onSearch();
+    setSearchQuery("");
+    setSearchResults([]);
+  }, [onSearch]);
+
+  // Обработчик поиска для Header
+  const handleSearch = useCallback(() => {
+    // Просто вызываем onSearch для Header
+    onSearch();
+  }, [onSearch]);
+
+  // Обработчик клика на результат поиска
+  const handleGameClick = useCallback((game: GameReadDto) => {
+    navigate(`/game/${game.id}`, {
+      state: { game }
+    });
+    setSearchQuery("");
+    setSearchResults([]);
+  }, [navigate]);
+
+  // Закрытие выпадающего списка при клике вне его
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target as Node)) {
+        setSearchQuery("");
+        setSearchResults([]);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // Очистка таймаута при размонтировании
+  useEffect(() => {
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleSignIn = () => {
     navigate("/login");
   };
 
-  const filteredFandoms = MOCK_FANDOMS.filter((fandom) =>
-    fandom.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const filteredGames = games.filter((game) =>
-    game.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Игры всегда показываются без фильтрации по поиску
+  // Поиск используется только для выпадающего списка
 
   const handleShowMore = () => {
     navigate(`/allgames`);
@@ -96,14 +175,27 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
           
           <p className={styles.heroSubtitle}>Find your community</p>
           <div className={styles.centerSection}>
-            <SearchInput
-              placeholder="Search games"
-              variant="secondary"
-              size="large"
-              withIcon={true}
-              className={styles.heroSearch}
-              onSearch={onSearch}
-            />
+            <div className={styles.searchContainer} ref={searchContainerRef}>
+              <SearchInput
+                placeholder="Search games"
+                variant="secondary"
+                size="large"
+                theme="light"
+                withIcon={true}
+                className={styles.heroSearch}
+                onSearch={handleSearchSubmit}
+                value={searchQuery}
+                onChange={handleSearchChange}
+                isDropdownOpen={searchQuery.trim().length > 0}
+              />
+              <SearchDropdown
+                isOpen={searchQuery.trim().length > 0}
+                isSearching={isSearching}
+                searchResults={searchResults}
+                onGameClick={handleGameClick}
+                theme="light"
+              />
+            </div>
           </div>
         </section>
         <section className={styles.gameSection}>
@@ -123,14 +215,14 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
                 Retry
               </button>
             </div>
-          ) : filteredGames.length === 0 ? (
+          ) : games.length === 0 ? (
             <div className={styles.noGames}>
               <p>No games found</p>
             </div>
           ) : (
             <>
               <div className={styles.gamesGrid}>
-                {filteredGames.map((game) => (
+                {games.map((game) => (
                    <GameCard
                     key={game.id}
                     gamePreview={game}
@@ -148,7 +240,7 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
         <section className={styles.fandomsSection}>
           <SectionTitle title="Top Fandoms" />
           <div className={styles.fandomsGrid}>
-            {filteredFandoms.map((fandom) => (
+            {MOCK_FANDOMS.map((fandom) => (
               <FandomCard key={fandom.id} {...fandom} />
             ))}
           </div>

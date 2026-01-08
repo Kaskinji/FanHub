@@ -14,6 +14,9 @@ export interface SearchInputProps {
     size?: "small" | "medium" | "large";
     withIcon?: boolean;
     theme?: "light" | "dark";
+    value?: string;
+    onChange?: (query: string) => void;
+    isDropdownOpen?: boolean;
 }
 export const SearchInput: FC<SearchInputProps> = ({
     placeholder = "Search",
@@ -23,8 +26,21 @@ export const SearchInput: FC<SearchInputProps> = ({
     size = "medium",
     withIcon = false,
     theme = "light",
+    value: controlledValue,
+    onChange,
+    isDropdownOpen = false,
 }) => {
-    const [query, setQuery] = useState("");
+    const [internalQuery, setInternalQuery] = useState("");
+    const query = controlledValue !== undefined ? controlledValue : internalQuery;
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = e.target.value;
+        if (onChange) {
+            onChange(newValue);
+        } else {
+            setInternalQuery(newValue);
+        }
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -39,13 +55,17 @@ export const SearchInput: FC<SearchInputProps> = ({
             [styles.searchFormWithIcon]: withIcon,
             [styles.searchFormDark]: theme === "dark", 
             [styles.searchFormLight]: theme === "light",
+            [styles.searchFormDropdownOpen]: isDropdownOpen,
         },
         className
     );
 
     const finalInputClassName = classNames(
         styles.searchInput,
-        styles[`searchInput--${variant}`]
+        styles[`searchInput--${variant}`],
+        {
+            [styles.searchInputDropdownOpen]: isDropdownOpen,
+        }
     );
 
     const iconSrc = theme === "dark" ? searchIconLight : searchIconDark;
@@ -56,7 +76,7 @@ export const SearchInput: FC<SearchInputProps> = ({
                 type="text"
                 placeholder={placeholder}
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={handleChange}
                 className={finalInputClassName}
             />
             {withIcon && (

@@ -9,6 +9,8 @@ import { getEventStatus, sortEventsByStatus, type EventStatus } from "../../util
 import { EventForm } from "./EventForm/EventForm";
 import { AddButton } from "../../components/UI/buttons/AddButton/AddButton";
 import { FirstLetter } from "../../components/UI/FirstLetter/FirstLetter";
+import Button from "../../components/UI/buttons/Button/Button";
+import Modal from "../../components/UI/Modal/Modal";
 import styles from "./FandomEventsPage.module.scss";
 import SectionTitle from "../../components/UI/SectionTitle/SectionTitle";
 
@@ -20,6 +22,7 @@ const FandomEventsPage = () => {
   const [showEventForm, setShowEventForm] = useState(false);
   const [editingEventId, setEditingEventId] = useState<number | undefined>(undefined);
   const [isCreator, setIsCreator] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<EventReadDto | null>(null);
 
   const fetchEvents = useCallback(async () => {
     if (!id) {
@@ -80,6 +83,14 @@ const FandomEventsPage = () => {
     handleCloseEventForm();
   };
 
+  const handleEventClick = (event: EventReadDto) => {
+    setSelectedEvent(event);
+  };
+
+  const handleCloseEventModal = () => {
+    setSelectedEvent(null);
+  };
+
   if (loading) {
     return (
       <div className={styles.page}>
@@ -134,6 +145,7 @@ const FandomEventsPage = () => {
                 event={event} 
                 status={getEventStatus(event)}
                 onEdit={isCreator ? () => handleOpenEventForm(event.id) : undefined}
+                onClick={() => handleEventClick(event)}
               />
             ))
           )}
@@ -149,6 +161,13 @@ const FandomEventsPage = () => {
           />
         </div>
       )}
+      {selectedEvent && (
+        <EventModal
+          event={selectedEvent}
+          status={getEventStatus(selectedEvent)}
+          onClose={handleCloseEventModal}
+        />
+      )}
     </div>
   );
 };
@@ -157,13 +176,47 @@ type EventCardProps = {
   event: EventReadDto;
   status: EventStatus;
   onEdit?: () => void;
+  onClick?: () => void;
 };
 
-const EventCard = ({ event, status, onEdit }: EventCardProps) => {
+const getStatusIcon = (status: EventStatus) => {
+  switch (status) {
+    case "Ongoing":
+      return (
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="2" fill="none"/>
+          <circle cx="10" cy="10" r="3" fill="currentColor"/>
+        </svg>
+      );
+    case "Upcoming":
+      return (
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="2" fill="none"/>
+          <path d="M10 6V10L13 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+        </svg>
+      );
+    case "Ended":
+      return (
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="2" fill="none"/>
+          <path d="M7 10L9 12L13 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      );
+    default:
+      return status;
+  }
+};
+
+const EventCard = ({ event, status, onEdit, onClick }: EventCardProps) => {
   const imageUrl = event.imageUrl ? getImageUrl(event.imageUrl) : undefined;
 
+  const handleEditClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onEdit?.();
+  };
+
   return (
-    <div className={styles.eventCard} onClick={onEdit} style={{ cursor: onEdit ? 'pointer' : 'default' }}>
+    <div className={styles.eventCard} onClick={onClick} style={{ cursor: onClick ? 'pointer' : 'default' }}>
       <div className={styles.eventImageContainer}>
         {imageUrl ? (
           <img src={imageUrl} alt={event.title} className={styles.eventImage} />
@@ -174,15 +227,59 @@ const EventCard = ({ event, status, onEdit }: EventCardProps) => {
         )}
       </div>
       <div className={styles.eventContent}>
-        <h3 className={styles.eventTitle}>{event.title}</h3>
+        <div className={styles.eventTitleContainer}>
+          <h3 className={styles.eventTitle}>{event.title}</h3>
+          {onEdit && (
+            <Button 
+              className={styles.editButton}
+              onClick={handleEditClick}
+            >
+              Edit
+            </Button>
+          )}
+        </div>
         <p className={styles.eventDescription}>{event.description}</p>
         <div className={styles.eventFooter}>
           <span className={`${styles.eventStatus} ${styles[`status${status}`]}`}>
-            {status}
+            {getStatusIcon(status)}
+            <span className={styles.statusText}>{status}</span>
           </span>
         </div>
       </div>
     </div>
+  );
+};
+
+type EventModalProps = {
+  event: EventReadDto;
+  status: EventStatus;
+  onClose: () => void;
+};
+
+const EventModal = ({ event, status, onClose }: EventModalProps) => {
+  const imageUrl = event.imageUrl ? getImageUrl(event.imageUrl) : undefined;
+
+  return (
+    <Modal isOpen={true} onClose={onClose} title={event.title} className={styles.eventModal}>
+      <div className={styles.eventModalContent}>
+        {imageUrl ? (
+          <img src={imageUrl} alt={event.title} className={styles.eventModalImage} />
+        ) : (
+          <div className={styles.eventModalImagePlaceholder}>
+            <FirstLetter text={event.title} fontSize="4rem" />
+          </div>
+        )}
+        <div className={styles.eventModalDescription}>
+          <p>{event.description}</p>
+        </div>
+        <div className={styles.eventModalStatus}>
+          <span className={`${styles.eventStatus} ${styles[`status${status}`]}`}>
+            <span className={styles.statusText}>{status}</span>
+            {getStatusIcon(status)}
+          </span>
+        </div>
+      </div>
+    </Modal>
   );
 };
 
