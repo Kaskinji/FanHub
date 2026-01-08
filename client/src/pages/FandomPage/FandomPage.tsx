@@ -14,12 +14,13 @@ import { Events } from "./Events/Events";
 import ErrorState from "../../components/ErrorState/ErrorState";
 import styles from "./FandomPage.module.scss";
 
-
 export default function FandomPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [fandomData, setFandomData] = useState<FandomPageData | null>(null);
-  const [initialIsCreator, setInitialIsCreator] = useState<boolean | null>(null);
+  const [initialIsCreator, setInitialIsCreator] = useState<boolean | null>(
+    null
+  );
   const [initialSubscriptionId, setInitialSubscriptionId] = useState<
     number | null | undefined
   >(undefined);
@@ -116,7 +117,11 @@ export default function FandomPage() {
       <div className={styles.page}>
         <Header onSearch={() => {}} />
 
-            <ErrorState className={styles.errorStateWrapper} error={error} onRetry={() => window.location.reload()} />
+        <ErrorState
+          className={styles.errorStateWrapper}
+          error={error}
+          onRetry={() => window.location.reload()}
+        />
       </div>
     );
   }
@@ -125,7 +130,10 @@ export default function FandomPage() {
     return (
       <div className={styles.page}>
         <Header onSearch={() => {}} />
-        <ErrorState error={"Fandom is not found"} onRetry={() => window.location.reload()} />
+        <ErrorState
+          error={"Fandom is not found"}
+          onRetry={() => window.location.reload()}
+        />
       </div>
     );
   }
@@ -147,17 +155,17 @@ export default function FandomPage() {
     <div className={styles.page}>
       <Header onSearch={() => {}} />
       <main className={styles.content}>
-        <FandomCard 
-          fandom={fandomData} 
-          initialIsCreator={initialIsCreator} 
-          initialSubscriptionId={initialSubscriptionId} 
+        <FandomCard
+          fandom={fandomData}
+          initialIsCreator={initialIsCreator}
+          initialSubscriptionId={initialSubscriptionId}
         />
         <SectionTitle title="Events" />
         <Events fandomId={fandomData.id} />
         <ShowMoreButton variant="light" onClick={handleShowEvents} />
         <SectionTitle title="Popular Posts" />
-        <Posts 
-          posts={fandomData.postsPreviews} 
+        <Posts
+          posts={fandomData.postsPreviews}
           fandomId={fandomData.id}
           fandomName={fandomData.title}
         />
@@ -166,4 +174,3 @@ export default function FandomPage() {
     </div>
   );
 }
-

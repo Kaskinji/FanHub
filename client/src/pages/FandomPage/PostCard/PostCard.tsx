@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FirstLetter } from "../../../components/UI/FirstLetter/FirstLetter";
 import styles from "./PostCard.module.scss";
@@ -18,6 +19,8 @@ interface PostCardProps {
 
 export function PostCard({ id, title, image, author, reactions, fandomId, fandomName }: PostCardProps) {
   const navigate = useNavigate();
+  const [imageError, setImageError] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
 
   const handleClick = () => {
     // Редирект на страницу постов с передачей данных о фандоме
@@ -32,9 +35,25 @@ export function PostCard({ id, title, image, author, reactions, fandomId, fandom
     }
   };
 
+  const hasImage = image && !imageError;
+  const hasAvatar = author.avatar && !avatarError;
+
   return (
     <div className={styles.postCard} onClick={handleClick}>
-      {image && <img src={image} alt={title} className={styles.postImage} />}
+      <div className={styles.postImageContainer}>
+        {hasImage ? (
+          <img 
+            src={image!} 
+            alt={title} 
+            className={styles.postImage}
+            onError={() => setImageError(true)}
+          />
+        ) : (
+          <div className={styles.postImagePlaceholder}>
+            <FirstLetter text={title} fontSize="3rem" />
+          </div>
+        )}
+      </div>
       <div className={styles.postContent}>
         <h4>{title}</h4>
         <div className={styles.postMeta}>
@@ -47,15 +66,16 @@ export function PostCard({ id, title, image, author, reactions, fandomId, fandom
           </div>
           <div className={styles.author}>
             <div className={styles.avatarContainer}>
-              {author.avatar ? (
+              {hasAvatar ? (
                 <img
-                  src={author.avatar}
+                  src={author.avatar!}
                   alt={author.username}
                   className={styles.avatar}
+                  onError={() => setAvatarError(true)}
                 />
               ) : (
                 <div className={styles.avatarPlaceholder}>
-                  <FirstLetter text={author.username} fontSize="0.75rem" />
+                  <FirstLetter text={author.username} fontSize="14px" />
                 </div>
               )}
             </div>

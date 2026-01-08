@@ -1,7 +1,8 @@
 // components/Post/PostPreview.tsx
-import type { FC } from "react";
+import { useState, type FC } from "react";
 import styles from "./PostPreview.module.scss";
 import type { Post } from "../../../types/Post";
+import { FirstLetter } from "../../UI/FirstLetter/FirstLetter";
 
 interface PostPreviewProps {
   post: Post;
@@ -11,6 +12,8 @@ interface PostPreviewProps {
 }
 
 const PostPreview: FC<PostPreviewProps> = ({ post, onClick, onReaction, className }) => {
+  const [imageError, setImageError] = useState(false);
+
   const getInitials = (username: string) => {
     return username
       .split(' ')
@@ -38,16 +41,28 @@ const PostPreview: FC<PostPreviewProps> = ({ post, onClick, onReaction, classNam
   const likeReaction = post.reactions.find(r => r.type === 'like') || { type: 'like' as const, count: 0, userReacted: false };
   const dislikeReaction = post.reactions.find(r => r.type === 'dislike') || { type: 'dislike' as const, count: 0, userReacted: false };
 
+  const hasImage = post.image && !imageError;
+
   return (
     <div 
       className={`${styles.postPreview} ${className || ''}`}
       onClick={() => onClick(post.id)}
     >
-      {post.image && (
-        <div className={styles.imageContainer}>
-          <img src={post.image} alt={post.title} className={styles.image} />
-        </div>
-      )}
+      <div className={styles.imageContainer}>
+        {hasImage ? (
+          <img 
+            src={post.image!} 
+            alt={post.title} 
+            className={styles.image}
+            onError={() => setImageError(true)}
+          />
+        ) : (
+          <div className={styles.imagePlaceholder}>
+            <FirstLetter text={post.title} fontSize={"5em"}/>
+          </div>
+        )}
+        <span className={styles.category}>{post.category}</span>
+      </div>
       
       <div className={styles.content}>
         <h3 className={styles.title}>{post.title}</h3>
@@ -56,7 +71,6 @@ const PostPreview: FC<PostPreviewProps> = ({ post, onClick, onReaction, classNam
           {post.excerpt && (
             <p className={styles.excerpt}>{post.excerpt}</p>
           )}
-          <span className={styles.category}>{post.category}</span>
         </div>
         
         <div className={styles.meta}>
@@ -92,9 +106,6 @@ const PostPreview: FC<PostPreviewProps> = ({ post, onClick, onReaction, classNam
                 {getReactionEmoji('dislike')} {dislikeReaction.count}
               </button>
             </div>
-            <span className={styles.comments}>
-              💬 {post.commentCount}
-            </span>
           </div>
         </div>
       </div>

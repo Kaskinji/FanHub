@@ -40,9 +40,7 @@
 }
 
 .genreFilterPanel {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgb(53, 7, 96);
   border-radius: 12px;
   padding: 1.5rem;
   margin-bottom: 2rem;
@@ -98,7 +96,7 @@
     
     .genreOption {
       background: rgba(255, 255, 255, 0.907);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: none;
       border-radius: 25px;
       color: rgb(0, 0, 0);
       padding: 0.75rem 1rem;
@@ -109,14 +107,13 @@
       font-weight: 600;
       
       &:hover {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgb(228, 190, 249);
         border-color: rgba(255, 255, 255, 0.2);
         transform: translateY(-2px);
       }
       
       &.selected {
         background: linear-gradient(135deg, #55058b, #51089a);
-        border-color: rgba(255, 255, 255, 0.3);
         font-weight: 600;
         color: aliceblue;
       }
@@ -130,19 +127,20 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgb(247, 247, 247);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 20px;
     padding: 0.5rem 1rem;
     
     .filterLabel {
-      color: rgba(255, 255, 255, 0.7);
+      color: rgba(0, 0, 0, 0.7);
       font-size: 0.9rem;
+      font-weight: 500;
     }
     
     .filterValue {
-      color: white;
-      font-weight: 500;
+      color: rgb(86, 14, 108);
+      font-weight: 600;
     }
     
     .removeFilter {
@@ -256,7 +254,6 @@
 .gamesSection {
   display: flex;
   flex-direction:column;
-  gap: 120px;
 }
 
 .sectionTitle {

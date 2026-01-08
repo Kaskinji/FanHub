@@ -1,0 +1,47 @@
+.content {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.fandomInfo {
+  width: fit-content;
+  margin-bottom: 20px;
+  padding: 10px 15px;
+  background: rgb(225, 225, 225);
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.fandomLabel {
+  color: #272727;
+  font-weight: 500;
+}
+
+.fandomName {
+  color: #601e8b;
+  font-weight: 600;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.postsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.noPosts {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 1.1rem;
+}
+

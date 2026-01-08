@@ -178,6 +178,61 @@ const Header: FC<HeaderProps> = ({ onSearch, onSignIn }) => {
     );
   }
 
+  // Резервируем место для userSection, чтобы высота не менялась
+  const rightSectionContent = isAuthenticated && user ? (
+    <div className={styles.userSection}>
+      <div
+        className={styles.userInfo}
+        onClick={handleProfileClick}
+        title="Go to profile"
+      >
+        <span className={styles.userName}>{user.name}</span>
+        <Avatar
+          src={user.avatar ? getImageUrl(user.avatar) : undefined}
+          alt={user.name}
+          size="small"
+          onClick={handleProfileClick}
+          className={styles.headerAvatar}
+        />
+      </div>
+      <div className={styles.notificationButtonWrapper}>
+        <button
+          className={styles.notificationButton}
+          onClick={handleNotificationClick}
+          title="Notifications"
+          aria-label="Notifications"
+        >
+          {hasNewNotification ? (
+            <img
+              src={notificationAlertIcon}
+              alt="Unread notifications"
+              className={styles.notificationAlertIcon}
+            />
+          ) : (
+            <img
+              src={notificationIcon}
+              alt="Notifications"
+              className={styles.notificationNormalIcon}
+            />
+          )}
+        </button>
+        <NotificationDropdown
+          isOpen={isNotificationOpen}
+          onClose={handleCloseNotifications}
+          onNotificationsUpdated={handleNotificationsUpdated}
+        />
+      </div>
+    </div>
+  ) : (
+    <Button
+      variant="light"
+      onClick={handleSignIn}
+      className={styles.signInButton}
+    >
+      Sign in
+    </Button>
+  );
+
   return (
     <header className={styles.header}>
       <div className={styles.leftSection} onClick={handleLogoClick}>
@@ -209,59 +264,7 @@ const Header: FC<HeaderProps> = ({ onSearch, onSignIn }) => {
       </div>
 
       <div className={styles.rightSection}>
-        {isAuthenticated && user ? (
-          <div className={styles.userSection}>
-            <div
-              className={styles.userInfo}
-              onClick={handleProfileClick}
-              title="Go to profile"
-            >
-              <span className={styles.userName}>{user.name}</span>
-              <Avatar
-                src={user.avatar ? getImageUrl(user.avatar) : undefined}
-                alt={user.name}
-                size="small"
-                onClick={handleProfileClick}
-                className={styles.headerAvatar}
-              />
-            </div>
-            <div className={styles.notificationButtonWrapper}>
-              <button
-                className={styles.notificationButton}
-                onClick={handleNotificationClick}
-                title="Notifications"
-                aria-label="Notifications"
-              >
-                {hasNewNotification ? (
-                  <img
-                    src={notificationAlertIcon}
-                    alt="Unread notifications"
-                    className={styles.notificationAlertIcon}
-                  />
-                ) : (
-                  <img
-                    src={notificationIcon}
-                    alt="Notifications"
-                    className={styles.notificationNormalIcon}
-                  />
-                )}
-              </button>
-              <NotificationDropdown
-                isOpen={isNotificationOpen}
-                onClose={handleCloseNotifications}
-                onNotificationsUpdated={handleNotificationsUpdated}
-              />
-            </div>
-          </div>
-        ) : (
-          <Button
-            variant="light"
-            onClick={handleSignIn}
-            className={styles.signInButton}
-          >
-            Sign in
-          </Button>
-        )}
+        {rightSectionContent}
       </div>
     </header>
   );

@@ -1,15 +1,15 @@
 .postCard {
   background: white;
-  border-radius: 0px;
+  border-radius: 10px;
   padding: 0;
   border: 1px solid rgba(0, 0, 0, 0.1);
   display: flex;
   height: 170px;
   width: 270px;
-  overflow: hidden;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   cursor: pointer;
+  overflow: hidden;
 
   &:hover {
     transform: translateY(-4px);
@@ -18,21 +18,42 @@
   }
 }
 
-.postImage {
+.postImageContainer {
   width: 135px;
+  height: 170px;
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+}
+
+.postImage {
+  width: 100%;
   height: 100%;
   object-fit: cover;
-  flex-shrink: 0;
   display: block;
+}
+
+.postImagePlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
 }
 
 .postContent {
   flex: 1;
   padding: 15px;
-  margin-top: 15px;
   display: flex;
   flex-direction: column;
   background: white;
+  min-width: 0;
+  overflow: hidden;
 
   h4 {
     color: #333;
@@ -45,12 +66,12 @@
     line-clamp: 2;
     -webkit-box-orient: vertical;
     min-height: 40px;
+    overflow: hidden;
   }
 }
 
 .reactions {
   margin-bottom: 10px;
-  margin-left: 20px;
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
@@ -79,10 +100,9 @@
 }
 
 .postMeta {
-  height: 50%;
   margin-top: auto;
-  display: flexbox;
-  align-items: last baseline;
+  display: flex;
+  flex-direction: column;
   gap: 10px;
 }
 
@@ -111,6 +131,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
 .avatarPlaceholder {

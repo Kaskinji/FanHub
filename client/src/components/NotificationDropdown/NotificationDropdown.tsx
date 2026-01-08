@@ -8,6 +8,7 @@ import { FandomNotificationType } from "../../types/enums/FandomNotificationType
 import { FirstLetter } from "../UI/FirstLetter/FirstLetter";
 import { getImageUrl } from "../../utils/urlUtils";
 import styles from "./NotificationDropdown.module.scss";
+import { postApi } from "../../api/PostApi";
 
 interface NotificationDropdownProps {
   isOpen: boolean;
@@ -17,7 +18,7 @@ interface NotificationDropdownProps {
 
 interface NotificationData extends NotificationWithViewedDto {
   fandomName?: string;
-  eventTitle?: string;
+  eventTitle?: string | null;
   eventImage?: string | null;
   postTitle?: string;
   postImage?: string | null;
@@ -32,12 +33,15 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
   const [notifications, setNotifications] = useState<NotificationData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [pendingDeleteIds, setPendingDeleteIds] = useState<Set<number>>(new Set());
   const dropdownRef = useRef<HTMLDivElement>(null);
   const prevIsOpenRef = useRef<boolean>(false);
 
   useEffect(() => {
     if (isOpen) {
       loadNotifications();
+      // Очищаем буфер удаления при открытии
+      setPendingDeleteIds(new Set());
     }
   }, [isOpen]);
 
@@ -91,7 +95,15 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
                 console.error("Failed to load event for notification:", err);
               }
             }
-            
+            if (notification.type === FandomNotificationType.PostCreated) {
+              try {
+                const post = await postApi.getPostById(notification.notifierId);
+                enriched.eventTitle = post.title;
+                enriched.eventImage = post.mediaContent;
+              } catch (err) {
+                console.error("Failed to load event for notification:", err);
+              }
+            }
             // Если это уведомление о посте, можно добавить логику для загрузки поста
             // Пока оставляем без изменений
           } catch (err) {
@@ -110,20 +122,28 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
     }
   };
 
-  const handleHide = async (notificationId: number) => {
+  const handleHide = (notificationId: number) => {
+    // Добавляем в буфер удаления вместо немедленного удаления
+    setPendingDeleteIds((prev) => new Set([...prev, notificationId]));
+  };
+
+  const handleDeletePending = useCallback(async (idsToDelete: number[]) => {
+    if (idsToDelete.length === 0) return;
+
     try {
       await fandomNotificationApi.hideNotifications({
-        notificationIds: [notificationId],
+        notificationIds: idsToDelete,
       });
+      // Обновляем список уведомлений
       await loadNotifications();
       // Уведомляем о обновлении уведомлений
       if (onNotificationsUpdated) {
         onNotificationsUpdated();
       }
     } catch (err) {
-      console.error("Failed to hide notification:", err);
+      console.error("Failed to delete pending notifications:", err);
     }
-  };
+  }, [onNotificationsUpdated]);
 
   const markAllAsViewedOnClose = useCallback(async (notificationIds: number[]) => {
     try {
@@ -140,16 +160,37 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
   }, [onNotificationsUpdated]);
 
   // Автоматически помечаем все непрочитанные уведомления как прочитанные при закрытии
+  // и удаляем помеченные на удаление уведомления
   useEffect(() => {
     // Если dropdown был открыт и теперь закрыт
-    if (prevIsOpenRef.current && !isOpen && notifications.length > 0) {
-      const unreadNotifications = notifications.filter((n) => !n.isViewed);
-      if (unreadNotifications.length > 0) {
-        markAllAsViewedOnClose(unreadNotifications.map((n) => n.id));
+    if (prevIsOpenRef.current && !isOpen) {
+      const idsToDelete = Array.from(pendingDeleteIds);
+      
+      // Сначала удаляем помеченные уведомления
+      if (idsToDelete.length > 0) {
+        handleDeletePending(idsToDelete);
+        // Очищаем буфер после начала удаления
+        setPendingDeleteIds(new Set());
+      }
+      
+      // Затем помечаем как прочитанные (исключая те, что удаляются)
+      if (notifications.length > 0 && idsToDelete.length > 0) {
+        const idsToDeleteSet = new Set(idsToDelete);
+        const unreadNotifications = notifications.filter(
+          (n) => !n.isViewed && !idsToDeleteSet.has(n.id)
+        );
+        if (unreadNotifications.length > 0) {
+          markAllAsViewedOnClose(unreadNotifications.map((n) => n.id));
+        }
+      } else if (notifications.length > 0) {
+        const unreadNotifications = notifications.filter((n) => !n.isViewed);
+        if (unreadNotifications.length > 0) {
+          markAllAsViewedOnClose(unreadNotifications.map((n) => n.id));
+        }
       }
     }
     prevIsOpenRef.current = isOpen;
-  }, [isOpen, notifications, markAllAsViewedOnClose]);
+  }, [isOpen, notifications, markAllAsViewedOnClose, pendingDeleteIds, handleDeletePending]);
 
   const getNotificationTitle = (notification: NotificationData) => {
     switch (notification.type) {
@@ -199,6 +240,10 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
 
   if (!isOpen) return null;
 
+  const visibleNotifications = notifications.filter(
+    (notification) => !pendingDeleteIds.has(notification.id)
+  );
+
   return (
     <div className={styles.dropdown} ref={dropdownRef}>
       <div className={styles.header}>
@@ -214,11 +259,11 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
           <div className={styles.loading}>Loading notifications...</div>
         ) : error ? (
           <div className={styles.error}>{error}</div>
-        ) : notifications.length === 0 ? (
+        ) : visibleNotifications.length === 0 ? (
           <div className={styles.empty}>No notifications</div>
         ) : (
           <div className={styles.notificationsList}>
-            {notifications.map((notification) => {
+            {visibleNotifications.map((notification) => {
               const imageUrl = getNotificationImage(notification);
               const imageFallback = getNotificationImageFallback(notification);
               const notificationTitle = getNotificationTitle(notification);

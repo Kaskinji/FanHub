@@ -2,7 +2,7 @@ import { TitleCard } from "../../../components/TitleCard/TitleCard";
 import type { GamePageData } from "../../../types/GamePageData";
 import { GameRight } from "../GameRight/GameRight";
 import postIcon from "../../../assets/postIcon.svg";
-import fandomIcon from "../../../assets/fandom.svg";
+import fandomIcon from "../../../assets/group.svg";
 import styles from "./GameCard.module.scss";
 
 type GameCardProps = {

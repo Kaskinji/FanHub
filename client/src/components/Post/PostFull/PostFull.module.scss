@@ -11,9 +11,8 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 2rem;
   animation: fadeIn 0.3s ease;
-  
+
   @media (max-width: 768px) {
     padding: 1rem;
   }
@@ -29,6 +28,7 @@
 }
 
 .modal {
+  padding:2rem;
   background: linear-gradient(135deg, #ffffff);
   border-radius: 20px;
   max-width: 900px;
@@ -50,11 +50,11 @@
   }
   
   &::-webkit-scrollbar-thumb {
-    background: rgba(76, 201, 240, 0.3);
+    background: rgba(50, 6, 62, 0.125);
     border-radius: 4px;
     
     &:hover {
-      background: rgba(73, 1, 111, 0.893);
+      background: rgba(72, 1, 111, 0.399);
     }
   }
 }
@@ -87,7 +87,6 @@
   justify-content: center;
   transition: all 0.3s ease;
   z-index: 0;
-  
 }
 
 .header {
@@ -189,19 +188,27 @@
 }
 
 .postImage {
+  padding: 20px;
   width: 100%;
-  height: 400px;
-  overflow: hidden;
-  
-  @media (max-width: 768px) {
-    height: 250px;
-  }
+  margin: 0 auto;
+  display: grid;
+  place-items: center;
   
   img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
+    // Базовые ограничения
+    max-width: 100%;
+    max-height: 700px;
+    
+    // Автоматическое определение ориентации
+    // Если ширина больше высоты - горизонтальное
+    &[width] {
+      height: auto;
+    }
+    
+    // Если высота больше ширины - вертикальное  
+    &[height] {
+      width: auto;
+    }
   }
 }
 
@@ -277,12 +284,12 @@
   transition: all 0.3s ease;
   
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
     transform: translateY(-2px);
+    box-shadow: 0 0 10px 0 rgba(156, 33, 209, 0.595);
   }
   
   &.active {
-    background: rgba(76, 201, 240, 0.15);
+    background: rgba(229, 76, 240, 0.505);
     color: #690a7e;
     border-color: rgba(160, 16, 193, 0.3);
   }

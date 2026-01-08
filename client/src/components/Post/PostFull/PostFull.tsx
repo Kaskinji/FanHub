@@ -32,7 +32,7 @@ const PostFull: FC<PostFullProps> = ({
   const isAuthor = currentUserId && post.author.id === currentUserId;
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("ru-RU", {
+    return new Date(dateString).toLocaleDateString("en-US", {
       day: "numeric",
       month: "long",
       year: "numeric",
