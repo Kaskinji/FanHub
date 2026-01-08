@@ -23,5 +23,12 @@ namespace Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task<List<Subscription>> GetSubscriptionsByUserIdAsync( int userId )
+        {
+            return await _entities
+                .Where( s => s.UserId == userId )
+                .ToListAsync();
+        }
+
     }
 }

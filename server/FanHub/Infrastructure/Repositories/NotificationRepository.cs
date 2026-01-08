@@ -16,5 +16,14 @@ namespace Infrastructure.Repositories
                 .Where( e => e.FandomId == fandomId )
                 .ToListAsync();
         }
+
+        public async Task<List<FandomNotification>> GetNotificationsByFandomIdsAsync( List<int> fandomIds )
+        {
+            return await _entities
+                .Include( e => e.Fandom )
+                .Where( e => fandomIds.Contains( e.FandomId ) )
+                .OrderByDescending( e => e.CreatedAt )
+                .ToListAsync();
+        }
     }
 }

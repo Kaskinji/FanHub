@@ -103,14 +103,12 @@ namespace Application.Services
             return entity;
         }
 
-        protected override Task CleanupBeforeUpdate( Post entity, PostUpdateDto updateDto )
+        protected override async Task CleanupBeforeUpdate( Post entity, PostUpdateDto updateDto )
         {
             if ( entity.MediaContent != updateDto.MediaContent && !string.IsNullOrEmpty( entity.MediaContent ) )
             {
-                _imageTools.DeleteImage( entity.MediaContent );
+                await _imageTools.TryDeleteImageAsync( entity.MediaContent );
             }
-
-            return Task.CompletedTask;
         }
 
         protected override async Task CheckUnique( Post post )
@@ -120,14 +118,12 @@ namespace Application.Services
             await _categoryRepository.GetByIdAsyncThrow( post.CategoryId );
         }
 
-        protected override Task CleanupBeforeDelete( Post entity )
+        protected override async Task CleanupBeforeDelete( Post entity )
         {
             if ( !string.IsNullOrEmpty( entity.MediaContent ) )
             {
-                _imageTools.DeleteImage( entity.MediaContent );
+                await _imageTools.TryDeleteImageAsync( entity.MediaContent );
             }
-
-            return Task.CompletedTask;
         }
 
         protected override async Task AfterCreate( Post entity )

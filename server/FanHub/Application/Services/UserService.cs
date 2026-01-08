@@ -76,14 +76,12 @@ namespace Application.Services
             return entity;
         }
 
-        protected override Task CleanupBeforeUpdate( User entity, UserUpdateDto updateDto )
+        protected override async Task CleanupBeforeUpdate( User entity, UserUpdateDto updateDto )
         {
             if ( entity.Avatar != updateDto.Avatar && !string.IsNullOrEmpty( entity.Avatar ) )
             {
-                _imageTools.DeleteImage( entity.Avatar );
+                await _imageTools.TryDeleteImageAsync( entity.Avatar );
             }
-
-            return Task.CompletedTask;
         }
 
         protected override async Task CheckUnique( User entity )
@@ -105,14 +103,12 @@ namespace Application.Services
             }
         }
 
-        protected override Task CleanupBeforeDelete( User entity )
+        protected override async Task CleanupBeforeDelete( User entity )
         {
             if ( !string.IsNullOrEmpty( entity.Avatar ) )
             {
-                _imageTools.DeleteImage( entity.Avatar );
+                await _imageTools.TryDeleteImageAsync( entity.Avatar );
             }
-
-            return Task.CompletedTask;
         }
     }
 }

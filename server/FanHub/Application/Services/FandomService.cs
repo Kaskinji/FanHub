@@ -122,24 +122,20 @@ namespace Application.Services
             return _mapper.Map<FandomStatsDto>( await _fandomRepository.GetByIdWithStatsAsync( id ) );
         }
 
-        protected override Task CleanupBeforeUpdate( Fandom entity, FandomUpdateDto updateDto )
+        protected override async Task CleanupBeforeUpdate( Fandom entity, FandomUpdateDto updateDto )
         {
             if ( entity.CoverImage != updateDto.CoverImage && !string.IsNullOrEmpty( entity.CoverImage ) )
             {
-                _imageTools.DeleteImage( entity.CoverImage );
+                await _imageTools.TryDeleteImageAsync( entity.CoverImage );
             }
-
-            return Task.CompletedTask;
         }
 
-        protected override Task CleanupBeforeDelete( Fandom entity )
+        protected override async Task CleanupBeforeDelete( Fandom entity )
         {
             if ( !string.IsNullOrEmpty( entity.CoverImage ) )
             {
-                _imageTools.DeleteImage( entity.CoverImage );
+                await _imageTools.TryDeleteImageAsync( entity.CoverImage );
             }
-
-            return Task.CompletedTask;
         }
     }
 }

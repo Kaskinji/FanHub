@@ -88,6 +88,24 @@ namespace WebApi.Controllers
 
             return Ok( notification );
         }
+
+        [Authorize( Policy = "AdminOnly" )]
+        [HttpGet( "admin/all" )]
+        public async Task<ActionResult<List<Application.Dto.NotificationViewedDto.NotificationViewedReadDto>>> GetAllViewedNotifications( [FromQuery] bool? isHidden = null )
+        {
+            List<Application.Dto.NotificationViewedDto.NotificationViewedReadDto> notifications = await _notificationViewedService
+                .GetAllViewedNotificationsAsync( isHidden );
+            return Ok( notifications );
+        }
+
+        [Authorize( Policy = "AdminOnly" )]
+        [HttpGet( "admin/user/{userId}" )]
+        public async Task<ActionResult<List<Application.Dto.NotificationViewedDto.NotificationViewedReadDto>>> GetViewedNotificationsByUserIdForAdmin( int userId, [FromQuery] bool? isHidden = null )
+        {
+            List<Application.Dto.NotificationViewedDto.NotificationViewedReadDto> notifications = await _notificationViewedService
+                .GetViewedNotificationsByUserIdForAdminAsync( userId, isHidden );
+            return Ok( notifications );
+        }
     }
 }
 

@@ -20,7 +20,7 @@ namespace Infrastructure.Repositories
 
         public async Task<List<TEntity>> GetAllAsync()
         {
-            return await _entities.ToListAsync();
+            return await _entities.AsNoTracking().ToListAsync();
         }
 
         public async Task<TEntity?> GetByIdAsync( int id )
@@ -45,7 +45,7 @@ namespace Infrastructure.Repositories
 
         public async Task<List<TEntity>> FindAllAsync( Expression<Func<TEntity, bool>> predicate )
         {
-            return await _entities.Where( predicate ).ToListAsync();
+            return await _entities.Where( predicate ).AsNoTracking().ToListAsync();
         }
     }
 }

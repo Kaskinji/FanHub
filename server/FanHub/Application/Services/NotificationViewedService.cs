@@ -1,4 +1,5 @@
-﻿using Application.Dto.NotificationViewedDto;
+﻿using Application.Dto.NotificationDto;
+using Application.Dto.NotificationViewedDto;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.Entities;
@@ -15,11 +16,13 @@ namespace Application.Services
         private readonly INotificationViewedRepository _notificationViewedRepository;
         private readonly INotificationRepository _notificationRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IFandomNotificationService _fandomNotificationService;
 
         public NotificationViewedService(
             INotificationViewedRepository repository,
             INotificationRepository notificationRepository,
             IUserRepository userRepository,
+            IFandomNotificationService fandomNotificationService,
             IMapper mapper,
             IValidator<NotificationViewed> validator,
             ILogger<NotificationViewedService> logger,
@@ -29,6 +32,7 @@ namespace Application.Services
             _notificationViewedRepository = repository;
             _notificationRepository = notificationRepository;
             _userRepository = userRepository;
+            _fandomNotificationService = fandomNotificationService;
         }
 
         public async Task<List<NotificationViewedReadDto>> GetViewedNotificationsByUserIdAsync( int userId )
@@ -238,7 +242,7 @@ namespace Application.Services
         {
             await _userRepository.GetByIdAsyncThrow( userId );
 
-            List<FandomNotification> notifications = await _notificationRepository.GetAllAsync();
+            List<FandomNotificationReadDto> notifications = await _fandomNotificationService.GetNotificationsByUserSubscriptionsAsync( userId );
             List<NotificationViewed> viewedNotifications = await _notificationViewedRepository
                 .FindAllAsync( nv => nv.UserId == userId );
 
@@ -247,7 +251,7 @@ namespace Application.Services
 
             List<NotificationWithViewedDto> result = new();
 
-            foreach ( FandomNotification notification in notifications )
+            foreach ( FandomNotificationReadDto notification in notifications )
             {
                 viewedDict.TryGetValue( notification.Id, out NotificationViewed? viewed );
 
@@ -309,6 +313,24 @@ namespace Application.Services
                 IsHidden = viewed?.IsHidden ?? false,
                 IsViewed = viewed is not null
             };
+        }
+
+        public async Task<List<NotificationViewedReadDto>> GetAllViewedNotificationsAsync( bool? isHidden = null )
+        {
+            List<NotificationViewed> entities = await _notificationViewedRepository
+                .GetAllViewedNotificationsAsync( isHidden );
+
+            return _mapper.Map<List<NotificationViewedReadDto>>( entities );
+        }
+
+        public async Task<List<NotificationViewedReadDto>> GetViewedNotificationsByUserIdForAdminAsync( int userId, bool? isHidden = null )
+        {
+            await _userRepository.GetByIdAsyncThrow( userId );
+
+            List<NotificationViewed> entities = await _notificationViewedRepository
+                .GetViewedNotificationsByUserIdAsync( userId, isHidden );
+
+            return _mapper.Map<List<NotificationViewedReadDto>>( entities );
         }
     }
 }

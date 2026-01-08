@@ -47,6 +47,20 @@ namespace Infrastructure.Repositories
                 .FirstOrDefaultAsync( nv => nv.NotificationId == notificationId && nv.UserId == userId );
         }
 
+        public async Task<List<NotificationViewed>> GetAllViewedNotificationsAsync( bool? isHidden = null )
+        {
+            IQueryable<NotificationViewed> query = _entities;
+
+            if ( isHidden.HasValue )
+            {
+                query = query.Where( nv => nv.IsHidden == isHidden.Value );
+            }
+
+            return await query
+                .OrderByDescending( nv => nv.ViewedAt )
+                .ToListAsync();
+        }
+
         public async Task BulkInsertAsync( List<NotificationViewed> entities )
         {
             if ( entities is null || entities.Count == 0 )

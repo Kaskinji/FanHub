@@ -39,6 +39,21 @@ namespace Application.Services
             return _mapper.Map<List<FandomNotificationReadDto>>( notifications );
         }
 
+        public async Task<List<FandomNotificationReadDto>> GetNotificationsByUserSubscriptionsAsync( int userId )
+        {
+            List<Subscription> subscriptions = await _subscriptionRepository.GetSubscriptionsByUserIdAsync( userId );
+
+            if ( subscriptions.Count == 0 )
+            {
+                return new List<FandomNotificationReadDto>();
+            }
+
+            List<int> fandomIds = subscriptions.Select( s => s.FandomId ).ToList();
+            List<FandomNotification> notifications = await _notificationRepository.GetNotificationsByFandomIdsAsync( fandomIds );
+
+            return _mapper.Map<List<FandomNotificationReadDto>>( notifications );
+        }
+
         public async Task Notify( FandomNotificationCreateDto dto )
         {
             await Create( dto );

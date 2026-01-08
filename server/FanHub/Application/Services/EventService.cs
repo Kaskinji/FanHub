@@ -56,24 +56,20 @@ namespace Application.Services
             await _userRepository.GetByIdAsyncThrow( eventEntity.OrganizerId );
         }
 
-        protected override Task CleanupBeforeUpdate( Event entity, EventUpdateDto updateDto )
+        protected override async Task CleanupBeforeUpdate( Event entity, EventUpdateDto updateDto )
         {
             if ( entity.ImageUrl != updateDto.ImageUrl && !string.IsNullOrEmpty( entity.ImageUrl ) )
             {
-                _imageTools.DeleteImage( entity.ImageUrl );
+                await _imageTools.TryDeleteImageAsync( entity.ImageUrl );
             }
-
-            return Task.CompletedTask;
         }
 
-        protected override Task CleanupBeforeDelete( Event entity )
+        protected override async Task CleanupBeforeDelete( Event entity )
         {
             if ( !string.IsNullOrEmpty( entity.ImageUrl ) )
             {
-                _imageTools.DeleteImage( entity.ImageUrl );
+                await _imageTools.TryDeleteImageAsync( entity.ImageUrl );
             }
-
-            return Task.CompletedTask;
         }
 
         protected override async Task AfterCreate( Event entity )

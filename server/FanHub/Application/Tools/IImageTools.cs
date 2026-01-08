@@ -4,6 +4,7 @@
     {
         Task<string> SaveImageAsync( IFile image );
         byte[] GetImage( string imageName );
-        void DeleteImage( string imageUrl );
+        Task DeleteImageAsync( string imageUrl );
+        Task<bool> TryDeleteImageAsync( string imagePath );
     }
 }

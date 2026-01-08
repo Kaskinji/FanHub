@@ -15,6 +15,8 @@ namespace Application.Services.Interfaces
         Task UnhideNotificationsAsync( int userId, List<int> notificationIds );
         Task<List<NotificationWithViewedDto>> GetNotificationsWithViewedAsync( int userId, bool? isHidden = null );
         Task<NotificationWithViewedDto?> GetNotificationWithViewedAsync( int userId, int notificationId );
+        Task<List<NotificationViewedReadDto>> GetAllViewedNotificationsAsync( bool? isHidden = null );
+        Task<List<NotificationViewedReadDto>> GetViewedNotificationsByUserIdForAdminAsync( int userId, bool? isHidden = null );
     }
 }
 
