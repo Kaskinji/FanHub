@@ -14,5 +14,6 @@ namespace Domain.Repositories
 
         Task<TEntity?> FindAsync( Expression<Func<TEntity, bool>> predicate );
         Task<List<TEntity>> FindAllAsync( Expression<Func<TEntity, bool>> predicate );
+
     }
 }

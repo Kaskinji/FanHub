@@ -8,7 +8,8 @@ namespace Domain.Repositories
         Task<List<Post>> GetAllByCategoryId( int categoryId );
         Task<List<Post>> GetAllByUserId( int userId );
         Task<List<Post>> FindByCategoryNameAsync( string categoryName );
-        Task<List<Post>> GetPopularPostsAsync( int limit = 20 );
-        Task<List<Post>> GetPopularPostsByFandomAsync( int fandomId, int limit = 20 );
+        Task<List<Post>> GetPopularPostsAsync( int? limit = null );
+        Task<List<Post>> GetPopularPostsByFandomAsync( int fandomId, int? limit = null );
+        Task<Post?> GetByIdWithIncludesAsync( int id );
     }
 }

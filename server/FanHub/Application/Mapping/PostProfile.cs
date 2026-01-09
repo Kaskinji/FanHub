@@ -1,6 +1,8 @@
 ﻿using Application.Dto.PostDto;
+using Application.Dto.ReactionDto;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Enums;
 
 namespace Application.Mapping
 {
@@ -8,9 +10,22 @@ namespace Application.Mapping
     {
         public PostProfile()
         {
-            CreateMap<Post, PostReadDto>()
-            .ForMember( dest => dest.ReactionsCount,
-               opt => opt.MapFrom( src => src.Reactions.Count ) );
+            CreateMap<Post, PostReadDto>();
+
+            CreateMap<Post, PostStatsDto>()
+                .ForMember( dest => dest.CommentsCount,
+                    opt => opt.MapFrom( src => src.Comments.Count ) )
+                .ForMember( dest => dest.ReactionsSummaries,
+                    opt => opt.MapFrom( src =>
+                       Enum.GetValues( typeof( ReactionType ) )
+                            .Cast<ReactionType>()
+                            .Select( rt => new ReactionSummaryDto
+                            {
+                                ReactionType = rt,
+                                Count = src.Reactions.Count( r => r.Type == rt )
+                            } )
+                            .ToList()
+                    ) );
 
             CreateMap<PostCreateDto, Post>();
 

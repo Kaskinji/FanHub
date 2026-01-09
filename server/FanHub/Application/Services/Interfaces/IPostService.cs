@@ -5,10 +5,11 @@ namespace Application.Services.Interfaces
 {
     public interface IPostService : IBaseService<Post, PostCreateDto, PostReadDto, PostUpdateDto>
     {
-        Task<List<PostReadDto>> SearchByCategoryNameAsync( string categoryName );
-        Task<List<PostReadDto>> SearchByCategoryIdAsync( int categoryId );
-        Task<List<PostReadDto>> SearchByCategoryAsync( string? categoryName = null, int? categoryId = null );
-        Task<List<PostReadDto>> GetPopularPosts( int limit = 20 );
-        Task<List<PostReadDto>> GetPopularPostsByFandom( int fandomId, int limit = 20 );
+        Task<List<PostStatsDto>> SearchByCategoryNameAsync( string categoryName );
+        Task<List<PostStatsDto>> SearchByCategoryIdAsync( int categoryId );
+        Task<List<PostStatsDto>> SearchByCategoryAsync( string? categoryName = null, int? categoryId = null );
+        Task<List<PostStatsDto>> GetPopularPosts( int? limit = null );
+        Task<List<PostStatsDto>> GetPopularPostsByFandom( int fandomId, int? limit = null );
+        Task<PostStatsDto> GetPostWithStatsById( int id );
     }
 }

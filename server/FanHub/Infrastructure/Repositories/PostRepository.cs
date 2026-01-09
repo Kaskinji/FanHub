@@ -13,20 +13,16 @@ namespace Infrastructure.Repositories
         public async Task<List<Post>> GetAllWithStatsAsync()
         {
             return await _entities
-                .Include( p => p.User )
-                .Include( p => p.Category )
-                .Include( p => p.Fandom )
                 .Include( p => p.Reactions )
+                .Include( p => p.Comments )
                 .OrderByDescending( p => p.PostDate )
                 .ToListAsync();
         }
         public async Task<List<Post>> FindByCategoryNameAsync( string categoryName )
         {
             return await _entities
-                .Include( p => p.User )
-                .Include( p => p.Category )
-                .Include( p => p.Fandom )
                 .Include( p => p.Reactions )
+                .Include( p => p.Comments )
                 .Where( p => p.Category.Name.ToLower() == categoryName.ToLower() )
                 .OrderByDescending( p => p.PostDate )
                 .ToListAsync();
@@ -36,7 +32,6 @@ namespace Infrastructure.Repositories
         {
             return await _entities
                 .Include( p => p.Category )
-                .Include( p => p.Reactions )
                 .Where( p => p.CategoryId == categoryId )
                 .OrderByDescending( p => p.PostDate )
                 .ToListAsync();
@@ -45,19 +40,18 @@ namespace Infrastructure.Repositories
         public async Task<List<Post>> GetAllByUserId( int userId )
         {
             return await _entities
-                .Include( p => p.Reactions )
                 .Where( p => p.UserId == userId )
+                .Include( p => p.Reactions )
+                .Include( p => p.Comments )
                 .OrderByDescending( p => p.PostDate )
                 .ToListAsync();
         }
 
-        public async Task<List<Post>> GetPopularPostsAsync( int limit = 20 )
+        public async Task<List<Post>> GetPopularPostsAsync( int? limit = null )
         {
-            return await _entities
-                .Include( p => p.User )
-                .Include( p => p.Category )
-                .Include( p => p.Fandom )
+            IQueryable<Post> query = _entities
                 .Include( p => p.Reactions )
+                .Include( p => p.Comments )
                 .Select( p => new
                 {
                     Post = p,
@@ -65,15 +59,19 @@ namespace Infrastructure.Repositories
                 } )
                 .OrderByDescending( x => x.LikeCount )
                 .ThenByDescending( x => x.Post.PostDate )
-                .Take( limit )
-                .Select( x => x.Post )
-                .Take( limit )
-                .ToListAsync();
+                .Select( x => x.Post );
+
+            if ( limit.HasValue )
+            {
+                query = query.Take( limit.Value );
+            }
+
+            return await query.ToListAsync();
         }
 
-        public async Task<List<Post>> GetPopularPostsByFandomAsync( int fandomId, int limit = 20 )
+        public async Task<List<Post>> GetPopularPostsByFandomAsync( int fandomId, int? limit = null )
         {
-            return await _entities
+            IQueryable<Post> query = _entities
                 .Where( p => p.FandomId == fandomId )
                 .Select( p => new
                 {
@@ -82,14 +80,25 @@ namespace Infrastructure.Repositories
                 } )
                 .OrderByDescending( x => x.LikeCount )
                 .ThenByDescending( x => x.Post.PostDate )
-                .Take( limit )
                 .Select( x => x.Post )
-                .Include( p => p.User )
-                .Include( p => p.Category )
-                .Include( p => p.Fandom )
                 .Include( p => p.Reactions )
-                .Take( limit )
-                .ToListAsync();
+                .Include( p => p.Comments );
+
+            if ( limit.HasValue )
+            {
+                query = query.Take( limit.Value );
+            }
+
+            return await query.ToListAsync();
+        }
+
+        public async Task<Post?> GetByIdWithIncludesAsync( int id )
+        {
+            return await _entities
+                .Where( p => p.Id == id )
+                .Include( p => p.Reactions )
+                .Include( p => p.Comments )
+                .FirstOrDefaultAsync();
         }
     }
 }

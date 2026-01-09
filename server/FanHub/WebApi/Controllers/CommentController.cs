@@ -29,7 +29,6 @@ namespace WebApi.Controllers
             return Ok( comments );
         }
 
-        [Authorize]
         [HttpGet( "post/{postId}" )]
         public async Task<ActionResult<List<CommentShowDto>>> GetCommentsByPostId( [FromRoute]
         int postId )
@@ -38,6 +37,7 @@ namespace WebApi.Controllers
 
             return Ok( comments );
         }
+
         [Authorize]
         [HttpGet( "{id}" )]
         public async Task<ActionResult<CommentReadDto>> GetCommentById( int id )

@@ -30,7 +30,6 @@ namespace WebApi.Controllers
             return Ok( users );
         }
 
-        [Authorize]
         [HttpGet( "{id}" )]
         public async Task<ActionResult<UserSafeReadDto>> GetUserById( int id )
         {

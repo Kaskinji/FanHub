@@ -29,33 +29,30 @@ namespace WebApi.Controllers
             return Ok( posts );
         }
 
-        [Authorize]
         [HttpGet( "category/name" )]
-        public async Task<ActionResult<List<PostReadDto>>> GetPostsByCategoryName(
+        public async Task<ActionResult<List<PostStatsDto>>> GetPostsByCategoryName(
         [FromQuery] string categoryName )
         {
-            List<PostReadDto> posts = await _postService.SearchByCategoryNameAsync( categoryName );
+            List<PostStatsDto> posts = await _postService.SearchByCategoryNameAsync( categoryName );
 
             return Ok( posts );
         }
 
-        [Authorize]
         [HttpGet( "category/{categoryId}" )]
-        public async Task<ActionResult<List<PostReadDto>>> GetPostsByCategoryId(
+        public async Task<ActionResult<List<PostStatsDto>>> GetPostsByCategoryId(
         [FromRoute] int categoryId )
         {
-            List<PostReadDto> posts = await _postService.SearchByCategoryIdAsync( categoryId );
+            List<PostStatsDto> posts = await _postService.SearchByCategoryIdAsync( categoryId );
 
             return Ok( posts );
         }
 
-        [Authorize]
         [HttpGet( "search" )]
-        public async Task<ActionResult<List<PostReadDto>>> SearchPosts(
+        public async Task<ActionResult<List<PostStatsDto>>> SearchPosts(
         [FromRoute] int? categoryId = null,
         [FromQuery] string? categoryName = null )
         {
-            List<PostReadDto> posts = await _postService.SearchByCategoryAsync( categoryName, categoryId );
+            List<PostStatsDto> posts = await _postService.SearchByCategoryAsync( categoryName, categoryId );
 
             return Ok( posts );
         }
@@ -69,21 +66,30 @@ namespace WebApi.Controllers
             return Ok( post );
         }
 
-        [HttpGet( "popular" )]
-        public async Task<ActionResult<List<PostReadDto>>> GetPopularPosts(
-       [FromQuery] int limit = 20 )
+        [Authorize]
+        [HttpGet( "with-stats/{id}" )]
+        public async Task<ActionResult<PostStatsDto>> GetPostWithStatsById( int id )
         {
-            List<PostReadDto> posts = await _postService.GetPopularPosts( limit );
+            PostStatsDto post = await _postService.GetPostWithStatsById( id );
+
+            return Ok( post );
+        }
+
+        [HttpGet( "popular" )]
+        public async Task<ActionResult<List<PostStatsDto>>> GetPopularPosts(
+       [FromQuery] int? limit = null )
+        {
+            List<PostStatsDto> posts = await _postService.GetPopularPosts( limit );
 
             return Ok( posts );
         }
 
         [HttpGet( "fandom/{fandomId}/popular" )]
-        public async Task<ActionResult<List<PostReadDto>>> GetPopularPostsByFandom(
+        public async Task<ActionResult<List<PostStatsDto>>> GetPopularPostsByFandom(
        [FromRoute] int fandomId,
-       [FromQuery] int limit = 20 )
+       [FromQuery] int? limit = null )
         {
-            List<PostReadDto> posts = await _postService.GetPopularPostsByFandom( fandomId, limit );
+            List<PostStatsDto> posts = await _postService.GetPopularPostsByFandom( fandomId, limit );
 
             return Ok( posts );
         }

@@ -45,25 +45,25 @@ namespace Application.Services
 
             return _mapper.Map<List<PostReadDto>>( posts );
         }
-        public async Task<List<PostReadDto>> SearchByCategoryNameAsync( string categoryName )
+        public async Task<List<PostStatsDto>> SearchByCategoryNameAsync( string categoryName )
         {
             List<Post> posts = await _postRepository.FindByCategoryNameAsync( categoryName );
 
-            return _mapper.Map<List<PostReadDto>>( posts );
+            return _mapper.Map<List<PostStatsDto>>( posts );
         }
 
-        public async Task<List<PostReadDto>> SearchByCategoryIdAsync( int categoryId )
+        public async Task<List<PostStatsDto>> SearchByCategoryIdAsync( int categoryId )
         {
             List<Post> posts = await _postRepository.GetAllByCategoryId( categoryId );
 
-            return _mapper.Map<List<PostReadDto>>( posts );
+            return _mapper.Map<List<PostStatsDto>>( posts );
         }
 
-        public async Task<List<PostReadDto>> SearchByCategoryAsync( string? categoryName = null, int? categoryId = null )
+        public async Task<List<PostStatsDto>> SearchByCategoryAsync( string? categoryName = null, int? categoryId = null )
         {
             if ( !categoryId.HasValue && string.IsNullOrWhiteSpace( categoryName ) )
             {
-                return new List<PostReadDto>();
+                return new List<PostStatsDto>();
             }
 
             List<Post> posts;
@@ -77,21 +77,21 @@ namespace Application.Services
                 posts = await _postRepository.FindByCategoryNameAsync( categoryName! );
             }
 
-            return _mapper.Map<List<PostReadDto>>( posts );
+            return _mapper.Map<List<PostStatsDto>>( posts );
         }
 
-        public async Task<List<PostReadDto>> GetPopularPosts( int limit = 20 )
+        public async Task<List<PostStatsDto>> GetPopularPosts( int? limit = null )
         {
             List<Post> posts = await _postRepository.GetPopularPostsAsync( limit );
 
-            return _mapper.Map<List<PostReadDto>>( posts );
+            return _mapper.Map<List<PostStatsDto>>( posts );
         }
 
-        public async Task<List<PostReadDto>> GetPopularPostsByFandom( int fandomId, int limit = 20 )
+        public async Task<List<PostStatsDto>> GetPopularPostsByFandom( int fandomId, int? limit = null )
         {
             List<Post> posts = await _postRepository.GetPopularPostsByFandomAsync( fandomId, limit );
 
-            return _mapper.Map<List<PostReadDto>>( posts );
+            return _mapper.Map<List<PostStatsDto>>( posts );
         }
 
         protected override Post InitializeEntity( PostCreateDto dto )
@@ -134,6 +134,18 @@ namespace Application.Services
                 NotifierId = entity.Id,
                 Type = FandomNotificationType.NewPost,
             } );
+        }
+
+        public async Task<PostStatsDto> GetPostWithStatsById( int id )
+        {
+            Post? f = await _postRepository.GetByIdWithIncludesAsync( id );
+
+            if ( f is null )
+            {
+                throw new KeyNotFoundException( $"Post with id {id} is not found" );
+            }
+
+            return _mapper.Map<PostStatsDto>( f );
         }
     }
 }
