@@ -66,7 +66,7 @@ export default function FandomPage() {
             fandomStats.id,
             3
           );
-          postsPreviews = await postApi.adaptToPostPreviews(posts);
+          postsPreviews = await postApi.adaptStatsDtosToPostPreviews(posts);
         } catch (err) {
           console.error("Error fetching posts:", err);
           // Если не удалось загрузить посты, оставляем пустой массив

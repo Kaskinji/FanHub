@@ -1,10 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import type { Post } from "../types/Post";
 import { postApi } from "../api/PostApi";
-import { commentApi } from "../api/CommentApi";
-import { countAllComments } from "../utils/commentUtils";
-import { usePostReactions, type PostReaction } from "./usePostReactions";
-import type { ReactionType } from "../api/ReactionApi";
 
 interface UsePostsParams {
   fandomId?: number;
@@ -12,12 +8,12 @@ interface UsePostsParams {
 
 /**
  * Хук для загрузки и управления постами
+ * Использует PostStatsDto, который уже включает количество комментариев и реакции
  */
 export const usePosts = ({ fandomId }: UsePostsParams) => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { getPostReactions } = usePostReactions();
   const postsRef = useRef<Post[]>([]);
 
   useEffect(() => {
@@ -35,43 +31,13 @@ export const usePosts = ({ fandomId }: UsePostsParams) => {
       setLoading(true);
       setError(null);
 
-      const postsDto = await postApi.getPopularPostsByFandom(fandomId);
-      const fullPosts = await postApi.adaptToFullPosts(postsDto);
+      // Получаем посты со статистикой (уже включают комментарии и реакции)
+      const postsStatsDto = await postApi.getPopularPostsByFandom(fandomId);
+      
+      // Преобразуем PostStatsDto в Post (уже включает commentCount и reactions)
+      const fullPosts = await postApi.adaptStatsDtosToFullPosts(postsStatsDto);
 
-      const postsWithComments = await Promise.all(
-        fullPosts.map(async (post) => {
-          try {
-            const [commentsDto, reactions] = await Promise.all([
-              commentApi.getCommentsByPostId(post.id),
-              getPostReactions(post.id),
-            ]);
-
-            const comments = commentApi.adaptToComments(commentsDto);
-            const totalCommentsCount = countAllComments(comments);
-
-            return {
-              ...post,
-              commentCount: totalCommentsCount,
-              reactions: reactions,
-            };
-          } catch {
-            return {
-              ...post,
-              commentCount: 0,
-              reactions: [
-                { type: "like" as ReactionType, count: 0, userReacted: false },
-                {
-                  type: "dislike" as ReactionType,
-                  count: 0,
-                  userReacted: false,
-                },
-              ],
-            };
-          }
-        })
-      );
-
-      setPosts(postsWithComments);
+      setPosts(fullPosts);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Failed to load posts"
@@ -79,7 +45,7 @@ export const usePosts = ({ fandomId }: UsePostsParams) => {
     } finally {
       setLoading(false);
     }
-  }, [fandomId, getPostReactions]);
+  }, [fandomId]);
 
   useEffect(() => {
     loadPosts();
@@ -88,24 +54,13 @@ export const usePosts = ({ fandomId }: UsePostsParams) => {
   const refreshPost = useCallback(
     async (postId: number) => {
       try {
-        const postDto = await postApi.getPostById(postId);
-        const fullPost = await postApi.adaptToFullPost(postDto);
+        // Получаем пост со статистикой (уже включает комментарии и реакции)
+        const postStatsDto = await postApi.getPostWithStatsById(postId);
+        
+        // Преобразуем PostStatsDto в Post
+        const updatedPost = await postApi.adaptStatsDtoToFullPost(postStatsDto);
 
-        if (fullPost) {
-          const [commentsDto, reactions] = await Promise.all([
-            commentApi.getCommentsByPostId(postId),
-            getPostReactions(postId),
-          ]);
-
-          const comments = commentApi.adaptToComments(commentsDto);
-          const totalCommentsCount = countAllComments(comments);
-
-          const updatedPost = {
-            ...fullPost,
-            commentCount: totalCommentsCount,
-            reactions: reactions,
-          };
-
+        if (updatedPost) {
           setPosts((prev) =>
             prev.map((p) => (p.id === postId ? updatedPost : p))
           );
@@ -113,11 +68,12 @@ export const usePosts = ({ fandomId }: UsePostsParams) => {
           return updatedPost;
         }
       } catch {
+        // При ошибке перезагружаем все посты
         await loadPosts();
       }
       return null;
     },
-    [getPostReactions, loadPosts]
+    [loadPosts]
   );
 
   const updatePost = useCallback((postId: number, updates: Partial<Post>) => {
@@ -141,4 +97,3 @@ export const usePosts = ({ fandomId }: UsePostsParams) => {
     postsRef,
   };
 };
-

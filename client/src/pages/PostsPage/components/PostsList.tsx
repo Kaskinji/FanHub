@@ -34,7 +34,7 @@ export const PostsList: FC<PostsListProps> = ({
       <div className={styles.sectionHeader}>
         <SectionTitle title="Posts" />
         {isAuthenticated && (
-          <AddButton text="Add" onClick={onAddPost} />
+          <AddButton className={styles.addButton} text="Add" onClick={onAddPost} />
         )}
       </div>
 

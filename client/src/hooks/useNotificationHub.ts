@@ -76,18 +76,14 @@ export const useNotificationHub = (
     // Обработчики состояния соединения
     connection.onclose(() => {
       setIsConnected(false);
-      console.log("SignalR connection closed");
     });
 
     connection.onreconnecting(() => {
       setIsConnected(false);
-      console.log("SignalR reconnecting...");
     });
 
     connection.onreconnected(() => {
       setIsConnected(true);
-      console.log("SignalR reconnected");
-      // При переподключении проверяем непрочитанные уведомления
       checkUnreadNotifications();
     });
 
@@ -96,10 +92,8 @@ export const useNotificationHub = (
       .start()
       .then(() => {
         setIsConnected(true);
-        console.log("SignalR connection started");
       })
-      .catch((error) => {
-        console.error("Error starting SignalR connection:", error);
+      .catch(() => {
         setIsConnected(false);
       });
 

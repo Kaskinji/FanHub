@@ -106,6 +106,9 @@ const PostPreview: FC<PostPreviewProps> = ({ post, onClick, onReaction, classNam
                 {getReactionEmoji('dislike')} {dislikeReaction.count}
               </button>
             </div>
+            <div className={styles.comments}>
+              💬 {post.commentCount || 0}
+            </div>
           </div>
         </div>
       </div>

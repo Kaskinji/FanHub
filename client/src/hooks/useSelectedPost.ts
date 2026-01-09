@@ -37,6 +37,8 @@ export const useSelectedPost = ({
       }
 
       const post = postsRef.current.find((p) => p.id === selectedPostId);
+      const existingReactions = post && post.reactions && post.reactions.length > 0 ? post.reactions : null;
+
       if (post) {
         if (!isCancelled) {
           setSelectedPost(post);
@@ -56,9 +58,16 @@ export const useSelectedPost = ({
       if (!isCancelled) {
         try {
           setLoadingComments(true);
+          
+          // Запрашиваем реакции только если их нет в существующем посте из postStats
+          const commentsPromise = commentApi.getCommentsByPostId(selectedPostId);
+          const reactionsPromise = existingReactions 
+            ? Promise.resolve(existingReactions) 
+            : getPostReactions(selectedPostId);
+
           const [commentsDto, reactions] = await Promise.all([
-            commentApi.getCommentsByPostId(selectedPostId),
-            getPostReactions(selectedPostId),
+            commentsPromise,
+            reactionsPromise,
           ]);
 
           const comments = commentApi.adaptToComments(commentsDto);
@@ -71,7 +80,8 @@ export const useSelectedPost = ({
                 return {
                   ...currentPost,
                   commentCount: countAllComments(comments),
-                  reactions: reactions,
+                  // Используем реакции из postStats, если они есть, иначе из API, иначе оставляем текущие
+                  reactions: reactions && reactions.length > 0 ? reactions : (currentPost.reactions || existingReactions || []),
                 };
               }
               return currentPost;
@@ -80,6 +90,16 @@ export const useSelectedPost = ({
         } catch {
           if (!isCancelled) {
             setSelectedPostComments([]);
+            // При ошибке сохраняем существующие реакции из postStats, если они есть
+            setSelectedPost((currentPost) => {
+              if (currentPost && existingReactions && (!currentPost.reactions || currentPost.reactions.length === 0)) {
+                return {
+                  ...currentPost,
+                  reactions: existingReactions,
+                };
+              }
+              return currentPost;
+            });
           }
         } finally {
           if (!isCancelled) {

@@ -4,6 +4,7 @@ import { FirstLetter } from "../../UI/FirstLetter/FirstLetter";
 import styles from "./PostFull.module.scss";
 import type { Post, Comment as CommentType } from "../../../types/Post";
 import PostComments from "../PostComments/PostComments";
+import closeSign from "../../../assets/closeSign.svg"
 
 interface PostFullProps {
   post: Post;
@@ -51,7 +52,7 @@ const PostFull: FC<PostFullProps> = ({
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <button className={styles.closeButton} onClick={onClose}>
-          ✕
+          <img className={styles.closeImg} src={closeSign}/>
         </button>
         
         <header className={styles.header}>

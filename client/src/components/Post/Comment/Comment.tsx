@@ -13,7 +13,7 @@ interface CommentProps {
 const Comment: FC<CommentProps> = ({ comment, onReply, className }) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("ru-RU", {
+    return date.toLocaleDateString("eng-US", {
       day: "numeric",
       month: "long",
       year: "numeric",
