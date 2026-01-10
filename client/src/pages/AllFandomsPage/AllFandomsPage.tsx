@@ -212,7 +212,7 @@ export default function AllFandomsPage() {
             />
           </div>
         )}
-      <Header onSearch={() => {}} onSignIn={() => {}} />
+      <Header onSearch={() => {}} />
       <main className={styles.content}>
         <Top
           onSearch={handleSearch}

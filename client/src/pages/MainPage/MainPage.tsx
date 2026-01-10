@@ -176,10 +176,6 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
     };
   }, []);
 
-  const handleSignIn = () => {
-    navigate("/login");
-  };
-
   const handleShowMore = () => {
     navigate(`/allgames`);
   };
@@ -203,7 +199,7 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
 
   return (
     <div className={styles.mainPage}>
-      <Header onSearch={handleSearch} onSignIn={handleSignIn} allGames={allGamesData} />
+      <Header onSearch={handleSearch} allGames={allGamesData} />
       <main className={styles.mainContent}>
         <section className={styles.heroSection}>
           <div className={styles.logoWrapper}>

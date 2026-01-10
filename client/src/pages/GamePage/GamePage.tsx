@@ -149,7 +149,7 @@ const GamePage = () => {
   if (loading) {
     return (
       <div className={styles.page}>
-        <Header onSearch={handleSearch} onSignIn={() => {}} />
+        <Header onSearch={handleSearch} />
         <main className={styles.contentSkeleton}>
           {/* Скелетон для GameCard */}
           <section className={styles.gameCardSkeleton}>
@@ -190,7 +190,7 @@ const GamePage = () => {
   if (error) {
     return (
       <div className={styles.page}>
-        <Header onSearch={handleSearch} onSignIn={() => {}} />
+        <Header onSearch={handleSearch} />
         <div className={styles.errorContainer}>
           <p className={styles.errorText}>{error}</p>
           <div className={styles.errorActions}>
@@ -213,7 +213,7 @@ const GamePage = () => {
   if (!gameData) {
     return (
       <div className={styles.page}>
-        <Header onSearch={handleSearch} onSignIn={() => {}} />
+        <Header onSearch={handleSearch} />
         <div className={styles.errorContainer}>
           <p className={styles.errorText}>Game not found</p>
           <Button onClick={handleBackToGames}>
@@ -226,7 +226,7 @@ const GamePage = () => {
 
   return (
     <div className={styles.page}>
-      <Header onSearch={handleSearch} onSignIn={() => {}} />
+      <Header onSearch={handleSearch} />
          {showGameForm && (
         <div className={styles.formContainer}>
           <GameForm

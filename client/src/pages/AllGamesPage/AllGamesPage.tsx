@@ -61,7 +61,7 @@ export default function AllGamesPage() {
   if (error) {
     return (
       <div className={styles.page}>
-        <Header onSearch={handleSearch} onSignIn={() => {}} />
+        <Header onSearch={handleSearch} />
         <div className={styles.errorContainer}>
           <p className={styles.errorText}>{error}</p>
           <Button onClick={() => {
@@ -77,7 +77,7 @@ export default function AllGamesPage() {
 
   return (
     <div className={styles.page}>
-      <Header onSearch={handleSearch} onSignIn={() => {}} allGames={allGames} />
+      <Header onSearch={handleSearch} allGames={allGames} />
         {showGameForm && (
         <div className={styles.formContainer}>
           <GameForm

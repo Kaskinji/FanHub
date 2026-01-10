@@ -157,7 +157,7 @@ export default function PostsPage() {
   if (error) {
     return (
       <div className={styles.page}>
-        <Header onSearch={() => {}} onSignIn={() => {}} />
+        <Header onSearch={() => {}} />
         <ErrorState error={error} onRetry={() => window.location.reload()} />
       </div>
     );
@@ -165,7 +165,7 @@ export default function PostsPage() {
 
   return (
     <div className={styles.page}>
-      <Header onSearch={() => {}} onSignIn={() => {}} />
+      <Header onSearch={() => {}} />
 
       <PostsList
         posts={posts}
