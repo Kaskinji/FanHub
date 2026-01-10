@@ -13,17 +13,43 @@ interface UsePostsParams {
  * Использует PostStatsDto, который уже включает количество комментариев и реакции
  */
 export const usePosts = ({ fandomId }: UsePostsParams) => {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [allPosts, setAllPosts] = useState<Post[]>([]); // Исходный список всех постов
+  const [posts, setPosts] = useState<Post[]>([]); // Отфильтрованные посты
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [sortOption, setSortOption] = useState<SortOption>('default');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [showCategoryFilter, setShowCategoryFilter] = useState(false);
   const postsRef = useRef<Post[]>([]);
 
-  // Сохраняем оригинальный список постов в ref для использования в других хуках
+  // Извлекаем уникальные категории из всех загруженных постов
+  const categories = useMemo(() => 
+    Array.from(new Set(allPosts.map(post => post.category).filter(Boolean))).sort(),
+    [allPosts]
+  );
+
+  // Применяем фильтры локально к загруженным постам
+  const filteredPosts = useMemo(() => {
+    let filtered = [...allPosts];
+    
+    // Фильтр по категории
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter(post => post.category === selectedCategory);
+    }
+    
+    return filtered;
+  }, [allPosts, selectedCategory]);
+
+  // Обновляем posts когда изменяются фильтры
+  useEffect(() => {
+    setPosts(filteredPosts);
+  }, [filteredPosts]);
+
+  // Сохраняем оригинальный список всех постов в ref для использования в других хуках
   // (sortedPosts используется только для отображения)
   useEffect(() => {
-    postsRef.current = posts;
-  }, [posts]);
+    postsRef.current = allPosts;
+  }, [allPosts]);
 
   // Сортируем посты перед отображением
   const sortedPosts = useMemo(() => {
@@ -65,7 +91,8 @@ export const usePosts = ({ fandomId }: UsePostsParams) => {
       // Преобразуем PostStatsDto в Post (уже включает commentCount и reactions)
       const fullPosts = await postApi.adaptStatsDtosToFullPosts(postsStatsDto);
 
-      setPosts(fullPosts);
+      setAllPosts(fullPosts); // Сохраняем исходный список
+      // Фильтры применятся автоматически через useMemo
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Failed to load posts"
@@ -89,7 +116,7 @@ export const usePosts = ({ fandomId }: UsePostsParams) => {
         const updatedPost = await postApi.adaptStatsDtoToFullPost(postStatsDto);
 
         if (updatedPost) {
-          setPosts((prev) =>
+          setAllPosts((prev) =>
             prev.map((p) => (p.id === postId ? updatedPost : p))
           );
 
@@ -105,17 +132,33 @@ export const usePosts = ({ fandomId }: UsePostsParams) => {
   );
 
   const updatePost = useCallback((postId: number, updates: Partial<Post>) => {
-    setPosts((prev) =>
+    setAllPosts((prev) =>
       prev.map((p) => (p.id === postId ? { ...p, ...updates } : p))
     );
   }, []);
 
   const removePost = useCallback((postId: number) => {
-    setPosts((prev) => prev.filter((p) => p.id !== postId));
+    setAllPosts((prev) => prev.filter((p) => p.id !== postId));
   }, []);
 
   const setSort = useCallback((option: SortOption) => {
     setSortOption(option);
+  }, []);
+
+  const filterByCategory = useCallback((category: string) => {
+    setSelectedCategory(category);
+    setShowCategoryFilter(false);
+    // Фильтрация происходит автоматически через useMemo
+  }, []);
+
+  const toggleCategoryFilter = useCallback(() => {
+    setShowCategoryFilter(prev => !prev);
+  }, []);
+
+  const resetFilters = useCallback(() => {
+    setSelectedCategory('all');
+    setShowCategoryFilter(false);
+    // Фильтрация происходит автоматически через useMemo
   }, []);
 
   return {
@@ -123,11 +166,17 @@ export const usePosts = ({ fandomId }: UsePostsParams) => {
     loading,
     error,
     sortOption,
+    categories,
+    selectedCategory,
+    showCategoryFilter,
     loadPosts,
     refreshPost,
     updatePost,
     removePost,
     postsRef,
     setSort,
+    filterByCategory,
+    toggleCategoryFilter,
+    resetFilters,
   };
 };
