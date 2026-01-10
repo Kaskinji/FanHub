@@ -2,17 +2,77 @@
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 .addButton {
   margin-left: 20px;
 }
 .fandomInfo {
   width: fit-content;
-  margin-bottom: 20px;
+  margin-bottom: 0;
   padding: 10px 15px;
   background: rgb(225, 225, 225);
   border-radius: 8px;
   font-size: 0.9rem;
+}
+
+.topSection {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0;
+}
+
+.sortWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+  
+  .sortLabel {
+    color: white;
+    font-size: 1.0rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  
+  .sortSelect {
+    background: rgba(255, 255, 255, 0.907);
+    border: none;
+    border-radius: 25px;
+    color: rgb(0, 0, 0);
+    padding: 0.4rem 1rem;
+    font-size: medium;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+    text-align: center;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    
+    background-image: var(--arrow-icon, url("../../../assets/arrow-bottom.svg"));
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+    padding-right: 2.5rem;
+    
+    &:hover {
+      background: rgb(189, 143, 213);
+    }
+    
+    &:focus {
+      background: rgba(255, 255, 255, 0.907);
+    }
+    
+    .option {
+      background: rgb(89, 18, 156);
+      color: white;
+      padding: 10px;
+      border: 2px solid rgb(189, 143, 213);
+    }
+  }
 }
 
 .fandomLabel {
@@ -29,7 +89,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 0;
 }
 
 .postsGrid {

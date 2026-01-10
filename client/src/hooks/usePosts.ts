@@ -1,6 +1,8 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import type { Post } from "../types/Post";
 import { postApi } from "../api/PostApi";
+
+export type SortOption = 'default' | 'reactions-desc' | 'reactions-asc';
 
 interface UsePostsParams {
   fandomId?: number;
@@ -14,11 +16,37 @@ export const usePosts = ({ fandomId }: UsePostsParams) => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [sortOption, setSortOption] = useState<SortOption>('default');
   const postsRef = useRef<Post[]>([]);
 
+  // Сохраняем оригинальный список постов в ref для использования в других хуках
+  // (sortedPosts используется только для отображения)
   useEffect(() => {
     postsRef.current = posts;
   }, [posts]);
+
+  // Сортируем посты перед отображением
+  const sortedPosts = useMemo(() => {
+    if (sortOption === 'default') {
+      return posts;
+    }
+    
+    const sorted = [...posts];
+    sorted.sort((a, b) => {
+      // Суммируем все реакции для поста a
+      const totalReactionsA = a.reactions.reduce((sum, reaction) => sum + reaction.count, 0);
+      // Суммируем все реакции для поста b
+      const totalReactionsB = b.reactions.reduce((sum, reaction) => sum + reaction.count, 0);
+      
+      if (sortOption === 'reactions-asc') {
+        return totalReactionsA - totalReactionsB; // От меньшего к большему
+      } else {
+        return totalReactionsB - totalReactionsA; // От большего к меньшему
+      }
+    });
+    
+    return sorted;
+  }, [posts, sortOption]);
 
   const loadPosts = useCallback(async () => {
     if (!fandomId) {
@@ -86,14 +114,20 @@ export const usePosts = ({ fandomId }: UsePostsParams) => {
     setPosts((prev) => prev.filter((p) => p.id !== postId));
   }, []);
 
+  const setSort = useCallback((option: SortOption) => {
+    setSortOption(option);
+  }, []);
+
   return {
-    posts,
+    posts: sortedPosts, // Возвращаем отсортированные посты
     loading,
     error,
+    sortOption,
     loadPosts,
     refreshPost,
     updatePost,
     removePost,
     postsRef,
+    setSort,
   };
 };

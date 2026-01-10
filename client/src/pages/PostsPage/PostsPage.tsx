@@ -27,11 +27,13 @@ export default function PostsPage() {
     posts,
     loading,
     error,
+    sortOption,
     loadPosts,
     refreshPost,
     updatePost,
     removePost,
     postsRef,
+    setSort,
   } = usePosts({
     fandomId: postsData?.fandomId,
   });
@@ -41,6 +43,8 @@ export default function PostsPage() {
     selectedPostComments,
     loadingComments,
     addComment,
+    updateComment,
+    deleteComment,
     setSelectedPost,
   } = useSelectedPost({
     selectedPostId,
@@ -171,9 +175,11 @@ export default function PostsPage() {
         posts={posts}
         fandomName={postsData?.fandomName}
         isAuthenticated={isAuthenticated}
+        sortOption={sortOption}
         onPostClick={setSelectedPostId}
         onReaction={handleReaction}
         onAddPost={() => setShowPostForm(true)}
+        onSortChange={setSort}
       />
 
       {selectedPost && (
@@ -182,6 +188,8 @@ export default function PostsPage() {
           comments={selectedPostComments}
           onClose={() => setSelectedPostId(null)}
           onAddComment={isAuthenticated ? handleAddComment : undefined}
+          onUpdateComment={isAuthenticated ? updateComment : undefined}
+          onDeleteComment={isAuthenticated ? deleteComment : undefined}
           onReaction={isAuthenticated ? handleReaction : undefined}
           isAddingComment={isAddingComment}
           isLoadingComments={loadingComments}

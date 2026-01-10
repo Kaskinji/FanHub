@@ -78,11 +78,11 @@
 }
 
 .reaction {
-  display: grid;
-  align-items: baseline;
-  gap: 6px;
-  background: rgba(102, 126, 234, 0.1);
-  padding: 1px 5px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  padding: 4px 8px;
   border-radius: 20px;
   font-size: 0.9rem;
   color: #667eea;
@@ -99,8 +99,15 @@
   }
 }
 
+.reactionIcon {
+  width: 16px;
+  height: 16px;
+  display: block;
+  flex-shrink: 0;
+}
+
 .postMeta {
-  margin-top: auto;
+  margin-top: 10px;
   display: flex;
   flex-direction: column;
   gap: 10px;

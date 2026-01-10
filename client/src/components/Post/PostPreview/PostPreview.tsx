@@ -3,6 +3,9 @@ import { useState, type FC } from "react";
 import styles from "./PostPreview.module.scss";
 import type { Post } from "../../../types/Post";
 import { FirstLetter } from "../../UI/FirstLetter/FirstLetter";
+import likeIcon from "../../../assets/like.svg";
+import dislikeIcon from "../../../assets/dislike.svg";
+import commentIcon from "../../../assets/comment.svg"
 
 interface PostPreviewProps {
   post: Post;
@@ -23,13 +26,6 @@ const PostPreview: FC<PostPreviewProps> = ({ post, onClick, onReaction, classNam
       .slice(0, 2);
   };
 
-  const getReactionEmoji = (type: string) => {
-    const emojis: Record<string, string> = {
-      like: '👍',
-      dislike: '👎'
-    };
-    return emojis[type] || '👍';
-  };
 
   const handleReactionClick = (e: React.MouseEvent, reactionType: "like" | "dislike" ) => {
     e.stopPropagation();
@@ -95,7 +91,12 @@ const PostPreview: FC<PostPreviewProps> = ({ post, onClick, onReaction, classNam
                 disabled={!onReaction}
                 title="Like"
               >
-                {getReactionEmoji('like')} {likeReaction.count}
+                <img 
+                  src={likeIcon} 
+                  alt="like"
+                  className={styles.reactionIcon}
+                />
+                {likeReaction.count}
               </button>
               <button
                 className={`${styles.reactionButton} ${dislikeReaction.userReacted ? styles.active : ''}`}
@@ -103,11 +104,20 @@ const PostPreview: FC<PostPreviewProps> = ({ post, onClick, onReaction, classNam
                 disabled={!onReaction}
                 title="Dislike"
               >
-                {getReactionEmoji('dislike')} {dislikeReaction.count}
+                <img 
+                  src={dislikeIcon} 
+                  alt="dislike"
+                  className={styles.reactionIcon}
+                />
+                {dislikeReaction.count}
               </button>
             </div>
             <div className={styles.comments}>
-              💬 {post.commentCount || 0}
+                <img 
+                  src={commentIcon} 
+                  alt="dislike"
+                  className={styles.reactionIcon}
+                /> {post.commentCount || 0}
             </div>
           </div>
         </div>

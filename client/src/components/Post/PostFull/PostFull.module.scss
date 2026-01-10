@@ -71,8 +71,8 @@
 }
 .closeButton {
   position: absolute;
-  top: 30px;
-  right: 20px;
+  top: 5px;
+  right: 8px;
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -109,7 +109,7 @@
 }
 
 .header {
-  padding: 70px 10px 30px 28px;
+  padding: 7px 10px 30px 18px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -167,6 +167,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+  padding-right: 20px;
 }
 
 .category {
@@ -183,6 +184,7 @@
 .postActions {
   display: flex;
   gap: 0.5rem;
+  margin-right: 25px;
 }
 
 .editButton,
@@ -291,7 +293,7 @@
 .reactionButton {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #b0b0b0;
+  color: #132ea9;
   padding: 0.7rem 1.2rem;
   border-radius: 25px;
   font-size: 1rem;
@@ -307,8 +309,22 @@
   }
   
   &.active {
-    background: rgba(229, 76, 240, 0.505);
+    background: rgba(215, 166, 236, 0.595);
     color: #690a7e;
     border-color: rgba(160, 16, 193, 0.3);
   }
+}
+
+.buttonIcon {
+  width: 28px;
+  height: 28px;
+  display: block;
+  flex-shrink: 0;
+}
+
+.reactionIcon {
+  width: 18px;
+  height: 18px;
+  display: block;
+  flex-shrink: 0;
 }

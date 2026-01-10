@@ -3,6 +3,8 @@ import { useState, useCallback, useMemo, useEffect } from 'react';
 import { gameApi } from '../api/GameApi';
 import type { GameReadDto } from '../api/GameApi';
 
+export type SortOption = 'default' | 'date-asc' | 'date-desc';
+
 export const useGames = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -11,6 +13,28 @@ export const useGames = () => {
   const [selectedGenre, setSelectedGenre] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>(''); // Поисковый запрос
   const [showGenreFilter, setShowGenreFilter] = useState(false);
+  const [sortOption, setSortOption] = useState<SortOption>('default');
+
+  // Сортируем gamesData перед преобразованием в GamePreview
+  const sortedGamesData = useMemo(() => {
+    if (sortOption === 'default') {
+      return gamesData;
+    }
+    
+    const sorted = [...gamesData];
+    sorted.sort((a, b) => {
+      const dateA = new Date(a.releaseDate).getTime();
+      const dateB = new Date(b.releaseDate).getTime();
+      
+      if (sortOption === 'date-asc') {
+        return dateA - dateB; // От старых к новым
+      } else {
+        return dateB - dateA; // От новых к старым
+      }
+    });
+    
+    return sorted;
+  }, [gamesData, sortOption]);
 
   // Функция сортировки (та же логика, что в SearchDropdown)
   const sortGames = (games: GameReadDto[], query: string): GameReadDto[] => {
@@ -85,8 +109,8 @@ export const useGames = () => {
 
   // Преобразуем GameReadDto[] → GamePreview[] (оптимизировано через useMemo)
   const gamesPreview = useMemo(() => 
-    gameApi.adaptToGamePreviews(gamesData),
-    [gamesData]
+    gameApi.adaptToGamePreviews(sortedGamesData),
+    [sortedGamesData]
   );
 
   // Извлекаем уникальные жанры из всех загруженных игр (оптимизировано через useMemo)
@@ -142,6 +166,10 @@ export const useGames = () => {
     setError(null);
   }, []);
 
+  const setSort = useCallback((option: SortOption) => {
+    setSortOption(option);
+  }, []);
+
   return {
     // Для отображения списка (GamePreview[])
     games: gamesPreview,
@@ -159,6 +187,7 @@ export const useGames = () => {
     selectedGenre,
     searchQuery,
     showGenreFilter,
+    sortOption,
     
     // Методы
     loadGames,
@@ -168,5 +197,6 @@ export const useGames = () => {
     resetFilters,
     clearError,
     getGameById,
+    setSort,
   };
 };
