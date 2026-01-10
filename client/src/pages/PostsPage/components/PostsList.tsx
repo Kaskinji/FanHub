@@ -3,24 +3,30 @@ import PostPreview from "../../../components/Post/PostPreview/PostPreview";
 import SectionTitle from "../../../components/UI/SectionTitle/SectionTitle";
 import { AddButton } from "../../../components/UI/buttons/AddButton/AddButton";
 import type { Post } from "../../../types/Post";
+import type { SortOption } from "../../../hooks/usePosts";
+import arrowBottomIcon from "../../../assets/arrow-bottom.svg";
 import styles from "./PostsList.module.scss";
 
 interface PostsListProps {
   posts: Post[];
   fandomName?: string;
   isAuthenticated: boolean;
+  sortOption: SortOption;
   onPostClick: (postId: number) => void;
   onReaction: (postId: number, reactionType: "like" | "dislike") => void;
   onAddPost: () => void;
+  onSortChange: (option: SortOption) => void;
 }
 
 export const PostsList: FC<PostsListProps> = ({
   posts,
   fandomName,
   isAuthenticated,
+  sortOption,
   onPostClick,
   onReaction,
   onAddPost,
+  onSortChange,
 }) => {
   return (
     <main className={styles.content}>
@@ -30,6 +36,22 @@ export const PostsList: FC<PostsListProps> = ({
           <span className={styles.fandomName}>{fandomName}</span>
         </div>
       )}
+
+      <div className={styles.topSection}>
+        <div className={styles.sortWrapper}>
+          <label className={styles.sortLabel}>Sort by:</label>
+          <select 
+            className={styles.sortSelect}
+            value={sortOption}
+            onChange={(e) => onSortChange(e.target.value as SortOption)}
+            style={{ '--arrow-icon': `url(${arrowBottomIcon})` } as React.CSSProperties}
+          >
+            <option value="default">Default</option>
+            <option value="reactions-desc">Most Reactions</option>
+            <option value="reactions-asc">Least Reactions</option>
+          </select>
+        </div>
+      </div>
 
       <div className={styles.sectionHeader}>
         <SectionTitle title="Posts" />

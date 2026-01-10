@@ -121,20 +121,20 @@ const LoginForm: FC<LoginFormProps> = ({
         <div className={styles.inputGroup}>
           <Input
             type="text"
-            placeholder="Username"
+            placeholder="Login"
             {...register("login", {
-              required: "Username is required",
+              required: "Login is required",
               minLength: {
                 value: 3,
-                message: "Username must be at least 3 characters long"
+                message: "Login must be at least 3 characters long"
               },
               maxLength: {
                 value: 20,
-                message: "Username must be less than 20 characters"
+                message: "Login must be less than 20 characters"
               },
               pattern: {
                 value: /^[a-zA-Z0-9_]+$/,
-                message: "Username can only contain eng letters, numbers and underscores"
+                message: "Login can only contain eng letters, numbers and underscores"
               }
             })}
             className={errors.login ? styles.inputError : ""}

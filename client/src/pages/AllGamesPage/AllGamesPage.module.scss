@@ -32,6 +32,57 @@
       flex-shrink: 0;
     }
     
+    .sortWrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-shrink: 0;
+      
+      .sortLabel {
+        color: white;
+        font-size: 1.0rem;
+        white-space: nowrap;
+      }
+      
+      .sortSelect {
+        background: rgba(255, 255, 255, 0.907);
+        border: none;
+        border-radius: 25px;
+        color: rgb(0, 0, 0);
+        padding: 0.4rem 1rem;
+        font-size: medium;
+        font-weight: 600;
+        cursor: pointer;
+        outline: none;
+        text-align: center;
+        appearance: none; /* убираем стандартный вид */
+        -webkit-appearance: none;
+        -moz-appearance: none;
+  
+      /* Добавляем кастомную стрелку */
+        background-image: var(--arrow-icon, url("../../assets/arrow-bottom.svg"));
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1em;
+        padding-right: 2.5rem;
+        
+        &:hover {
+          background: rgb(189, 143, 213); 
+        }
+        
+        &:focus {
+          background: rgba(255, 255, 255, 0.907);
+        }
+        
+        .option {
+          background: rgb(89, 18, 156);
+          color: white;
+          padding: 10px;
+          border: 2px solid rgb(189, 143, 213); /* граница вокруг опций */
+        }
+      }
+    }
+    
     .searchWrapper {
       flex: 1;
       max-width: 400px;

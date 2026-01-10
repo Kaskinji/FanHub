@@ -5,12 +5,18 @@ import styles from "./PostFull.module.scss";
 import type { Post, Comment as CommentType } from "../../../types/Post";
 import PostComments from "../PostComments/PostComments";
 import closeSign from "../../../assets/closeSign.svg"
+import likeIcon from "../../../assets/like.svg";
+import deleteIcon from "../../../assets/delete.svg"
+import editIcon from "../../../assets/edit.svg"
+import dislikeIcon from "../../../assets/dislike.svg";
 
 interface PostFullProps {
   post: Post;
   comments: CommentType[];
   onClose: () => void;
   onAddComment?: (content: string) => Promise<void>;
+  onUpdateComment?: (commentId: number, updatedComment: CommentType) => void;
+  onDeleteComment?: (commentId: number) => void;
   onReaction?: (postId: number, reactionType: "like" | "dislike") => void;
   isAddingComment?: boolean;
   isLoadingComments?: boolean;
@@ -23,6 +29,8 @@ const PostFull: FC<PostFullProps> = ({
   comments,
   onClose,
   onAddComment,
+  onUpdateComment,
+  onDeleteComment,
   onReaction,
   isAddingComment = false,
   isLoadingComments = false,
@@ -82,7 +90,11 @@ const PostFull: FC<PostFullProps> = ({
                     onClick={onEdit}
                     title="Edit post"
                   >
-                    ✏️
+                    <img 
+                  src={editIcon} 
+                  alt={"edit"}
+                  className={styles.buttonIcon}
+                />
                   </button>
                 )}
                 {onDelete && (
@@ -91,7 +103,11 @@ const PostFull: FC<PostFullProps> = ({
                     onClick={onDelete}
                     title="Delete post"
                   >
-                    🗑️
+                    <img 
+                  src={deleteIcon} 
+                  alt={"delete"}
+                  className={styles.buttonIcon}
+                />
                   </button>
                 )}
               </div>
@@ -130,7 +146,12 @@ const PostFull: FC<PostFullProps> = ({
                 onClick={() => handleReaction(reactionType)}
                 disabled={!onReaction}
               >
-                {getReactionEmoji(reactionType)} {reaction.count}
+                <img 
+                  src={reactionType === "like" ? likeIcon : dislikeIcon} 
+                  alt={reactionType === "like" ? "like" : "dislike"}
+                  className={styles.reactionIcon}
+                />
+                {reaction.count}
               </button>
             );
           })}
@@ -140,20 +161,14 @@ const PostFull: FC<PostFullProps> = ({
           comments={comments}
           postId={post.id}
           onAddComment={onAddComment}
+          onUpdateComment={onUpdateComment}
+          onDeleteComment={onDeleteComment}
           isAddingComment={isAddingComment}
           isLoadingComments={isLoadingComments}
         />
       </div>
     </div>
   );
-};
-
-const getReactionEmoji = (type: string) => {
-  const emojis: Record<string, string> = {
-    like: '👍',
-    dislike: '👎'
-  };
-  return emojis[type] || '👍';
 };
 
 export default PostFull;
