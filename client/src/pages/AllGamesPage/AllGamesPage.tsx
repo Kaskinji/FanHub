@@ -12,7 +12,7 @@ import type { GameReadDto } from "../../api/GameApi";
 import { useAuth } from "../../hooks/useAuth";
 import { Role } from "../../types/enums/Roles";
 import GameForm from "../../pages/AllGamesPage/GameForm/GameForm";
-import arrowBottomIcon from "../../assets/arrow-bottom.svg";
+import { CustomSelect } from "../../components/UI/CustomSelect/CustomSelect";
 
 
 export default function AllGamesPage() {
@@ -254,7 +254,11 @@ interface TopProps {
 
 function Top({ onSearch, onToggleFilter, showGenreFilter, searchQuery, sortOption, onSortChange }: TopProps) {
   const [searchValue, setSearchValue] = useState(searchQuery);
-  const [isSelectOpen, setIsSelectOpen] = useState(false);
+  const sortOptions = [
+    { value: "default", label: "Default" },
+    { value: "date-desc", label: "Newest First" },
+    { value: "date-asc", label: "Oldest First" },
+  ];
 
   // Синхронизируем локальное состояние с пропом (например, при сбросе фильтров)
   useEffect(() => {
@@ -270,50 +274,18 @@ function Top({ onSearch, onToggleFilter, showGenreFilter, searchQuery, sortOptio
     onSearch(query);
   };
 
-  const handleSelectFocus = () => {
-    setIsSelectOpen(true);
-  };
-
-  const handleSelectBlur = () => {
-    // Небольшая задержка для корректной работы
-    setTimeout(() => {
-      setIsSelectOpen(false);
-    }, 0);
-  };
-
-  const handleSelectMouseDown = () => {
-    // При mousedown переключаем состояние для отслеживания открытия/закрытия
-    setIsSelectOpen(prev => !prev);
-  };
-
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    onSortChange(e.target.value as 'default' | 'date-asc' | 'date-desc');
-    // Закрываем после выбора
-    setTimeout(() => setIsSelectOpen(false), 100);
-  };
-
   return (
     <div className={styles.top}>
       <div className={styles.topHeader}>
         <h1 className={styles.pageTitle}></h1>
        
         <div className={styles.controls}>
-        <div className={styles.sortWrapper}>
-            <label className={styles.sortLabel}>Sort by:</label>
-            <select 
-              className={`${styles.sortSelect} ${isSelectOpen ? styles.selectOpen : ''}`}
-              value={sortOption}
-              onChange={handleSelectChange}
-              onFocus={handleSelectFocus}
-              onBlur={handleSelectBlur}
-              onMouseDown={handleSelectMouseDown}
-              style={{ '--arrow-icon': `url(${arrowBottomIcon})` } as React.CSSProperties}
-            >
-                <option value="default">Default</option>
-                <option value="date-desc">Newest First</option>
-                <option value="date-asc">Oldest First</option>
-            </select>
-          </div>
+        <CustomSelect
+            label="Sort by:"
+            options={sortOptions}
+            value={sortOption}
+            onChange={(value) => onSortChange(value as 'default' | 'date-asc' | 'date-desc')}
+          />
           <Button
             variant={"light"}
             onClick={onToggleFilter}
@@ -362,7 +334,15 @@ function Games({ games, gamesData, loading,  isAdmin, onAddGameClick  }: AllGame
   if (games.length === 0 && !loading) {
     return (
       <section className={styles.gamesSection}>
-        <SectionTitle title="Games" />
+        <div className={styles.sectionHeader}>
+          <SectionTitle title="Games" />
+          {isAdmin && (
+            <AddButton
+              text="Add"
+              onClick={onAddGameClick}
+            />
+          )}
+        </div>
         <div className={styles.noGames}>
           <p>No games found</p>
         </div>
