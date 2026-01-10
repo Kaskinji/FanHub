@@ -151,11 +151,87 @@ export const useSelectedPost = ({
     [selectedPostId]
   );
 
+  const updateComment = useCallback(
+    (commentId: number, updatedComment: CommentType) => {
+      const updateCommentInTree = (comments: CommentType[]): CommentType[] => {
+        return comments.map((comment) => {
+          if (comment.id === commentId) {
+            return {
+              ...updatedComment,
+              replies: comment.replies || updatedComment.replies || [],
+            };
+          }
+          if (comment.replies && comment.replies.length > 0) {
+            return {
+              ...comment,
+              replies: updateCommentInTree(comment.replies),
+            };
+          }
+          return comment;
+        });
+      };
+
+      setSelectedPostComments((prev) => {
+        const updated = updateCommentInTree(prev);
+        const totalCommentsCount = countAllComments(updated);
+        
+        setSelectedPost((currentPost) =>
+          currentPost
+            ? {
+                ...currentPost,
+                commentCount: totalCommentsCount,
+              }
+            : null
+        );
+        
+        return updated;
+      });
+    },
+    []
+  );
+
+  const deleteComment = useCallback(
+    (commentId: number) => {
+      const deleteCommentFromTree = (comments: CommentType[]): CommentType[] => {
+        return comments
+          .filter((comment) => comment.id !== commentId)
+          .map((comment) => {
+            if (comment.replies && comment.replies.length > 0) {
+              return {
+                ...comment,
+                replies: deleteCommentFromTree(comment.replies),
+              };
+            }
+            return comment;
+          });
+      };
+
+      setSelectedPostComments((prev) => {
+        const updated = deleteCommentFromTree(prev);
+        const totalCommentsCount = countAllComments(updated);
+        
+        setSelectedPost((currentPost) =>
+          currentPost
+            ? {
+                ...currentPost,
+                commentCount: totalCommentsCount,
+              }
+            : null
+        );
+        
+        return updated;
+      });
+    },
+    []
+  );
+
   return {
     selectedPost,
     selectedPostComments,
     loadingComments,
     addComment,
+    updateComment,
+    deleteComment,
     setSelectedPost,
   };
 };

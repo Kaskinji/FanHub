@@ -41,6 +41,8 @@ export default function PostsPage() {
     selectedPostComments,
     loadingComments,
     addComment,
+    updateComment,
+    deleteComment,
     setSelectedPost,
   } = useSelectedPost({
     selectedPostId,
@@ -182,6 +184,8 @@ export default function PostsPage() {
           comments={selectedPostComments}
           onClose={() => setSelectedPostId(null)}
           onAddComment={isAuthenticated ? handleAddComment : undefined}
+          onUpdateComment={isAuthenticated ? updateComment : undefined}
+          onDeleteComment={isAuthenticated ? deleteComment : undefined}
           onReaction={isAuthenticated ? handleReaction : undefined}
           isAddingComment={isAddingComment}
           isLoadingComments={loadingComments}

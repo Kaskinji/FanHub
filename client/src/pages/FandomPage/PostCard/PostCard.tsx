@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FirstLetter } from "../../../components/UI/FirstLetter/FirstLetter";
 import styles from "./PostCard.module.scss";
+import likeIcon from "../../../assets/like.svg";
+import dislikeIcon from "../../../assets/dislike.svg";
 
 interface PostCardProps {
   id: number;
@@ -60,7 +62,12 @@ export function PostCard({ id, title, image, author, reactions, fandomId, fandom
           <div className={styles.reactions}>
             {reactions?.map((reaction, index) => (
               <span key={index} className={styles.reaction}>
-                {reaction.type === "like" ? "👍" : "👎"} {reaction.count}
+                <img 
+                  src={reaction.type === "like" ? likeIcon : dislikeIcon} 
+                  alt={reaction.type === "like" ? "like" : "dislike"}
+                  className={styles.reactionIcon}
+                />
+                {reaction.count}
               </span>
             ))}
           </div>

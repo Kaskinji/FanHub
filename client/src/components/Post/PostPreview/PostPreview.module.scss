@@ -191,8 +191,15 @@
   }
   
   &.active {
-    background: rgba(156, 33, 209, 0.595);
+    background: rgba(215, 166, 236, 0.595);
     color: #690a7e;
     border-color: rgba(160, 16, 193, 0.3);
   }
+}
+
+.reactionIcon {
+  width: 20px;
+  height: 20px;
+  display: block;
+  flex-shrink: 0;
 }

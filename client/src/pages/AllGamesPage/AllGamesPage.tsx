@@ -12,6 +12,7 @@ import type { GameReadDto } from "../../api/GameApi";
 import { useAuth } from "../../hooks/useAuth";
 import { Role } from "../../types/enums/Roles";
 import GameForm from "../../pages/AllGamesPage/GameForm/GameForm";
+import arrowBottomIcon from "../../assets/arrow-bottom.svg";
 
 
 export default function AllGamesPage() {
@@ -23,18 +24,19 @@ export default function AllGamesPage() {
     genres,
     selectedGenre,
     showGenreFilter,
+    sortOption,
     loadGames,
     searchGames,
     filterByGenre,
     toggleGenreFilter,
     resetFilters,
-    clearError
+    clearError,
+    setSort
   } = useGames();
 
   const { user } = useAuth();
   const isAdmin = user?.role === Role.Admin;
   const [showGameForm, setShowGameForm] = useState(false);
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   useEffect(() => {
     loadGames();
@@ -51,7 +53,7 @@ export default function AllGamesPage() {
 
   const handleGameCreated = () => {
     setShowGameForm(false);
-    setRefreshTrigger(prev => prev + 1);
+    loadGames(); // Перезагружаем игры после создания
   };
 
   if (error) {
@@ -90,10 +92,12 @@ export default function AllGamesPage() {
         isAdmin={isAdmin}
         selectedGenre={selectedGenre}
         showGenreFilter={showGenreFilter}
+        sortOption={sortOption}
         onSearch={handleSearch}
         onGenreSelect={handleGenreSelect}
         onToggleFilter={toggleGenreFilter}
         onResetFilters={resetFilters}
+        onSortChange={setSort}
         onAddGameClick={() => setShowGameForm(true)}
       />
     </div>
@@ -109,10 +113,12 @@ interface ContentProps {
   isAdmin: boolean;
   selectedGenre: string;
   showGenreFilter: boolean;
+  sortOption: 'default' | 'date-asc' | 'date-desc';
   onSearch: (query: string) => void;
   onGenreSelect: (genre: string) => void;
   onToggleFilter: () => void;
   onResetFilters: () => void;
+  onSortChange: (option: 'default' | 'date-asc' | 'date-desc') => void;
   onAddGameClick: () => void;
 }
 function Content({   
@@ -122,11 +128,13 @@ function Content({
   genres, 
   selectedGenre, 
   showGenreFilter,
+  sortOption,
   isAdmin,
   onSearch, 
   onGenreSelect,
   onToggleFilter,
   onResetFilters,
+  onSortChange,
   onAddGameClick   
 }: ContentProps) {
   return (
@@ -135,6 +143,8 @@ function Content({
         onSearch={onSearch}
         onToggleFilter={onToggleFilter}
         showGenreFilter={showGenreFilter}
+        sortOption={sortOption}
+        onSortChange={onSortChange}
       />
       
       {/* Фильтр по жанрам (показывается/скрывается) */}
@@ -228,15 +238,30 @@ interface TopProps {
   onSearch: (query: string) => void;
   onToggleFilter: () => void;
   showGenreFilter: boolean;
+  sortOption: 'default' | 'date-asc' | 'date-desc';
+  onSortChange: (option: 'default' | 'date-asc' | 'date-desc') => void;
 }
 
-function Top({ onSearch, onToggleFilter, showGenreFilter }: TopProps) {
+function Top({ onSearch, onToggleFilter, showGenreFilter, sortOption, onSortChange }: TopProps) {
   return (
     <div className={styles.top}>
       <div className={styles.topHeader}>
         <h1 className={styles.pageTitle}></h1>
        
         <div className={styles.controls}>
+        <div className={styles.sortWrapper}>
+            <label className={styles.sortLabel}>Sort by:</label>
+            <select 
+              className={styles.sortSelect}
+              value={sortOption}
+              onChange={(e) => onSortChange(e.target.value as 'default' | 'date-asc' | 'date-desc')}
+              style={{ '--arrow-icon': `url(${arrowBottomIcon})` } as React.CSSProperties}
+            >
+                <option value="default">Default</option>
+                <option value="date-desc">Newest First</option>
+                <option value="date-asc">Oldest First</option>
+            </select>
+          </div>
           <Button
             variant={"light"}
             onClick={onToggleFilter}
@@ -244,6 +269,7 @@ function Top({ onSearch, onToggleFilter, showGenreFilter }: TopProps) {
           >
             {showGenreFilter ? "Hide Filters" : "Filter by Genre"}
           </Button>
+          
           <div className={styles.searchWrapper}>
             <SearchInput 
               placeholder="Search games..."

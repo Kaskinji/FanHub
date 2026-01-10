@@ -9,6 +9,8 @@ interface PostCommentsProps {
   comments: CommentType[];
   postId: number;
   onAddComment?: (content: string) => Promise<void>;
+  onUpdateComment?: (commentId: number, updatedComment: CommentType) => void;
+  onDeleteComment?: (commentId: number) => void;
   isAddingComment?: boolean;
   isLoadingComments?: boolean;
 }
@@ -17,6 +19,8 @@ const PostComments: FC<PostCommentsProps> = ({
   comments,
   postId,
   onAddComment,
+  onUpdateComment,
+  onDeleteComment,
   isAddingComment = false,
   isLoadingComments = false
 }) => {
@@ -62,6 +66,8 @@ const PostComments: FC<PostCommentsProps> = ({
               key={comment.id}
               comment={comment}
               onReply={handleReply}
+              onUpdate={onUpdateComment}
+              onDelete={onDeleteComment}
             />
           ))
         )}
