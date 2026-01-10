@@ -19,11 +19,10 @@ import notificationAlertIcon from "../../assets/notification-alert.svg";
 
 interface HeaderProps {
   onSearch: (query: string) => void;
-  onSignIn?: () => void; // Сделаем необязательным
   allGames?: GameReadDto[]; // Все загруженные игры для локального поиска
 }
 
-const Header: FC<HeaderProps> = ({ onSearch, onSignIn, allGames }) => {
+const Header: FC<HeaderProps> = ({ onSearch, allGames }) => {
   const navigate = useNavigate();
   const { isAuthenticated, user, isLoading } = useAuth();
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
@@ -50,13 +49,7 @@ const Header: FC<HeaderProps> = ({ onSearch, onSignIn, allGames }) => {
 
   // Функция для входа
   const handleSignIn = () => {
-    if (onSignIn) {
-      // Если передали извне - используем кастомную логику
-      onSignIn();
-    } else {
-      // Иначе используем навигацию по умолчанию
-      navigate("/login");
-    }
+    navigate("/login");
   };
 
   const handleNotificationClick = (e: React.MouseEvent) => {

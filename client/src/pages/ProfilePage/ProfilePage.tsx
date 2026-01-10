@@ -30,7 +30,7 @@ export const ProfilePage: FC = () => {
   if (authLoading || pageLoading) {
     return (
       <div className={styles.page}>
-        <Header onSearch={() => {}} onSignIn={() => {}} />
+        <Header onSearch={() => {}} />
       </div>
     );
   }
@@ -38,7 +38,7 @@ export const ProfilePage: FC = () => {
   if (!user) {
     return (
       <div className={styles.page}>
-        <Header onSearch={() => {}} onSignIn={() => {}} />
+        <Header onSearch={() => {}} />
         <div className={styles.content}>
           <div className={styles.error}>
             <h3>User not found</h3>
@@ -94,7 +94,7 @@ export const ProfilePage: FC = () => {
 
   return (
     <div className={styles.page}>
-      <Header onSearch={() => {}} onSignIn={() => {}} />
+      <Header onSearch={() => {}} />
       <div className={styles.content}>
         {isEditing ? (
           <ProfileEditCard
