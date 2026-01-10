@@ -1,5 +1,5 @@
 // components/Post/PostComments.tsx
-import { useState, type FC } from "react";
+import { type FC } from "react";
 import styles from "./PostComments.module.scss";
 import type { Comment as CommentType } from "../../../types/Post";
 import Comment from "../Comment/Comment";
@@ -7,7 +7,6 @@ import CommentCreator from "../Comment/CommentCreator/CommentCreator";
 
 interface PostCommentsProps {
   comments: CommentType[];
-  postId: number;
   onAddComment?: (content: string) => Promise<void>;
   onUpdateComment?: (commentId: number, updatedComment: CommentType) => void;
   onDeleteComment?: (commentId: number) => void;
@@ -17,24 +16,16 @@ interface PostCommentsProps {
 
 const PostComments: FC<PostCommentsProps> = ({
   comments,
-  postId,
   onAddComment,
   onUpdateComment,
   onDeleteComment,
   isAddingComment = false,
   isLoadingComments = false
 }) => {
-  const [replyingTo, setReplyingTo] = useState<number | null>(null);
-
   const handleAddComment = async (content: string) => {
     if (onAddComment) {
       await onAddComment(content);
-      setReplyingTo(null);
     }
-  };
-
-  const handleReply = (commentId: number) => {
-    setReplyingTo(commentId);
   };
 
   return (
@@ -47,7 +38,6 @@ const PostComments: FC<PostCommentsProps> = ({
         <CommentCreator
           onSubmit={handleAddComment}
           isSubmitting={isAddingComment}
-          replyingTo={replyingTo ? comments.find(c => c.id === replyingTo) : null}
         />
       )}
       
@@ -65,7 +55,6 @@ const PostComments: FC<PostCommentsProps> = ({
             <Comment
               key={comment.id}
               comment={comment}
-              onReply={handleReply}
               onUpdate={onUpdateComment}
               onDelete={onDeleteComment}
             />

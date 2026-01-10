@@ -347,18 +347,19 @@ interface AllGamesProps {
   onAddGameClick: () => void;
 }
 function Games({ games, gamesData, loading,  isAdmin, onAddGameClick  }: AllGamesProps) {
-  if (loading) {
-    return (
-      <section className={styles.gamesSection}>
-        
-        <div className={styles.loadingContainer}>
-          <div className={styles.loadingSpinner}></div>
-          <p>Loading games...</p>
+  // Функция для рендеринга skeleton-карточек игр
+  const renderGameSkeletons = (count: number = 6) => {
+    return Array.from({ length: count }).map((_, index) => (
+      <div key={`game-skeleton-${index}`} className={styles.gameSkeleton}>
+        <div className={styles.gameSkeletonImage} />
+        <div className={styles.gameSkeletonOverlay}>
+          <div className={styles.gameSkeletonTitle} />
         </div>
-      </section>
-    );
-  }
-  if (games.length === 0) {
+      </div>
+    ));
+  };
+
+  if (games.length === 0 && !loading) {
     return (
       <section className={styles.gamesSection}>
         <SectionTitle title="Games" />
@@ -368,11 +369,12 @@ function Games({ games, gamesData, loading,  isAdmin, onAddGameClick  }: AllGame
       </section>
     );
   }
+  
   return (
     <section className={styles.gamesSection}>
       <div className={styles.sectionHeader}>
         <SectionTitle title="Games" />
-        {isAdmin && (
+        {isAdmin && !loading && (
           <AddButton
             text="Add"
             onClick={onAddGameClick}
@@ -380,16 +382,20 @@ function Games({ games, gamesData, loading,  isAdmin, onAddGameClick  }: AllGame
         )}
       </div>
       <div className={styles.gamesGrid}>
-        {games.map((gamePreview) => {
-          const gameFull = gamesData.find(g => g.id === gamePreview.id);
-          return (
-            <GameCard
-              key={gamePreview.id}
-              gamePreview={gamePreview}
-              gameFull={gameFull}
-            />
-          );
-        })}
+        {loading ? (
+          renderGameSkeletons(6)
+        ) : (
+          games.map((gamePreview) => {
+            const gameFull = gamesData.find(g => g.id === gamePreview.id);
+            return (
+              <GameCard
+                key={gamePreview.id}
+                gamePreview={gamePreview}
+                gameFull={gameFull}
+              />
+            );
+          })
+        )}
       </div>
     </section>
   );

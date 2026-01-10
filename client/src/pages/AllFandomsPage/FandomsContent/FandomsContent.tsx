@@ -30,31 +30,17 @@ export const FandomsContent = ({
     imageUrl: fandom.coverImage ? getImageUrl(fandom.coverImage) : undefined, 
   });
 
-  if (loading) {
-    return (
-      <section className={styles.fandomsSection}>
-        <SectionTitle title="Fandoms" />
-        <div className={styles.loadingState}>
-          <div className={styles.loadingSpinner}></div>
-          <p>Loading fandoms...</p>
+  // Функция для рендеринга skeleton-карточек фандомов
+  const renderFandomSkeletons = (count: number = 6) => {
+    return Array.from({ length: count }).map((_, index) => (
+      <div key={`fandom-skeleton-${index}`} className={styles.fandomSkeleton}>
+        <div className={styles.fandomSkeletonImage} />
+        <div className={styles.fandomSkeletonOverlay}>
+          <div className={styles.fandomSkeletonTitle} />
         </div>
-      </section>
-    );
-  }
-
-  if (error) {
-    return (
-      <section className={styles.fandomsSection}>
-        <div className={styles.sectionHeader}>
-        <SectionTitle title="Fandoms" />
-
-        </div>
-       
-          <ErrorState error={error} onRetry={() => window.location.reload()} />
-        
-      </section>
-    );
-  }
+      </div>
+    ));
+  };
 
   const hasFandoms = fandoms.length > 0;
 
@@ -62,8 +48,8 @@ export const FandomsContent = ({
     <section className={styles.fandomsSection}>
       {/* Заголовок с кнопкой добавления */}
       <div className={styles.sectionHeader}>
-        <SectionTitle title={`Fandoms ${hasFandoms ? `(${fandoms.length})` : ''}`} />
-        {onAddFandomClick && (
+        <SectionTitle title={`Fandoms ${hasFandoms && !loading ? `(${fandoms.length})` : ''}`} />
+        {onAddFandomClick && !loading && (
           <AddButton
             text="Add"
             onClick={onAddFandomClick}
@@ -71,8 +57,16 @@ export const FandomsContent = ({
         )}
       </div>
 
-      {/* Пустое состояние */}
-      {!hasFandoms ? (
+      {/* Состояние ошибки */}
+      {error ? (
+        <ErrorState error={error} onRetry={() => window.location.reload()} />
+      ) : loading ? (
+        /* Skeleton при загрузке */
+        <div className={styles.fandomsGrid}>
+          {renderFandomSkeletons(6)}
+        </div>
+      ) : !hasFandoms ? (
+        /* Пустое состояние */
         <div className={styles.emptyState}>
           <p>No fandoms found</p>
         </div>

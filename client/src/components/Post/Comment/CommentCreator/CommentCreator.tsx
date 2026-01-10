@@ -1,43 +1,18 @@
 // components/Comment/CommentCreator.tsx
-import { useState, type FC, useRef, useCallback } from "react";
+import { useState, type FC, useRef } from "react";
 import styles from "../CommentCreator/CommentCreator.module.scss";
-import type { Comment as CommentType } from "../../../../types/Post";
-import React from "react";
+
 interface CommentCreatorProps {
   onSubmit: (content: string) => Promise<void>;
   isSubmitting?: boolean;
-  replyingTo?: CommentType | null;
 }
 
 const CommentCreator: FC<CommentCreatorProps> = ({ 
   onSubmit, 
-  isSubmitting = false,
-  replyingTo = null 
+  isSubmitting = false
 }) => {
   const [commentText, setCommentText] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  const focusTextarea = useCallback(() => {
-    if (textareaRef.current) {
-      textareaRef.current.focus();
-      textareaRef.current.setSelectionRange(
-        textareaRef.current.value.length,
-        textareaRef.current.value.length
-      );
-    }
-  }, []);
-
-  const handleReplyingToChange = useCallback(() => {
-    if (replyingTo) {
-      const newText = `@${replyingTo.author.username} `;
-      setCommentText(newText);
-      setTimeout(focusTextarea, 0);
-    }
-  }, [replyingTo, focusTextarea]);
-
-  React.useEffect(() => {
-    handleReplyingToChange();
-  }, [handleReplyingToChange]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

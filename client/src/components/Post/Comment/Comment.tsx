@@ -9,13 +9,12 @@ import deleteIcon from "../../../assets/delete.svg";
 
 interface CommentProps {
   comment: CommentType;
-  onReply?: (commentId: number) => void;
   onUpdate?: (commentId: number, updatedComment: CommentType) => void;
   onDelete?: (commentId: number) => void;
   className?: string;
 }
 
-const Comment: FC<CommentProps> = ({ comment, onReply, onUpdate, onDelete, className }) => {
+const Comment: FC<CommentProps> = ({ comment, onUpdate, onDelete, className }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -23,7 +22,7 @@ const Comment: FC<CommentProps> = ({ comment, onReply, onUpdate, onDelete, class
   const [isDeletingInProgress, setIsDeletingInProgress] = useState(false);
 
   const currentUserId = Number(localStorage.getItem('user_id'));
-  const isAuthor = currentUserId && comment.author.id === currentUserId;
+  const isAuthor = Boolean(currentUserId) && comment.author.id === currentUserId;
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -187,20 +186,7 @@ const Comment: FC<CommentProps> = ({ comment, onReply, onUpdate, onDelete, class
           )}
         </div>
 
-          {comment.replies && comment.replies.length > 0 && (
-            <div className={styles.replies}>
-              {comment.replies.map((reply) => (
-                <Comment
-                  key={reply.id}
-                  comment={reply}
-                  onReply={onReply}
-                  onUpdate={onUpdate}
-                  onDelete={onDelete}
-                  className={styles.nestedComment}
-                />
-              ))}
-            </div>
-          )}
+          
         </div>
       </div>
 

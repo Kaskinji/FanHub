@@ -131,7 +131,7 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
   }, [performSearch]);
 
   // Обработчик отправки формы поиска
-  const handleSearchSubmit = useCallback((query: string) => {
+  const handleSearchSubmit = useCallback(() => {
     onSearch();
     setSearchQuery("");
     setSearchResults([]);

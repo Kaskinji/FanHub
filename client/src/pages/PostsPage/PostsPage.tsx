@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Header from "../../components/Header/Header";
 import PostFull from "../../components/Post/PostFull/PostFull";
 import PostForm from "./PostForm/PostForm";
@@ -22,6 +22,8 @@ export default function PostsPage() {
   const [showPostForm, setShowPostForm] = useState(false);
   const [editingPostId, setEditingPostId] = useState<number | null>(null);
   const [isAddingComment, setIsAddingComment] = useState(false);
+  // Флаг, чтобы отследить, был ли уже обработан postId из location.state
+  const hasProcessedInitialPostId = useRef(false);
 
   const {
     posts,
@@ -67,13 +69,18 @@ export default function PostsPage() {
     onPostUpdate: handlePostUpdate,
   });
 
+  // Устанавливаем selectedPostId после загрузки постов (только один раз при монтировании)
   useEffect(() => {
-    if (postsData?.postId) {
-      setTimeout(() => {
+    if (postsData?.postId && !loading && !hasProcessedInitialPostId.current) {
+      // Устанавливаем ID поста после завершения загрузки
+      // useSelectedPost сам проверит наличие поста в списке или загрузит через API
+      hasProcessedInitialPostId.current = true;
+      const timer = setTimeout(() => {
         setSelectedPostId(postsData.postId!);
-      }, 100);
+      }, 300); // Задержка, чтобы убедиться, что postsRef обновлен после загрузки
+      return () => clearTimeout(timer);
     }
-  }, [postsData?.postId]);
+  }, [postsData?.postId, loading]);
 
   const handleAddComment = async (content: string) => {
     if (!selectedPostId) return;
@@ -147,17 +154,6 @@ export default function PostsPage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className={styles.page}>
-        <Header onSearch={() => {}} onSignIn={() => {}} />
-        <div className={styles.loading}>
-          <p>Loading posts...</p>
-        </div>
-      </div>
-    );
-  }
-
   if (error) {
     return (
       <div className={styles.page}>
@@ -173,6 +169,7 @@ export default function PostsPage() {
 
       <PostsList
         posts={posts}
+        loading={loading}
         fandomName={postsData?.fandomName}
         isAuthenticated={isAuthenticated}
         sortOption={sortOption}

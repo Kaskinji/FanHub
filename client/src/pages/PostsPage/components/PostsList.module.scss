@@ -107,3 +107,134 @@
   font-size: 1.1rem;
 }
 
+// Стили для skeleton-карточек постов
+.postSkeleton {
+  background: rgba(254, 254, 254);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  animation: pulse 1.5s infinite;
+}
+
+.postSkeletonImageContainer {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+}
+
+.postSkeletonImage {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.postSkeletonCategory {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 80px;
+  height: 28px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+}
+
+.postSkeletonContent {
+  padding: 1.5rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.postSkeletonTitle {
+  width: 85%;
+  height: 32px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.postSkeletonExcerpt {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.postSkeletonLine {
+  width: 100%;
+  height: 14px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 3px;
+}
+
+.postSkeletonLineShort {
+  width: 70%;
+  height: 14px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 3px;
+}
+
+.postSkeletonMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding-top: 1rem;
+}
+
+.postSkeletonAuthor {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.postSkeletonAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.postSkeletonUsername {
+  width: 80px;
+  height: 16px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 3px;
+}
+
+.postSkeletonStats {
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+}
+
+.postSkeletonReaction {
+  width: 50px;
+  height: 28px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 20px;
+}
+
+.postSkeletonComment {
+  width: 40px;
+  height: 28px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 20px;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+

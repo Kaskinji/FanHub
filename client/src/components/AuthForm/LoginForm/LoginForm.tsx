@@ -111,7 +111,7 @@ const LoginForm: FC<LoginFormProps> = ({
   return (
     <div className={styles.loginForm}>
       <div className={styles.header}>
-        <Link to="/main">
+        <Link to="/">
           <Logo size="large" className={styles.logo} />
         </Link>
         <p className={styles.subtitle}>Sign In</p>

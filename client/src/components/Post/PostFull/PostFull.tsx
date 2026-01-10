@@ -38,7 +38,7 @@ const PostFull: FC<PostFullProps> = ({
   onDelete,
 }) => {
   const currentUserId = Number(localStorage.getItem('user_id'));
-  const isAuthor = currentUserId && post.author.id === currentUserId;
+  const isAuthor = Boolean(currentUserId) && post.author.id === currentUserId;
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -91,10 +91,10 @@ const PostFull: FC<PostFullProps> = ({
                     title="Edit post"
                   >
                     <img 
-                  src={editIcon} 
-                  alt={"edit"}
-                  className={styles.buttonIcon}
-                />
+                      src={editIcon} 
+                      alt={"edit"}
+                      className={styles.buttonIcon}
+                    />
                   </button>
                 )}
                 {onDelete && (
@@ -104,10 +104,10 @@ const PostFull: FC<PostFullProps> = ({
                     title="Delete post"
                   >
                     <img 
-                  src={deleteIcon} 
-                  alt={"delete"}
-                  className={styles.buttonIcon}
-                />
+                      src={deleteIcon} 
+                      alt={"delete"}
+                      className={styles.buttonIcon}
+                    />
                   </button>
                 )}
               </div>
@@ -159,7 +159,6 @@ const PostFull: FC<PostFullProps> = ({
         
         <PostComments
           comments={comments}
-          postId={post.id}
           onAddComment={onAddComment}
           onUpdateComment={onUpdateComment}
           onDeleteComment={onDeleteComment}

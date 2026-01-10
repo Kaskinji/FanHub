@@ -349,6 +349,76 @@
   }
 }
 
+// Стили для skeleton-карточек игр
+.gameSkeleton {
+  width: 200px;
+  height: 250px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #1e1e1e;
+  border: 2px solid rgba(111, 16, 199, 0.3);
+  position: relative;
+  animation: pulse 1.5s infinite;
+}
+
+.gameSkeletonImage {
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.gameSkeletonOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px 20px;
+  background: linear-gradient(to top, rgba(32, 2, 43, 0.8), transparent);
+  z-index: 2;
+}
+
+.gameSkeletonTitle {
+  width: 80%;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  margin-top: 8px;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.noGames {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 20px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
+}
+
 // Стили для карточек фандомов (адаптируем под референс)
 .gameCard {
   background: rgba(255, 255, 255, 0.1);

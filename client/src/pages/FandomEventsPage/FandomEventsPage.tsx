@@ -91,32 +91,28 @@ const FandomEventsPage = () => {
     setSelectedEvent(null);
   };
 
-  if (loading) {
-    return (
-      <div className={styles.page}>
-        <Header onSearch={handleSearch} />
-        <main className={styles.content}>
-          <div className={styles.loading}>Loading events...</div>
-        </main>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className={styles.page}>
-        <Header onSearch={handleSearch} />
-        <main className={styles.content}>
-          <div className={styles.error}>
-            <p>{error}</p>
-            <button className={styles.retryButton} onClick={() => window.location.reload()}>
-              Retry
-            </button>
+  // Функция для рендеринга skeleton-карточек событий
+  const renderEventSkeletons = (count: number = 3) => {
+    return Array.from({ length: count }).map((_, index) => (
+      <div key={`event-skeleton-${index}`} className={styles.eventSkeleton}>
+        <div className={styles.eventSkeletonImage} />
+        <div className={styles.eventSkeletonContent}>
+          <div className={styles.eventSkeletonTitleContainer}>
+            <div className={styles.eventSkeletonTitle} />
+            <div className={styles.eventSkeletonEditButton} />
           </div>
-        </main>
+          <div className={styles.eventSkeletonDescription}>
+            <div className={styles.eventSkeletonLine} />
+            <div className={styles.eventSkeletonLine} />
+            <div className={styles.eventSkeletonLineShort} />
+          </div>
+          <div className={styles.eventSkeletonFooter}>
+            <div className={styles.eventSkeletonStatus} />
+          </div>
+        </div>
       </div>
-    );
-  }
+    ));
+  };
 
   const fandomId = id ? parseInt(id, 10) : 0;
 
@@ -126,30 +122,41 @@ const FandomEventsPage = () => {
       <main className={styles.content}>
         <div className={styles.headerSection}>
           <SectionTitle title="Events"/>
-          {isCreator && (
+          {isCreator && !loading && (
             <AddButton 
               text="Add" 
               onClick={() => handleOpenEventForm()} 
             />
           )}
         </div>
-        <div className={styles.eventsList}>
-          {events.length === 0 ? (
-            <div className={styles.emptyState}>
-              <p>No events found for this fandom.</p>
-            </div>
-          ) : (
-            events.map((event) => (
-              <EventCard 
-                key={event.id} 
-                event={event} 
-                status={getEventStatus(event)}
-                onEdit={isCreator ? () => handleOpenEventForm(event.id) : undefined}
-                onClick={() => handleEventClick(event)}
-              />
-            ))
-          )}
-        </div>
+        {error ? (
+          <div className={styles.error}>
+            <p>{error}</p>
+            <button className={styles.retryButton} onClick={() => window.location.reload()}>
+              Retry
+            </button>
+          </div>
+        ) : (
+          <div className={styles.eventsList}>
+            {loading ? (
+              renderEventSkeletons(3)
+            ) : events.length === 0 ? (
+              <div className={styles.emptyState}>
+                <p>No events found for this fandom.</p>
+              </div>
+            ) : (
+              events.map((event) => (
+                <EventCard 
+                  key={event.id} 
+                  event={event} 
+                  status={getEventStatus(event)}
+                  onEdit={isCreator ? () => handleOpenEventForm(event.id) : undefined}
+                  onClick={() => handleEventClick(event)}
+                />
+              ))
+            )}
+          </div>
+        )}
       </main>
       {showEventForm && (
         <div className={styles.formOverlay}>

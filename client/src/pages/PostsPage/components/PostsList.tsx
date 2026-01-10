@@ -9,6 +9,7 @@ import styles from "./PostsList.module.scss";
 
 interface PostsListProps {
   posts: Post[];
+  loading?: boolean;
   fandomName?: string;
   isAuthenticated: boolean;
   sortOption: SortOption;
@@ -20,6 +21,7 @@ interface PostsListProps {
 
 export const PostsList: FC<PostsListProps> = ({
   posts,
+  loading = false,
   fandomName,
   isAuthenticated,
   sortOption,
@@ -28,6 +30,37 @@ export const PostsList: FC<PostsListProps> = ({
   onAddPost,
   onSortChange,
 }) => {
+  // Функция для рендеринга skeleton-карточек постов
+  const renderPostSkeletons = (count: number = 6) => {
+    return Array.from({ length: count }).map((_, index) => (
+      <div key={`post-skeleton-${index}`} className={styles.postSkeleton}>
+        <div className={styles.postSkeletonImageContainer}>
+          <div className={styles.postSkeletonImage} />
+          <div className={styles.postSkeletonCategory} />
+        </div>
+        <div className={styles.postSkeletonContent}>
+          <div className={styles.postSkeletonTitle} />
+          <div className={styles.postSkeletonExcerpt}>
+            <div className={styles.postSkeletonLine} />
+            <div className={styles.postSkeletonLine} />
+            <div className={styles.postSkeletonLineShort} />
+          </div>
+          <div className={styles.postSkeletonMeta}>
+            <div className={styles.postSkeletonAuthor}>
+              <div className={styles.postSkeletonAvatar} />
+              <div className={styles.postSkeletonUsername} />
+            </div>
+            <div className={styles.postSkeletonStats}>
+              <div className={styles.postSkeletonReaction} />
+              <div className={styles.postSkeletonReaction} />
+              <div className={styles.postSkeletonComment} />
+            </div>
+          </div>
+        </div>
+      </div>
+    ));
+  };
+
   return (
     <main className={styles.content}>
       {fandomName && (
@@ -55,13 +88,15 @@ export const PostsList: FC<PostsListProps> = ({
 
       <div className={styles.sectionHeader}>
         <SectionTitle title="Posts" />
-        {isAuthenticated && (
+        {isAuthenticated && !loading && (
           <AddButton className={styles.addButton} text="Add" onClick={onAddPost} />
         )}
       </div>
 
       <div className={styles.postsGrid}>
-        {posts.length === 0 ? (
+        {loading ? (
+          renderPostSkeletons(6)
+        ) : posts.length === 0 ? (
           <div className={styles.noPosts}>
             <p>No posts found for this fandom.</p>
           </div>
