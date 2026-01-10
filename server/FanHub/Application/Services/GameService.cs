@@ -64,5 +64,24 @@ namespace Application.Services
                 await _imageTools.TryDeleteImageAsync( entity.CoverImage );
             }
         }
+
+        public async Task<GameStatsDto> GetGameWithStatsById( int id )
+        {
+            Game? game = await _gameRepository.GetByIdWithStatsAsync( id );
+
+            if ( game is null )
+            {
+                throw new KeyNotFoundException( $"Game with id {id} is not found" );
+            }
+
+            return _mapper.Map<GameStatsDto>( game );
+        }
+
+        public async Task<List<GameStatsDto>> GetAllGamesWithStats()
+        {
+            List<Game> games = await _gameRepository.GetAllWithStatsAsync();
+
+            return _mapper.Map<List<GameStatsDto>>( games );
+        }
     }
 }

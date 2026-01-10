@@ -24,6 +24,14 @@ public class GameController : ControllerBase
         return Ok( games );
     }
 
+    [HttpGet( "with-stats" )]
+    public async Task<ActionResult<List<GameStatsDto>>> GetAllGamesWithStats()
+    {
+        List<GameStatsDto> games = await _gameService.GetAllGamesWithStats();
+
+        return Ok( games );
+    }
+
     [HttpGet( "game/name" )]
     public async Task<ActionResult<GameReadDto>> GetGameByName(
         [FromQuery] string name )
@@ -45,6 +53,14 @@ public class GameController : ControllerBase
     public async Task<ActionResult<GameReadDto>> GetGameById( int id )
     {
         GameReadDto game = await _gameService.GetById( id );
+
+        return Ok( game );
+    }
+
+    [HttpGet( "with-stats/{id}" )]
+    public async Task<ActionResult<GameStatsDto>> GetGameWithStatsById( int id )
+    {
+        GameStatsDto game = await _gameService.GetGameWithStatsById( id );
 
         return Ok( game );
     }

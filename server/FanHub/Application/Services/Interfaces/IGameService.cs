@@ -7,5 +7,7 @@ namespace Application.Services.Interfaces
     {
         Task<List<GameReadDto>> SearchGamesByNameAsync( string searchTerm );
         Task<List<GameReadDto>> SearchGamesByGenreAsync( string searchTerm );
+        Task<GameStatsDto> GetGameWithStatsById( int id );
+        Task<List<GameStatsDto>> GetAllGamesWithStats();
     }
 }

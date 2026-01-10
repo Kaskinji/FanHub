@@ -19,7 +19,6 @@ namespace WebApi.Controllers
             _mapper = mapper;
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<EventReadDto>>> GetEvents( [FromQuery] int? fandomId )
         {

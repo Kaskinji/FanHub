@@ -21,20 +21,20 @@ public class FandomController : ControllerBase
     }
 
     [HttpGet( "name" )]
-    public async Task<ActionResult<List<FandomReadDto>>> SearchFandomsByName(
+    public async Task<ActionResult<List<FandomStatsDto>>> SearchFandomsByName(
         [FromQuery] string name )
     {
-        IReadOnlyList<FandomReadDto> fandoms = await _fandomService.SearchByNameAsync( name );
+        IReadOnlyList<FandomStatsDto> fandoms = await _fandomService.SearchByNameAsync( name );
 
         return Ok( fandoms );
     }
 
     [HttpGet( "search/{gameId}" )]
-    public async Task<ActionResult<List<FandomReadDto>>> SearchFandomsByNameAndGame(
+    public async Task<ActionResult<List<FandomStatsDto>>> SearchFandomsByNameAndGame(
         [FromRoute] int gameId,
         [FromQuery] string? name = null )
     {
-        IReadOnlyList<FandomReadDto> fandoms = await _fandomService.SearchByNameAndGameIdAsync( name ?? "", gameId );
+        IReadOnlyList<FandomStatsDto> fandoms = await _fandomService.SearchByNameAndGameIdAsync( name ?? "", gameId );
 
         return Ok( fandoms );
     }

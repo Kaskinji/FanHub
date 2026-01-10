@@ -10,6 +10,10 @@ namespace Application.Mapping
         {
             CreateMap<Game, GameReadDto>();
 
+            CreateMap<Game, GameStatsDto>()
+                .ForMember( dest => dest.FandomsCount,
+                    opt => opt.MapFrom( src => src.Fandoms.Count ) );
+
             CreateMap<GameCreateDto, Game>();
 
             CreateMap<GameUpdateDto, Game>()

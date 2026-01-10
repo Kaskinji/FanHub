@@ -7,5 +7,7 @@ namespace Domain.Repositories
         Task<List<Game>> SearchGamesByNameAsync( string searchTerm );
         Task<List<Game>> SearchGamesByGenreAsync( string searchTerm );
         Task<bool> IsGameExistAsync( Game entity );
+        Task<Game?> GetByIdWithStatsAsync( int id );
+        Task<List<Game>> GetAllWithStatsAsync();
     }
 }

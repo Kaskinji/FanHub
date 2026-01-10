@@ -52,11 +52,11 @@ namespace Application.Services
             return _mapper.Map<List<FandomReadDto>>( fandoms );
         }
 
-        public async Task<List<FandomReadDto>> SearchByNameAsync( string searchTerm )
+        public async Task<List<FandomStatsDto>> SearchByNameAsync( string searchTerm )
         {
             List<Fandom> fandoms = await _fandomRepository.SearchByNameWithStatsAsync( searchTerm?.ToLower() ?? "" );
 
-            return _mapper.Map<List<FandomReadDto>>( fandoms );
+            return _mapper.Map<List<FandomStatsDto>>( fandoms );
         }
 
         public override async Task<bool> CheckCreator( int creatorId, int entityId )
@@ -71,13 +71,13 @@ namespace Application.Services
             await _notificationService.Notify( dto );
         }
 
-        public async Task<List<FandomReadDto>> SearchByNameAndGameIdAsync( string searchTerm, int gameId )
+        public async Task<List<FandomStatsDto>> SearchByNameAndGameIdAsync( string searchTerm, int gameId )
         {
             List<Fandom> fandoms = await _fandomRepository.SearchByNameAndGameWithStatsAsync(
                 searchTerm?.ToLower() ?? "",
                 gameId );
 
-            return _mapper.Map<List<FandomReadDto>>( fandoms );
+            return _mapper.Map<List<FandomStatsDto>>( fandoms );
         }
 
         public async Task<List<FandomReadDto>> GetPopularAsync( int limit )
