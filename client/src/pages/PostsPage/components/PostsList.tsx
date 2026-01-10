@@ -34,15 +34,14 @@ export const PostsList: FC<PostsListProps> = ({
     { value: "reactions-asc", label: "Least Reactions" },
   ];
   return (
-    <main className={styles.content}>
-      {fandomName && (
+    <main className={styles.content}>    
+      <div className={styles.topSection}>
+        {fandomName && (
         <div className={styles.fandomInfo}>
           <span className={styles.fandomLabel}>Fandom: </span>
           <span className={styles.fandomName}>{fandomName}</span>
         </div>
       )}
-
-      <div className={styles.topSection}>
         <CustomSelect
           label="Sort by:"
           options={sortOptions}
