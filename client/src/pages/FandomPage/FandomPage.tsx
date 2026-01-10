@@ -114,13 +114,67 @@ export default function FandomPage() {
     fetchFandomData();
   }, [id]);
 
+  // Функция для рендеринга скелетон-карточек постов
+  const renderPostSkeletons = (count: number) => {
+    return Array.from({ length: count }).map((_, index) => (
+      <div key={`skeleton-post-${index}`} className={styles.postCardSkeleton}>
+        <div className={styles.postCardSkeletonImage} />
+        <div className={styles.postCardSkeletonContent}>
+          <div className={styles.postCardSkeletonTitle} />
+          <div className={styles.postCardSkeletonReactions} />
+          <div className={styles.postCardSkeletonMeta} />
+        </div>
+      </div>
+    ));
+  };
+
+  // Функция для рендеринга скелетон-карточек событий
+  const renderEventSkeletons = (count: number) => {
+    return Array.from({ length: count }).map((_, index) => (
+      <div key={`skeleton-event-${index}`} className={styles.eventCardSkeleton}>
+        <div className={styles.eventCardSkeletonImage} />
+        <div className={styles.eventCardSkeletonContent}>
+          <div className={styles.eventCardSkeletonTitle} />
+        </div>
+      </div>
+    ));
+  };
+
   if (loading) {
     return (
       <div className={styles.page}>
         <Header onSearch={() => {}} />
-        <div className={styles.loading}>
-          <p>Loading fandom data...</p>
-        </div>
+        <main className={styles.contentSkeleton}>
+          {/* Скелетон для FandomCard */}
+          <section className={styles.fandomCardSkeleton}>
+            <div className={styles.fandomCardSkeletonLeft}>
+              <div className={styles.fandomCardSkeletonTitleImage} />
+              <div className={styles.fandomCardSkeletonStats}>
+                <div className={styles.fandomCardSkeletonStat} />
+              </div>
+            </div>
+            <div className={styles.fandomCardSkeletonRight}>
+              <div className={styles.fandomCardSkeletonInfoBox} />
+              <div className={styles.fandomCardSkeletonInfoBox} />
+            </div>
+          </section>
+          
+          {/* SectionTitle скелетон */}
+          <div className={styles.sectionTitleSkeleton} />
+          
+          {/* Скелетоны для Events */}
+          <section className={styles.eventsSkeleton}>
+            {renderEventSkeletons(2)}
+          </section>
+          
+          {/* SectionTitle скелетон */}
+          <div className={styles.sectionTitleSkeleton} />
+          
+          {/* Скелетоны для Posts */}
+          <section className={styles.postsSkeleton}>
+            {renderPostSkeletons(3)}
+          </section>
+        </main>
       </div>
     );
   }

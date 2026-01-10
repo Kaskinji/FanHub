@@ -1,0 +1,125 @@
+.selectWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.label {
+  color: white;
+  font-size: 1.0rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.customSelect {
+  position: relative;
+}
+
+.selectButton {
+  background: rgba(255, 255, 255, 0.907);
+  border: none;
+  border-radius: 25px;
+  color: rgb(0, 0, 0);
+  padding: 0.4rem 1rem;
+  padding-right: 2.5rem;
+  font-size: medium;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 150px;
+  justify-content: center;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: rgb(189, 143, 213);
+  }
+  
+  &:focus {
+    outline: 2px solid rgba(138, 43, 226, 0.5);
+    outline-offset: 2px;
+  }
+  
+  &.open {
+    border-radius: 25px 25px 8px 8px;
+  }
+}
+
+.arrowIcon {
+  width: 1em;
+  height: 1em;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+  
+  &.arrowUp {
+    transform: rotate(180deg);
+  }
+}
+
+.optionsContainer {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: 8px;
+  margin-top: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  overflow: hidden;
+  border: 1px solid rgba(138, 43, 226, 0.2);
+  animation: slideDown 0.2s ease;
+  
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+.option {
+  width: 100%;
+  background: white;
+  color: rgb(0, 0, 0);
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin: 2px;
+  
+  &:hover {
+    background: rgba(138, 43, 226, 0.1);
+    color: rgb(86, 14, 108);
+  }
+  
+  &.selected {
+    background: linear-gradient(135deg, #55058b, #51089a);
+    color: white;
+    font-weight: 600;
+    
+    &:hover {
+      background: linear-gradient(135deg, #65069b, #6109aa);
+    }
+  }
+  
+  &:first-child {
+    margin-top: 0;
+  }
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}

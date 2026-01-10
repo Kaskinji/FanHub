@@ -30,13 +30,33 @@ export const FandomsContent = ({
     imageUrl: fandom.coverImage ? getImageUrl(fandom.coverImage) : undefined, 
   });
 
+  // Функция для рендеринга скелетон-карточек
+  const renderSkeletons = (count: number) => {
+    return Array.from({ length: count }).map((_, index) => (
+      <div key={`skeleton-${index}`} className={styles.cardSkeleton}>
+        <div className={styles.cardSkeletonImage} />
+        <div className={styles.cardSkeletonContent}>
+          <div className={styles.cardSkeletonTitle} />
+          <div className={styles.cardSkeletonSubtitle} />
+        </div>
+      </div>
+    ));
+  };
+
   if (loading) {
     return (
       <section className={styles.fandomsSection}>
-        <SectionTitle title="Fandoms" />
-        <div className={styles.loadingState}>
-          <div className={styles.loadingSpinner}></div>
-          <p>Loading fandoms...</p>
+        <div className={styles.sectionHeader}>
+          <SectionTitle title="Fandoms" />
+          {onAddFandomClick && (
+            <AddButton
+              text="Add"
+              onClick={onAddFandomClick}
+            />
+          )}
+        </div>
+        <div className={styles.fandomsGrid}>
+          {renderSkeletons(5)}
         </div>
       </section>
     );

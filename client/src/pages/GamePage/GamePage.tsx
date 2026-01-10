@@ -14,6 +14,7 @@ import type { FandomReadDto } from "../../api/FandomApi";
 import type { FandomPreview } from "../../types/Fandom";
 import { getImageUrl } from "../../utils/urlUtils";
 import { Content } from "./Content/Content";
+import SectionTitle from "../../components/UI/SectionTitle/SectionTitle";
 
 type GameLocationState = {
   game: GameReadDto;
@@ -132,13 +133,56 @@ const GamePage = () => {
     loadGameData();
   };
 
+  // Функция для рендеринга скелетон-карточек фандомов
+  const renderFandomSkeletons = (count: number) => {
+    return Array.from({ length: count }).map((_, index) => (
+      <div key={`skeleton-fandom-${index}`} className={styles.fandomCardSkeleton}>
+        <div className={styles.fandomCardSkeletonImage} />
+        <div className={styles.fandomCardSkeletonContent}>
+          <div className={styles.fandomCardSkeletonTitle} />
+          <div className={styles.fandomCardSkeletonText} />
+        </div>
+      </div>
+    ));
+  };
+
   if (loading) {
     return (
       <div className={styles.page}>
         <Header onSearch={handleSearch} onSignIn={() => {}} />
-        <div className={styles.loadingContainer}>
-          <p>Loading game...</p>
-        </div>
+        <main className={styles.contentSkeleton}>
+          {/* Скелетон для GameCard */}
+          <section className={styles.gameCardSkeleton}>
+            <div className={styles.gameCardSkeletonLeft}>
+              <div className={styles.gameCardSkeletonTitleImage} />
+              <div className={styles.gameCardSkeletonStats}>
+                <div className={styles.gameCardSkeletonStat} />
+              </div>
+            </div>
+            <div className={styles.gameCardSkeletonRight}>
+              <div className={styles.gameCardSkeletonDescription}>
+                <div className={styles.gameCardSkeletonLine} />
+                <div className={styles.gameCardSkeletonLine} />
+                <div className={styles.gameCardSkeletonLine} />
+                <div className={styles.gameCardSkeletonLineShort} />
+              </div>
+              <div className={styles.gameCardSkeletonDetails}>
+                <div className={styles.gameCardSkeletonDetail} />
+                <div className={styles.gameCardSkeletonDetail} />
+                <div className={styles.gameCardSkeletonDetail} />
+                <div className={styles.gameCardSkeletonDetail} />
+              </div>
+            </div>
+          </section>
+          
+          {/* SectionTitle скелетон */}
+          <div className={styles.sectionTitleSkeleton} />
+          
+          {/* Скелетоны для Fandoms */}
+          <section className={styles.fandomsSkeleton}>
+            {renderFandomSkeletons(2)}
+          </section>
+        </main>
       </div>
     );
   }
