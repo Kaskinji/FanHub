@@ -48,7 +48,9 @@ export function Events({ fandomId }: EventsProps) {
   }
 
   if (events.length === 0) {
-    return null;
+    return (
+      <p>No events found.</p>
+    );
   }
 
   return (

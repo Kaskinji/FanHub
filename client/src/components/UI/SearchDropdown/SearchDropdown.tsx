@@ -10,6 +10,7 @@ export interface SearchDropdownProps {
   searchResults: GameReadDto[];
   onGameClick: (game: GameReadDto) => void;
   theme?: "light" | "dark";
+  searchQuery?: string;
 }
 
 const SearchDropdown: FC<SearchDropdownProps> = ({
@@ -18,8 +19,48 @@ const SearchDropdown: FC<SearchDropdownProps> = ({
   searchResults,
   onGameClick,
   theme = "dark",
+  searchQuery = "",
 }) => {
   if (!isOpen) return null;
+
+  const sortSearchResults = (results: GameReadDto[], query: string): GameReadDto[] => {
+    if (!query.trim()) return results;
+    
+    const lowerQuery = query.toLowerCase();
+    
+    const resultsWithQuery = results.filter(game => 
+      game.title.toLowerCase().includes(lowerQuery)
+    );
+    
+    return resultsWithQuery.sort((a, b) => {
+      const titleA = a.title.toLowerCase();
+      const titleB = b.title.toLowerCase();
+      
+      if (titleA === lowerQuery && titleB !== lowerQuery) return -1;
+      if (titleA !== lowerQuery && titleB === lowerQuery) return 1;
+      if (titleA === lowerQuery && titleB === lowerQuery) return 0;
+      
+      const startsWithA = titleA.startsWith(lowerQuery);
+      const startsWithB = titleB.startsWith(lowerQuery);
+      
+      if (startsWithA && !startsWithB) return -1;
+      if (!startsWithA && startsWithB) return 1;
+      if (startsWithA && startsWithB) {
+        return titleA.length - titleB.length;
+      }
+      
+      const positionA = titleA.indexOf(lowerQuery);
+      const positionB = titleB.indexOf(lowerQuery);
+      
+      if (positionA !== positionB) {
+        return positionA - positionB;
+      }
+      
+      return titleA.length - titleB.length;
+    });
+  };
+
+  const sortedResults = sortSearchResults(searchResults, searchQuery);
 
   const dropdownClassName = classNames(styles.searchDropdown, {
     [styles.searchDropdownLight]: theme === "light",
@@ -30,9 +71,9 @@ const SearchDropdown: FC<SearchDropdownProps> = ({
     <div className={dropdownClassName}>
       {isSearching ? (
         <div className={styles.searchLoading}>Searching...</div>
-      ) : searchResults.length > 0 ? (
+      ) : sortedResults.length > 0 ? (
         <div className={styles.searchResults}>
-          {searchResults.map((game) => (
+          {sortedResults.map((game) => (
             <div
               key={game.id}
               className={styles.searchResultItem}
@@ -66,4 +107,3 @@ const SearchDropdown: FC<SearchDropdownProps> = ({
 };
 
 export default SearchDropdown;
-

@@ -8,6 +8,7 @@ import type { FandomContextData } from "../../types/Fandom";
 import { fandomApi, type FandomStatsDto } from "../../api/FandomApi";
 import { subscriptionApi } from "../../api/SubscriptionApi";
 import { postApi } from "../../api/PostApi";
+import { eventApi } from "../../api/EventApi";
 import { FandomCard } from "./FandomCard/FandomCard";
 import { Posts } from "./Posts/Posts";
 import { Events } from "./Events/Events";
@@ -26,6 +27,7 @@ export default function FandomPage() {
   >(undefined);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hasEvents, setHasEvents] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchFandomData = async () => {
@@ -72,6 +74,17 @@ export default function FandomPage() {
           // Если не удалось загрузить посты, оставляем пустой массив
           postsPreviews = [];
         }
+
+        // Проверяем наличие событий
+        let eventsExist = false;
+        try {
+          const events = await eventApi.getEvents(fandomStats.id);
+          eventsExist = events.length > 0;
+        } catch (err) {
+          console.error("Error fetching events:", err);
+          eventsExist = false;
+        }
+        setHasEvents(eventsExist);
         const transformedData: FandomPageData = {
           id: fandomStats.id,
           title: fandomStats.name,
@@ -162,14 +175,20 @@ export default function FandomPage() {
         />
         <SectionTitle title="Events" />
         <Events fandomId={fandomData.id} />
-        <ShowMoreButton variant="light" onClick={handleShowEvents} />
+        {hasEvents ? (
+          <ShowMoreButton variant="light" onClick={handleShowEvents} />
+        ) : initialIsCreator === true ? (
+          <ShowMoreButton text="Go to Events" variant="light" onClick={handleShowEvents} />
+        ) : null}
         <SectionTitle title="Popular Posts" />
         <Posts
           posts={fandomData.postsPreviews}
           fandomId={fandomData.id}
           fandomName={fandomData.title}
         />
-        <ShowMoreButton variant="light" onClick={handleShowMore} />
+        {(fandomData.postsPreviews.length == 0 || fandomData.postsCount == 0) ? (
+          <ShowMoreButton text="Go to posts"variant="light" onClick={handleShowMore} />
+        ): <ShowMoreButton variant="light" onClick={handleShowMore} />}
       </main>
     </div>
   );

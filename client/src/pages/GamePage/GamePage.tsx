@@ -3,7 +3,7 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import styles from "./GamePage.module.scss";
 import Button from "../../components/UI/buttons/Button/Button";
-import type { GameReadDto } from "../../api/GameApi";
+import type { GameReadDto, GameStatsDto } from "../../api/GameApi";
 import { gameApi } from "../../api/GameApi";
 import type { GamePageData } from "../../types/GamePageData";
 import { useAuth } from "../../hooks/useAuth";
@@ -58,14 +58,14 @@ const GamePage = () => {
 
     console.log('Loading game by ID:', gameId);
     
-    // Параллельно загружаем игру и фандомы
-    const [gameResponse, fandomsResponse] = await Promise.all([
-      gameApi.getGameById(gameId),
-      fandomApi.searchFandomsByNameAndGame(gameId)
+    // Параллельно загружаем игру со статистикой и популярные фандомы (лимит 2)
+    const [gameResponse, popularFandomsResponse] = await Promise.all([
+      gameApi.getGameWithStatsById(gameId),
+      fandomApi.getPopularFandomsByGame(gameId, 2)
     ]);
     
     // Форматируем данные
-    const formattedGame = formatGameData(gameResponse, fandomsResponse);
+    const formattedGame = formatGameData(gameResponse, popularFandomsResponse);
     setGameData(formattedGame);
 
   } catch (err) {
@@ -81,27 +81,22 @@ const GamePage = () => {
     loadGameData();
   }, [loadGameData]);
 
-  const formatGameData = (game: GameReadDto, fandoms: FandomReadDto[]): GamePageData => {
+  const formatGameData = (game: GameStatsDto, popularFandoms: FandomReadDto[]): GamePageData => {
 
-  const formattedFandoms: FandomPreview[] = fandoms.map(fandom => ({
+  const formattedFandoms: FandomPreview[] = popularFandoms.map(fandom => ({
     id: fandom.id,
-    gameId: fandom.gameId,
     name: fandom.name,
     description: fandom.description,
     imageUrl: fandom.coverImage ? getImageUrl(fandom.coverImage) : undefined,
-    creationDate: fandom.creationDate,
-    rules: fandom.rules,
-    subscribersCount: 0, 
-    postsCount: 0      
   }));
 
   return {
     id: game.id,
     title: game.title,
     description: game.description,
-    coverImage: game.coverImage,
+    coverImage: game.coverImage || undefined,
     stats: {
-      fandoms: fandoms.length,
+      fandoms: game.fandomsCount,
       posts: 0,
     },
     details: {

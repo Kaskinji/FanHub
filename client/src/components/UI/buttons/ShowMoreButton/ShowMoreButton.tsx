@@ -5,13 +5,15 @@ import classNames from "classnames";
 interface ShowMoreButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: "light" | "dark";
     withArrow?: boolean;
+    text?: string;
 }
 
 const ShowMoreButton: FC<ShowMoreButtonProps> = ({
-    children = "Show More",
+    children,
     className,
     variant = "dark",
     withArrow = true,
+    text,
     ...props
 }) => {
     const finalClassName = classNames(
@@ -25,13 +27,16 @@ const ShowMoreButton: FC<ShowMoreButtonProps> = ({
         className,
     );
 
+    // Приоритет: text > children > "Show More"
+    const displayText = text || children || "Show More";
+
     return (
         <button 
             className={finalClassName} 
             data-theme={variant}
             {...props}
         >
-            <span className={styles.showMoreButton__text}>{children}</span>
+            <span className={styles.showMoreButton__text}>{displayText}</span>
             {withArrow && (
                 <span className={styles.showMoreButton__arrow}>&gt;&gt;</span>
             )}

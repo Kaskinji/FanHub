@@ -30,19 +30,13 @@ export const GameCard = ({ game, isAdmin, onEditGame }: GameCardProps) => {
               <div className={styles.gameStats}>
                 <div className={styles.statItem}>
                   <span className={styles.statNumber}>{game.stats.fandoms}</span>
+                  <span className={styles.statName}>Fandoms</span>
                   <img 
                     className={styles.statIcon}
                     src={fandomIcon}
                     alt="Fandoms" 
-                  />
-                </div>
-                <div className={styles.statItem}>
-                  <span className={styles.statNumber}>{game.stats.posts}</span>
-                  <img 
-                    className={styles.statIcon}
-                    src={postIcon}
-                    alt="Posts" 
-                  />
+                    />
+                    
                 </div>
               </div>
             </div>

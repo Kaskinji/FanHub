@@ -9,6 +9,12 @@ interface PostsProps {
 }
 
 export function Posts({ posts, fandomId, fandomName }: PostsProps) {
+  if(posts.length === 0)
+  {
+    return(
+      <p>No posts found.</p>
+    );
+  }
   return (
     <section className={styles.posts}>
       {posts.map((post) => (

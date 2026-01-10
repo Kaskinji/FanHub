@@ -18,10 +18,12 @@ export default function AllGamesPage() {
   const {
     games,
     gamesData,
+    allGames,
     loading,
     error,
     genres,
     selectedGenre,
+    searchQuery,
     showGenreFilter,
     loadGames,
     searchGames,
@@ -73,7 +75,7 @@ export default function AllGamesPage() {
 
   return (
     <div className={styles.page}>
-      <Header onSearch={handleSearch} onSignIn={() => {}} />
+      <Header onSearch={handleSearch} onSignIn={() => {}} allGames={allGames} />
         {showGameForm && (
         <div className={styles.formContainer}>
           <GameForm
@@ -89,6 +91,7 @@ export default function AllGamesPage() {
         genres={genres}
         isAdmin={isAdmin}
         selectedGenre={selectedGenre}
+        searchQuery={searchQuery}
         showGenreFilter={showGenreFilter}
         onSearch={handleSearch}
         onGenreSelect={handleGenreSelect}
@@ -108,6 +111,7 @@ interface ContentProps {
   genres: string[];
   isAdmin: boolean;
   selectedGenre: string;
+  searchQuery: string;
   showGenreFilter: boolean;
   onSearch: (query: string) => void;
   onGenreSelect: (genre: string) => void;
@@ -120,7 +124,8 @@ function Content({
   loading, 
   gamesData,
   genres, 
-  selectedGenre, 
+  selectedGenre,
+  searchQuery,
   showGenreFilter,
   isAdmin,
   onSearch, 
@@ -135,6 +140,7 @@ function Content({
         onSearch={onSearch}
         onToggleFilter={onToggleFilter}
         showGenreFilter={showGenreFilter}
+        searchQuery={searchQuery}
       />
       
       {/* Фильтр по жанрам (показывается/скрывается) */}
@@ -228,9 +234,26 @@ interface TopProps {
   onSearch: (query: string) => void;
   onToggleFilter: () => void;
   showGenreFilter: boolean;
+  searchQuery: string;
 }
 
-function Top({ onSearch, onToggleFilter, showGenreFilter }: TopProps) {
+function Top({ onSearch, onToggleFilter, showGenreFilter, searchQuery }: TopProps) {
+  const [searchValue, setSearchValue] = useState(searchQuery);
+
+  // Синхронизируем локальное состояние с пропом (например, при сбросе фильтров)
+  useEffect(() => {
+    setSearchValue(searchQuery);
+  }, [searchQuery]);
+
+  const handleChange = (query: string) => {
+    setSearchValue(query);
+    onSearch(query); // Фильтрация происходит сразу при изменении
+  };
+
+  const handleSubmit = (query: string) => {
+    onSearch(query);
+  };
+
   return (
     <div className={styles.top}>
       <div className={styles.topHeader}>
@@ -248,7 +271,9 @@ function Top({ onSearch, onToggleFilter, showGenreFilter }: TopProps) {
             <SearchInput 
               placeholder="Search games..."
               withIcon={true}
-              onSearch={onSearch}
+              onSearch={handleSubmit}
+              onChange={handleChange}
+              value={searchValue}
               variant="head"
               size="medium"
             />

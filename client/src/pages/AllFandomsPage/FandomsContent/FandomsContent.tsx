@@ -8,8 +8,10 @@ import FandomCard from "../../MainPage/FandomCard/FandomCard";
 import styles from "./FandomsContent.module.scss";
 import { getImageUrl } from "../../../utils/urlUtils";
 
+type FandomWithStats = FandomReadDto | import("../../../api/FandomApi").FandomStatsDto;
+
 interface FandomsProps {
-  fandoms: FandomReadDto[];
+  fandoms: FandomWithStats[];
   loading: boolean;
   error: string | null;
   gameTitle?: string | null;
@@ -20,10 +22,9 @@ export const FandomsContent = ({
   fandoms, 
   loading, 
   error, 
-  gameTitle,
   onAddFandomClick 
 }: FandomsProps) => {
-  const convertToPreview = (fandom: FandomReadDto): FandomPreview => ({
+  const convertToPreview = (fandom: FandomWithStats): FandomPreview => ({
     id: fandom.id,
     name: fandom.name,
     imageUrl: fandom.coverImage ? getImageUrl(fandom.coverImage) : undefined, 
@@ -44,8 +45,13 @@ export const FandomsContent = ({
   if (error) {
     return (
       <section className={styles.fandomsSection}>
+        <div className={styles.sectionHeader}>
         <SectionTitle title="Fandoms" />
-        <ErrorState error={error} onRetry={() => window.location.reload()} />
+
+        </div>
+       
+          <ErrorState error={error} onRetry={() => window.location.reload()} />
+        
       </section>
     );
   }
@@ -69,9 +75,6 @@ export const FandomsContent = ({
       {!hasFandoms ? (
         <div className={styles.emptyState}>
           <p>No fandoms found</p>
-          <p className={styles.emptySubtext}>
-              Be the first who'll create a fandom for <strong>{`${gameTitle}`}!</strong>
-          </p>
         </div>
       ) : (
         /* Список фандомов */

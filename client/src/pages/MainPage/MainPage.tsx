@@ -16,7 +16,6 @@ import { fandomApi } from "../../api/FandomApi";
 import { getImageUrl } from "../../utils/urlUtils";
 import SearchDropdown from "../../components/UI/SearchDropdown/SearchDropdown";
 
-
 type MainPageProps = {
   onSearch: () => void;
 };
@@ -25,6 +24,7 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [games, setGames] = useState<GamePreview[]>([]);
+  const [allGamesData, setAllGamesData] = useState<GameReadDto[]>([]); // Все игры для поиска
   const [fandoms, setFandoms] = useState<FandomPreview[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingFandoms, setLoadingFandoms] = useState(true);
@@ -37,7 +37,6 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
   const searchTimeoutRef = useRef<number | null>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
 
-
   useEffect(() => {
     const loadGames = async () => {
       try {
@@ -46,7 +45,10 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
         
         const gamesData = await gameApi.getGames();
         
-        // только первые 6
+        // Сохраняем все игры для поиска в Header
+        setAllGamesData(gamesData);
+        
+        // только первые 6 для отображения
         const firstSixGames = gamesData.slice(0, 6);
         
         // Преобразуем в GamePreview
@@ -129,7 +131,6 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
   }, [performSearch]);
 
   // Обработчик отправки формы поиска
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleSearchSubmit = useCallback((query: string) => {
     onSearch();
     setSearchQuery("");
@@ -187,9 +188,22 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
     window.location.reload();
   };
 
+  // Функция для рендеринга скелетон-карточек
+  const renderSkeletons = (count: number) => {
+    return Array.from({ length: count }).map((_, index) => (
+      <div key={`skeleton-${index}`} className={styles.cardSkeleton}>
+        <div className={styles.cardSkeletonImage} />
+        <div className={styles.cardSkeletonContent}>
+          <div className={styles.cardSkeletonTitle} />
+          <div className={styles.cardSkeletonSubtitle} />
+        </div>
+      </div>
+    ));
+  };
+
   return (
     <div className={styles.mainPage}>
-      <Header onSearch={handleSearch} onSignIn={handleSignIn} />
+      <Header onSearch={handleSearch} onSignIn={handleSignIn} allGames={allGamesData} />
       <main className={styles.mainContent}>
         <section className={styles.heroSection}>
           <div className={styles.logoWrapper}>
@@ -216,6 +230,7 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
                 isSearching={isSearching}
                 searchResults={searchResults}
                 onGameClick={handleGameClick}
+                searchQuery={searchQuery}
                 theme="light"
               />
             </div>
@@ -224,11 +239,7 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
         <section className={styles.gameSection}>
           <SectionTitle title="Games" />
           
-          {loading ? (
-            <div className={styles.loadingContainer}>
-              <p>Loading games...</p>
-            </div>
-          ) : error ? (
+          {error ? (
             <div className={styles.errorContainer}>
               <p className={styles.errorText}>{error}</p>
               <button 
@@ -238,36 +249,38 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
                 Retry
               </button>
             </div>
-          ) : games.length === 0 ? (
-            <div className={styles.noGames}>
-              <p>No games found</p>
-            </div>
           ) : (
             <>
               <div className={styles.gamesGrid}>
-                {games.map((game) => (
-                   <GameCard
-                    key={game.id}
-                    gamePreview={game}
-                    className={styles.gameCardItem}
-                  />
-                ))}
+                {loading ? (
+                  renderSkeletons(6)
+                ) : games.length === 0 ? (
+                  <div className={styles.noGames}>
+                    <p>No games found</p>
+                  </div>
+                ) : (
+                  games.map((game) => (
+                    <GameCard
+                      key={game.id}
+                      gamePreview={game}
+                      className={styles.gameCardItem}
+                    />
+                  ))
+                )}
               </div>
-              <ShowMoreButton 
-                variant="light" 
-                onClick={handleShowMore}
-              />
+              {!loading && games.length > 0 && (
+                <ShowMoreButton 
+                  variant="light" 
+                  onClick={handleShowMore}
+                />
+              )}
             </>
           )}
         </section>
         <section className={styles.fandomsSection}>
           <SectionTitle title="Top Fandoms" />
           
-          {loadingFandoms ? (
-            <div className={styles.loadingContainer}>
-              <p>Loading fandoms...</p>
-            </div>
-          ) : fandomsError ? (
+          {fandomsError ? (
             <div className={styles.errorContainer}>
               <p className={styles.errorText}>{fandomsError}</p>
               <button 
@@ -277,20 +290,24 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
                 Retry
               </button>
             </div>
-          ) : fandoms.length === 0 ? (
-            <div className={styles.noGames}>
-              <p>No fandoms found</p>
-            </div>
           ) : (
             <div className={styles.fandomsGrid}>
-              {fandoms.map((fandom) => (
-                <FandomCard 
-                  key={fandom.id} 
-                  id={fandom.id}
-                  name={fandom.name}
-                  imageUrl={fandom.imageUrl}
-                />
-              ))}
+              {loadingFandoms ? (
+                renderSkeletons(6)
+              ) : fandoms.length === 0 ? (
+                <div className={styles.noGames}>
+                  <p>No fandoms found</p>
+                </div>
+              ) : (
+                fandoms.map((fandom) => (
+                  <FandomCard 
+                    key={fandom.id} 
+                    id={fandom.id}
+                    name={fandom.name}
+                    imageUrl={fandom.imageUrl}
+                  />
+                ))
+              )}
             </div>
           )}
         </section>

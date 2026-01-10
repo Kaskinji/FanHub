@@ -33,6 +33,18 @@ export interface GameUpdateDto {
   genre?: string;
 }
 
+export interface GameStatsDto {
+  id: number;
+  title: string;
+  description: string;
+  releaseDate: string;
+  developer: string;
+  publisher: string;
+  coverImage: string;
+  genre: string;
+  fandomsCount: number;
+}
+
 export class GameApi {
   private readonly baseUrl: string;
 
@@ -128,6 +140,38 @@ export class GameApi {
       return response.data;
     } catch (error) {
       this.handleGameError(error, `Failed to fetch game with ID ${id}`);
+    }
+  }
+
+  async getGameWithStatsById(id: number): Promise<GameStatsDto> {
+    try {
+      const response = await axios.get<GameStatsDto>(
+        `${this.baseUrl}/games/with-stats/${id}`,
+        {
+          withCredentials: true,
+          timeout: 10000,
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      this.handleGameError(error, `Failed to fetch game with stats for ID ${id}`);
+    }
+  }
+
+  async getAllGamesWithStats(): Promise<GameStatsDto[]> {
+    try {
+      const response = await axios.get<GameStatsDto[]>(
+        `${this.baseUrl}/games/with-stats`,
+        {
+          withCredentials: true,
+          timeout: 10000,
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      this.handleGameError(error, 'Failed to fetch games with stats');
     }
   }
 

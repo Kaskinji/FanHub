@@ -21,21 +21,30 @@
 }
 
 .retryButton {
-  background: rgba(255, 255, 255, 0.871);
+  background: rgba(255, 255, 255, 0.9);
   color: rgb(74, 15, 102);
-  border: 0px;
-  padding: 8px 16px;
-  border-radius: 20px;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 25px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  min-width: 120px;
   
   &:hover {
-    background: rgba(236, 207, 255, 0.916);
+    background: rgba(236, 207, 255, 0.95);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(160, 16, 193, 0.3);
   }
   
   &:active {
-    transform: scale(0.98);
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(160, 16, 193, 0.2);
+  }
+  
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(160, 16, 193, 0.3);
   }
 }

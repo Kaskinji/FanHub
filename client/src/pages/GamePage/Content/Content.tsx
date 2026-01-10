@@ -12,22 +12,26 @@ type ContentProps = {
   onEditGame: () => void;
 };
 
-export const Content = ({ game, onShowMore, isAdmin, onEditGame }: ContentProps) => {
+export const Content = ({
+  game,
+  onShowMore,
+  isAdmin,
+  onEditGame,
+}: ContentProps) => {
   return (
     <main className={styles.content}>
-      <GameCard 
-        game={game} 
-        isAdmin={isAdmin}
-        onEditGame={onEditGame} />
+      <GameCard game={game} isAdmin={isAdmin} onEditGame={onEditGame} />
       <SectionTitle title="Fandoms" />
       <Fandoms fandoms={game.fandoms} />
-      {game.fandoms.length > 0 && (
-        <ShowMoreButton 
-          variant="light" 
+      {game.fandoms.length > 0 ? (
+        <ShowMoreButton variant="light" onClick={onShowMore} />
+      ) : (
+        <ShowMoreButton
+          text="Go to fandoms"
+          variant="light"
           onClick={onShowMore}
         />
       )}
     </main>
   );
 };
-

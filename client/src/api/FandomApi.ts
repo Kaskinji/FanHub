@@ -135,9 +135,9 @@ export class FandomApi {
   async searchFandomsByNameAndGame(
     gameId: number,
     name?: string
-  ): Promise<FandomReadDto[]> {
+  ): Promise<FandomStatsDto[]> {
     try {
-      const response = await axios.get<FandomReadDto[]>(
+      const response = await axios.get<FandomStatsDto[]>(
         `${this.baseUrl}/fandoms/search/${gameId}`,
         {
           params: { name: name || "" },

@@ -20,9 +20,10 @@ import notificationAlertIcon from "../../assets/notification-alert.svg";
 interface HeaderProps {
   onSearch: (query: string) => void;
   onSignIn?: () => void; // Сделаем необязательным
+  allGames?: GameReadDto[]; // Все загруженные игры для локального поиска
 }
 
-const Header: FC<HeaderProps> = ({ onSearch, onSignIn }) => {
+const Header: FC<HeaderProps> = ({ onSearch, onSignIn, allGames }) => {
   const navigate = useNavigate();
   const { isAuthenticated, user, isLoading } = useAuth();
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
@@ -82,8 +83,21 @@ const Header: FC<HeaderProps> = ({ onSearch, onSignIn }) => {
       return;
     }
 
-    setIsSearching(true);
     setIsSearchDropdownOpen(true);
+    
+    // Если есть все игры, используем локальный поиск (синхронно)
+    if (allGames && allGames.length > 0) {
+      const lowerQuery = query.toLowerCase().trim();
+      const results = allGames.filter(game => 
+        game.title.toLowerCase().includes(lowerQuery)
+      );
+      setSearchResults(results);
+      setIsSearching(false);
+      return;
+    }
+    
+    // Иначе используем API (для обратной совместимости)
+    setIsSearching(true);
     try {
       const results = await gameApi.searchGamesByName(query);
       setSearchResults(results);
@@ -93,7 +107,7 @@ const Header: FC<HeaderProps> = ({ onSearch, onSignIn }) => {
     } finally {
       setIsSearching(false);
     }
-  }, []);
+  }, [allGames]);
 
   // Обработчик изменения поискового запроса
   const handleSearchChange = useCallback(
@@ -162,24 +176,15 @@ const Header: FC<HeaderProps> = ({ onSearch, onSignIn }) => {
     };
   }, []);
 
-  if (isLoading) {
-    return (
-      <header className={styles.header}>
-        <div className={styles.leftSection} onClick={handleLogoClick}>
-          <Logo size="small" showText={true} />
-        </div>
-        <div className={styles.centerSection}>
-          <div className={styles.loadingPlaceholder}>Loading...</div>
-        </div>
-        <div className={styles.rightSection}>
-          <div className={styles.authLoading}>Checking auth...</div>
-        </div>
-      </header>
-    );
-  }
-
-  // Резервируем место для userSection, чтобы высота не менялась
-  const rightSectionContent = isAuthenticated && user ? (
+   const rightSectionContent = isLoading ? (
+    <div className={styles.userSectionSkeleton}>
+      <div className={styles.skeletonUserInfo}>
+        <div className={styles.skeletonUserName} />
+        <div className={styles.skeletonAvatar} />
+      </div>
+      <div className={styles.skeletonNotificationButton} />
+    </div>
+  ) : isAuthenticated && user ? (
     <div className={styles.userSection}>
       <div
         className={styles.userInfo}
@@ -258,6 +263,7 @@ const Header: FC<HeaderProps> = ({ onSearch, onSignIn }) => {
             isSearching={isSearching}
             searchResults={searchResults}
             onGameClick={handleGameClick}
+            searchQuery={searchQuery}
             theme="dark"
           />
         </div>

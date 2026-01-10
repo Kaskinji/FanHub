@@ -3,7 +3,7 @@ import { FandomCard } from "../FandomCard/FandomCard";
 import styles from "./Fandoms.module.scss";
 
 type FandomsProps = {
-  fandoms: GamePageData['fandoms'];
+  fandoms: GamePageData["fandoms"];
 };
 
 export const Fandoms = ({ fandoms }: FandomsProps) => {
@@ -17,9 +17,10 @@ export const Fandoms = ({ fandoms }: FandomsProps) => {
 
   return (
     <section className={styles.fandoms}>
-      {fandoms.map((fandom) => (
+      {fandoms.slice(0, 2).map((fandom) => (
         <FandomCard
           key={fandom.id}
+          id={fandom.id}
           title={fandom.name}
           text={fandom.description || ""}
           image={fandom.imageUrl || ""}
@@ -28,4 +29,3 @@ export const Fandoms = ({ fandoms }: FandomsProps) => {
     </section>
   );
 };
-
