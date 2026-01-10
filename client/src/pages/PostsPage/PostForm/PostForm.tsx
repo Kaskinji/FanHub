@@ -318,7 +318,7 @@ export const PostForm = ({
               ) : (
                 categories.map((category) => (
                   <option key={category.id} value={category.id}>
-                    {category.icon ? `${category.icon} ` : ''}{category.name}
+                    {category.name}
                   </option>
                 ))
               )}

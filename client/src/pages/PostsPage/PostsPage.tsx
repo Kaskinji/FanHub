@@ -27,11 +27,13 @@ export default function PostsPage() {
     posts,
     loading,
     error,
+    sortOption,
     loadPosts,
     refreshPost,
     updatePost,
     removePost,
     postsRef,
+    setSort,
   } = usePosts({
     fandomId: postsData?.fandomId,
   });
@@ -173,9 +175,11 @@ export default function PostsPage() {
         posts={posts}
         fandomName={postsData?.fandomName}
         isAuthenticated={isAuthenticated}
+        sortOption={sortOption}
         onPostClick={setSelectedPostId}
         onReaction={handleReaction}
         onAddPost={() => setShowPostForm(true)}
+        onSortChange={setSort}
       />
 
       {selectedPost && (
