@@ -254,6 +254,7 @@ interface TopProps {
 
 function Top({ onSearch, onToggleFilter, showGenreFilter, searchQuery, sortOption, onSortChange }: TopProps) {
   const [searchValue, setSearchValue] = useState(searchQuery);
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
 
   // Синхронизируем локальное состояние с пропом (например, при сбросе фильтров)
   useEffect(() => {
@@ -268,6 +269,29 @@ function Top({ onSearch, onToggleFilter, showGenreFilter, searchQuery, sortOptio
   const handleSubmit = (query: string) => {
     onSearch(query);
   };
+
+  const handleSelectFocus = () => {
+    setIsSelectOpen(true);
+  };
+
+  const handleSelectBlur = () => {
+    // Небольшая задержка для корректной работы
+    setTimeout(() => {
+      setIsSelectOpen(false);
+    }, 0);
+  };
+
+  const handleSelectMouseDown = () => {
+    // При mousedown переключаем состояние для отслеживания открытия/закрытия
+    setIsSelectOpen(prev => !prev);
+  };
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    onSortChange(e.target.value as 'default' | 'date-asc' | 'date-desc');
+    // Закрываем после выбора
+    setTimeout(() => setIsSelectOpen(false), 100);
+  };
+
   return (
     <div className={styles.top}>
       <div className={styles.topHeader}>
@@ -277,9 +301,12 @@ function Top({ onSearch, onToggleFilter, showGenreFilter, searchQuery, sortOptio
         <div className={styles.sortWrapper}>
             <label className={styles.sortLabel}>Sort by:</label>
             <select 
-              className={styles.sortSelect}
+              className={`${styles.sortSelect} ${isSelectOpen ? styles.selectOpen : ''}`}
               value={sortOption}
-              onChange={(e) => onSortChange(e.target.value as 'default' | 'date-asc' | 'date-desc')}
+              onChange={handleSelectChange}
+              onFocus={handleSelectFocus}
+              onBlur={handleSelectBlur}
+              onMouseDown={handleSelectMouseDown}
               style={{ '--arrow-icon': `url(${arrowBottomIcon})` } as React.CSSProperties}
             >
                 <option value="default">Default</option>
