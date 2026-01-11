@@ -15,6 +15,7 @@ import { gameApi, type GameReadDto } from "../../api/GameApi";
 import { fandomApi } from "../../api/FandomApi";
 import { getImageUrl } from "../../utils/urlUtils";
 import SearchDropdown from "../../components/UI/SearchDropdown/SearchDropdown";
+import CategoriesManagement from "../../components/CategoriesManagement/CategoriesManagement";
 
 type MainPageProps = {
   onSearch: () => void;
@@ -307,6 +308,7 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
             </div>
           )}
         </section>
+        <CategoriesManagement />
       </main>
     </div>
   );

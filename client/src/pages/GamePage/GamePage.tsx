@@ -14,7 +14,6 @@ import type { FandomReadDto } from "../../api/FandomApi";
 import type { FandomPreview } from "../../types/Fandom";
 import { getImageUrl } from "../../utils/urlUtils";
 import { Content } from "./Content/Content";
-import SectionTitle from "../../components/UI/SectionTitle/SectionTitle";
 
 type GameLocationState = {
   game: GameReadDto;
@@ -125,13 +124,34 @@ const GamePage = () => {
   };
 
   const handleBackToGames = () => {
-    navigate('/games');
+    navigate('/allgames');
   };
 
   const handleGameUpdated = () => {
     setShowGameForm(false);
     loadGameData();
   };
+
+  // Обработка ESC для закрытия формы
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && showGameForm) {
+        e.preventDefault();
+        // Убираем фокус с активного элемента, чтобы кнопка не выделялась
+        if (document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur();
+        }
+        setShowGameForm(false);
+      }
+    };
+
+    if (showGameForm) {
+      document.addEventListener("keydown", handleEscape);
+      return () => {
+        document.removeEventListener("keydown", handleEscape);
+      };
+    }
+  }, [showGameForm]);
 
   // Функция для рендеринга скелетон-карточек фандомов
   const renderFandomSkeletons = (count: number) => {
@@ -228,10 +248,28 @@ const GamePage = () => {
     <div className={styles.page}>
       <Header onSearch={handleSearch} />
          {showGameForm && (
-        <div className={styles.formContainer}>
+        <div 
+          className={styles.formContainer}
+          onClick={(e) => {
+            // Закрываем форму при клике на overlay (вне формы)
+            if (e.target === e.currentTarget) {
+              // Убираем фокус с активного элемента, чтобы кнопка не выделялась
+              if (document.activeElement instanceof HTMLElement) {
+                document.activeElement.blur();
+              }
+              setShowGameForm(false);
+            }
+          }}
+        >
           <GameForm
             gameId={gameData.id}
-            onCancel={() => setShowGameForm(false)}
+            onCancel={() => {
+              // Убираем фокус с активного элемента при закрытии через Cancel
+              if (document.activeElement instanceof HTMLElement) {
+                document.activeElement.blur();
+              }
+              setShowGameForm(false);
+            }}
             onSuccess={handleGameUpdated}
           />
         </div>

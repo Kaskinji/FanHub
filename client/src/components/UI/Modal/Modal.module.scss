@@ -13,6 +13,17 @@
   z-index: 1000;
   padding: 20px;
   animation: fadeIn 0.3s ease;
+
+  &.noOverlay {
+    background-color: transparent;
+    backdrop-filter: none;
+    pointer-events: auto; // Оставляем pointer-events для обработки кликов
+    z-index: 1001; // Выше формы редактирования
+  }
+}
+
+.modalOverlayContent {
+  pointer-events: auto;
 }
 
 .modal {

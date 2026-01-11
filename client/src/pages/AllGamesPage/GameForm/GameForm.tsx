@@ -204,7 +204,7 @@ export const GameForm = ({
     try {
       await gameApi.deleteGame(gameId);
       setShowDeleteConfirm(false);
-      navigate(`/games`); // Перенаправляем на список игр
+      navigate(`/allgames`); // Перенаправляем на список игр
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Failed to delete game";
@@ -221,7 +221,10 @@ export const GameForm = ({
 
   return (
     <div className={styles.formContainer}>
-      <div className={styles.formInner}>
+      <div 
+        className={styles.formInner}
+        onClick={(e) => e.stopPropagation()}
+      >
         <button
           type="button"
           onClick={onCancel}
@@ -391,39 +394,40 @@ export const GameForm = ({
             </button>
           </div>
         </form>
-
-        {showDeleteConfirm && (
-          <Modal
-            isOpen={showDeleteConfirm}
-            onClose={() => setShowDeleteConfirm(false)}
-            title="Confirm Deletion"
-          >
-            <p className={styles.deleteConfirmText}>
-              Are you sure you want to delete this game? 
-              All associated fandoms and content will also be deleted. 
-              This action cannot be undone.
-            </p>
-            <div className={styles.deleteConfirmActions}>
-              <button
-                type="button"
-                className={styles.submitButton}
-                onClick={() => setShowDeleteConfirm(false)}
-                disabled={loading}
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                className={styles.deleteButton}
-                onClick={confirmDelete}
-                disabled={loading}
-              >
-                Delete
-              </button>
-            </div>
-          </Modal>
-        )}
       </div>
+
+      {showDeleteConfirm && (
+        <Modal
+          isOpen={showDeleteConfirm}
+          onClose={() => setShowDeleteConfirm(false)}
+          title="Confirm Deletion"
+          hideOverlay={true}
+        >
+          <p className={styles.deleteConfirmText}>
+            Are you sure you want to delete this game? 
+            All associated fandoms and content will also be deleted. 
+            This action cannot be undone.
+          </p>
+          <div className={styles.deleteConfirmActions}>
+            <button
+              type="button"
+              className={styles.submitButton}
+              onClick={() => setShowDeleteConfirm(false)}
+              disabled={loading}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              className={styles.deleteButton}
+              onClick={confirmDelete}
+              disabled={loading}
+            >
+              Delete
+            </button>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };

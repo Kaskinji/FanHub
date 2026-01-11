@@ -30,6 +30,45 @@ export class CategoryApi {
   }
 
   /**
+   * Создать новую категорию
+   */
+  async createCategory(name: string, icon?: string): Promise<Category> {
+    try {
+      const response = await axios.post<Category>(
+        `${this.baseUrl}/categories`,
+        { name, icon },
+        {
+          withCredentials: true,
+          timeout: 10000,
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error("Failed to create category:", error);
+      this.handleCategoryError(error, "Failed to create category");
+    }
+  }
+
+  /**
+   * Удалить категорию
+   */
+  async deleteCategory(id: number): Promise<void> {
+    try {
+      await axios.delete(
+        `${this.baseUrl}/categories/${id}`,
+        {
+          withCredentials: true,
+          timeout: 10000,
+        }
+      );
+    } catch (error) {
+      console.error("Failed to delete category:", error);
+      this.handleCategoryError(error, "Failed to delete category");
+    }
+  }
+
+  /**
    * Обработка ошибок
    */
   private handleCategoryError(error: unknown, defaultMessage: string): never {

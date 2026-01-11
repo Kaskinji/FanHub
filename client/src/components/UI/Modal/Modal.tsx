@@ -1,6 +1,7 @@
 // components/UI/Modal/Modal.tsx
 import type { FC, ReactNode, MouseEvent } from "react";
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import styles from "./Modal.module.scss"
 
 interface ModalProps {
@@ -9,6 +10,7 @@ interface ModalProps {
   title: string;
   children: ReactNode;
   className?: string;
+  hideOverlay?: boolean; // Опция для скрытия overlay
 }
 
 const Modal: FC<ModalProps> = ({ 
@@ -16,7 +18,8 @@ const Modal: FC<ModalProps> = ({
   onClose, 
   title, 
   children, 
-  className 
+  className,
+  hideOverlay = false
 }) => {
   // Закрытие по ESC и блокировка скролла wrapper
   useEffect(() => {
@@ -44,21 +47,29 @@ const Modal: FC<ModalProps> = ({
     }
   }, [isOpen, onClose]);
 
-  // Обработка клика по оверлею
+  // Обработка клика по оверлею (вне модального окна)
   const handleOverlayClick = (e: MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
   };
 
+  // Обработка клика по модальному окну - останавливаем всплытие
+  const handleModalClick = (e: MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+  };
+
   if (!isOpen) return null;
 
-  return (
+  const modalContent = (
     <div 
-      className={styles.modalOverlay} 
+      className={`${styles.modalOverlay} ${hideOverlay ? styles.noOverlay : ''}`} 
       onClick={handleOverlayClick}
     >
-      <div className={`${styles.modal} ${className || ''}`}>
+      <div 
+        className={`${styles.modal} ${hideOverlay ? styles.modalOverlayContent : ''} ${className || ''}`}
+        onClick={handleModalClick}
+      >
         <div className={styles.modalHeader}>
           <h2 className={styles.modalTitle}>{title}</h2>
           <button 
@@ -75,6 +86,9 @@ const Modal: FC<ModalProps> = ({
       </div>
     </div>
   );
+
+  // Используем Portal для рендеринга модального окна в body
+  return createPortal(modalContent, document.body);
 };
 
 export default Modal;
