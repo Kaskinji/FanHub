@@ -22,13 +22,11 @@ export interface CommentShowDto {
   authorName?: string;
   authorUsername?: string;
   authorAvatar?: string | null;
-  // Альтернативная структура (если сервер вернет объект author)
   author?: {
     id: number;
     username: string;
     avatar?: string;
   };
-  // Для обратной совместимости
   createdAt?: string;
   updatedAt?: string;
   parentCommentId?: number;
@@ -85,17 +83,14 @@ export class CommentApi {
 
       return response.data || [];
     } catch (error) {
-      // Если 404 - это нормально, значит у поста просто нет комментариев
       if (axios.isAxiosError(error) && error.response?.status === 404) {
         return [];
       }
       
-      // Для 401 (Unauthorized) возвращаем пустой массив без логирования
       if (axios.isAxiosError(error) && error.response?.status === 401) {
         return [];
       }
       
-      // Для других ошибок пробрасываем исключение
       this.handleCommentError(
         error,
         `Failed to fetch comments for post ID ${postId}`
@@ -198,21 +193,17 @@ export class CommentApi {
       return null;
     }
 
-    // Определяем данные автора из разных возможных структур
     let authorId: number;
     let authorUsername: string;
     let authorAvatar: string | undefined;
 
     if (comment.author) {
-      // Если есть объект author (старая структура)
       authorId = comment.author.id;
       authorUsername = comment.author.username;
       authorAvatar = comment.author.avatar
         ? this.getImageUrl(comment.author.avatar) || undefined
         : undefined;
     } else if (comment.userId && (comment.authorName || comment.authorUsername)) {
-      // Если есть плоская структура (новая структура)
-      // authorName содержит username для отображения, authorUsername может содержать login
       authorId = comment.userId;
       authorUsername = comment.authorName || comment.authorUsername || 'Unknown';
       authorAvatar = comment.authorAvatar
@@ -223,7 +214,6 @@ export class CommentApi {
       return null;
     }
 
-    // Используем commentDate или createdAt
     const createdAt = comment.commentDate || comment.createdAt || new Date().toISOString();
 
     const adapted: CommentType = {
@@ -266,7 +256,6 @@ export class CommentApi {
 
     console.log(`Successfully adapted ${adaptedComments.length} comments`);
 
-    // Организуем комментарии в иерархию (основные и ответы)
     const commentsMap = new Map<number, CommentType>();
     const rootComments: CommentType[] = [];
 
@@ -276,7 +265,6 @@ export class CommentApi {
 
     adaptedComments.forEach((comment) => {
       const originalComment = comments.find((c) => c.id === comment.id);
-      // Проверяем parentCommentId (может быть в разных полях)
       const parentCommentId = originalComment?.parentCommentId;
       
       if (parentCommentId) {
@@ -290,7 +278,6 @@ export class CommentApi {
           console.warn(
             `Parent comment ${parentCommentId} not found for comment ${comment.id}`
           );
-          // Если родитель не найден, добавляем как корневой комментарий
           rootComments.push(comment);
         }
       } else {

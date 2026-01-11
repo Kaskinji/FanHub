@@ -68,7 +68,6 @@ export const CategoriesManagement: FC = () => {
       setNewCategoryName("");
       setNewCategoryIcon("");
       setShowAddForm(false);
-      // Перезагружаем список категорий для синхронизации с сервером
       await loadCategories(false);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to create category";
@@ -99,7 +98,6 @@ export const CategoriesManagement: FC = () => {
       );
       setNewCategoryName("");
       setEditingCategoryId(null);
-      // Перезагружаем список категорий для синхронизации с сервером
       await loadCategories(false);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to update category";
@@ -123,13 +121,11 @@ export const CategoriesManagement: FC = () => {
     setError(null);
     
     try {
-      // Проверяем, есть ли посты с этой категорией
       const posts = await postApi.getPostsByCategoryId(id);
       setPostsCount(posts.length);
       setShowDeleteConfirm(true);
     } catch (err) {
       console.error("Error checking posts for category:", err);
-      // Если не удалось проверить, всё равно показываем модальное окно
       setPostsCount(0);
       setShowDeleteConfirm(true);
     } finally {
@@ -140,7 +136,6 @@ export const CategoriesManagement: FC = () => {
   const confirmDelete = async () => {
     if (!categoryToDelete) return;
 
-    // Если есть посты с этой категорией, запрещаем удаление
     if (postsCount > 0) {
       setError(`Cannot delete category "${categoryToDeleteName}". There are ${postsCount} post(s) using this category. Please reassign or delete these posts first.`);
       setShowDeleteConfirm(false);

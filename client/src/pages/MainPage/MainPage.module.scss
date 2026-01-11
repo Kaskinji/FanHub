@@ -10,7 +10,6 @@
     margin: 0 auto;
   }
   
-  // Стили для универсальной скелетон-карточки
   .cardSkeleton {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 8px;
@@ -21,13 +20,13 @@
     
     &Image {
       width: 100%;
-      height: 122px; // 146px * 0.83 (пропорционально высоте изображения)
+      height: 122px;
       background: rgba(255, 255, 255, 0.1);
     }
     
     &Content {
       padding: 12px;
-      height: 74px; // Оставшееся пространство
+      height: 74px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -178,7 +177,6 @@
       padding: 2rem 0;
   }
   
-  /* Медиа-запросы */
   @media (max-width: 768px) {
       .fandomsSection {
           margin-top: 2rem;

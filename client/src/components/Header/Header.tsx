@@ -112,12 +112,15 @@ const Header: FC<HeaderProps> = ({ onSearch, allGames }) => {
         clearTimeout(searchTimeoutRef.current);
       }
 
-      // Устанавливаем новый таймаут для debounce (300ms)
+      // Если есть все игры, выполняем поиск сразу (локальный поиск быстрый)
+      // Иначе используем debounce для API запросов (150ms вместо 300ms для меньшей задержки)
+      const debounceDelay = allGames && allGames.length > 0 ? 0 : 150;
+      
       searchTimeoutRef.current = setTimeout(() => {
         performSearch(query);
-      }, 300);
+      }, debounceDelay);
     },
-    [performSearch]
+    [performSearch, allGames]
   );
 
   // Обработчик отправки формы поиска

@@ -55,7 +55,7 @@ export default function AllGamesPage() {
 
   const handleGameCreated = () => {
     setShowGameForm(false);
-    loadGames(); // Перезагружаем игры после создания
+    loadGames();
   };
 
   if (error) {
@@ -107,7 +107,6 @@ export default function AllGamesPage() {
   );
 }
 
-/* ================= CONTENT ================= */
 interface ContentProps {
   games: GamePreview[];
   gamesData: GameReadDto[];
@@ -156,7 +155,6 @@ function Content({
 
       />
       
-      {/* Фильтр по жанрам (показывается/скрывается) */}
       {showGenreFilter && (
         <GenreFilter 
           genres={genres}
@@ -166,7 +164,6 @@ function Content({
         />
       )}
       
-      {/* Панель активных фильтров */}
       <ActiveFilters 
         selectedGenre={selectedGenre}
         onReset={onResetFilters}
@@ -174,7 +171,7 @@ function Content({
       
       <Games 
         games={games}
-        gamesData={gamesData} // ← Передаем
+        gamesData={gamesData}
         loading={loading}
         isAdmin={isAdmin}
         onAddGameClick={onAddGameClick}
@@ -241,8 +238,6 @@ function GenreFilter({ genres, selectedGenre, onSelect, onClose }: GenreFilterPr
   );
 }
 
-/* ================= TOP SECTION ================= */
-
 interface TopProps {
   onSearch: (query: string) => void;
   onToggleFilter: () => void;
@@ -260,14 +255,13 @@ function Top({ onSearch, onToggleFilter, showGenreFilter, searchQuery, sortOptio
     { value: "date-asc", label: "Oldest First" },
   ];
 
-  // Синхронизируем локальное состояние с пропом (например, при сбросе фильтров)
   useEffect(() => {
     setSearchValue(searchQuery);
   }, [searchQuery]);
 
   const handleChange = (query: string) => {
     setSearchValue(query);
-    onSearch(query); // Фильтрация происходит сразу при изменении
+    onSearch(query);
   };
 
   const handleSubmit = (query: string) => {
@@ -310,16 +304,16 @@ function Top({ onSearch, onToggleFilter, showGenreFilter, searchQuery, sortOptio
     </div>
   );
 }
-/* ================= gameS SECTION ================= */
+
 interface AllGamesProps {
   games: GamePreview[];
-  gamesData: GameReadDto[]; // ← Добавляем полные данные
+  gamesData: GameReadDto[];
   loading: boolean;
    isAdmin: boolean;
   onAddGameClick: () => void;
 }
+
 function Games({ games, gamesData, loading,  isAdmin, onAddGameClick  }: AllGamesProps) {
-  // Функция для рендеринга skeleton-карточек игр
   const renderGameSkeletons = (count: number = 6) => {
     return Array.from({ length: count }).map((_, index) => (
       <div key={`game-skeleton-${index}`} className={styles.gameSkeleton}>

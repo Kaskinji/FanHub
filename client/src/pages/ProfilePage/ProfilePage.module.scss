@@ -14,8 +14,16 @@
 
 .actions {
   margin-left: auto;
+  display: flex;
+  align-items: center;
 }
-
+.logoutIcon {
+  width: 20px;
+  height: 20px;
+  filter: invert(100%);
+  margin-left: 2px;
+  
+}
 .wrapper {
   margin-left: auto;
   display: flex;
@@ -34,13 +42,12 @@
 }
 
 .editButton {
-  background-color: #3b077f;
+  background-color: #4a1490;
   color: white;
   border: none;
-  padding: 12px 30px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 500;
+  padding: 5px 20px;
+  border-radius: 25px;
+  font-size: 0.85rem;
   cursor: pointer;
   transition: background-color 0.2s;
 
@@ -57,7 +64,7 @@
   padding: 6px 12px;
   font-size: 0.85rem;
   background-color: rgba(189, 143, 213, 0.2);
-  border: 1px solid rgba(189, 143, 213, 0.4);
+  border: none;
   color: white;
   margin-left: 20px;
   &:hover {
@@ -66,10 +73,10 @@
 }
 
 .logoutButton {
-  padding: 6px 12px;
+  padding: 0px 12px;
   font-size: 0.85rem;
   background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: none;
   color: white;
   margin-left: 20px;
   &:hover {

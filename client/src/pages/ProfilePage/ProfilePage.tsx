@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import type { User } from "../../types/AuthTypes";
 import { formatDateTime } from "../../utils/dateUtils";
 import { SERVER_CONFIG } from "../../config/apiConfig";
+import logoutIcon from "../../assets/logout.svg";
 import { Role } from "../../types/enums/Roles";
 
 export const ProfilePage: FC = () => {
@@ -126,7 +127,7 @@ export const ProfilePage: FC = () => {
                   onClick={handleLogout}
                   className={styles.logoutButton}
                 >
-                  Logout
+                  <img src={logoutIcon} alt="Logout" className={styles.logoutIcon}/>
                 </Button>
               </div>
               <div className={styles.registrationInfo}>

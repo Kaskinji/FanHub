@@ -28,13 +28,11 @@ const FandomCard: FC<FandomCardProps> = ({
         .join(" ");
 
     const handleAction = (event: MouseEvent, id: number) => {
-        // Если передан внешний onClick — вызываем его
         if (onClick) {
             onClick(id, name);
             return;
         }
 
-        // Иначе — стандартная навигация
         navigate(`/fandom/${id}`);
     };
 

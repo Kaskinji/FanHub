@@ -121,8 +121,6 @@ export class CategoryApi {
   }
 }
 
-// Экспортируем экземпляр по умолчанию
 export const categoryApi = new CategoryApi();
 
-// Для использования с кастомным URL
 export default CategoryApi;

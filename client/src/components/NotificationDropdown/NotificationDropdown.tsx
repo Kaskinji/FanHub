@@ -20,7 +20,7 @@ interface NotificationData extends NotificationWithViewedDto {
   fandomName?: string;
   eventTitle?: string | null;
   eventImage?: string | null;
-  postTitle?: string;
+  postTitle?: string | null;
   postImage?: string | null;
 }
 
@@ -85,7 +85,7 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
             const fandom = await fandomApi.getFandomById(notification.fandomId);
             enriched.fandomName = fandom.name;
             
-            // Если это уведомление о событии, загружаем последний ивент фандома
+            // Загружаем информацию в зависимости от типа уведомления
             if (notification.type === FandomNotificationType.EventCreated) {
               try {
                 const event = await eventApi.getEventById(notification.notifierId);
@@ -94,18 +94,16 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
               } catch (err) {
                 console.error("Failed to load event for notification:", err);
               }
-            }
-            if (notification.type === FandomNotificationType.PostCreated) {
+            } 
+            else if (notification.type === FandomNotificationType.PostCreated) {
               try {
                 const post = await postApi.getPostById(notification.notifierId);
-                enriched.eventTitle = post.title;
-                enriched.eventImage = post.mediaContent;
+                enriched.postTitle = post.title;
+                enriched.postImage = post.mediaContent;
               } catch (err) {
-                console.error("Failed to load event for notification:", err);
+                console.error("Failed to load post for notification:", err);
               }
             }
-            // Если это уведомление о посте, можно добавить логику для загрузки поста
-            // Пока оставляем без изменений
           } catch (err) {
             console.error("Failed to load fandom for notification:", err);
           }
@@ -230,10 +228,24 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
     return "N";
   };
 
+  const getNotificationContent = (notification: NotificationData) => {
+    if (notification.type === FandomNotificationType.EventCreated) {
+      return notification.eventTitle || "";
+    }
+    if (notification.type === FandomNotificationType.PostCreated) {
+      return notification.postTitle || "";
+    }
+    return "";
+  };
+
   const handleNotificationClick = (notification: NotificationData) => {
-    // Редиректим только на уведомления об ивентах
     if (notification.type === FandomNotificationType.EventCreated) {
       navigate(`/fandom/${notification.fandomId}/events`);
+      onClose();
+    } 
+    else if (notification.type === FandomNotificationType.PostCreated) {
+      // Добавьте навигацию для постов, если нужно
+      navigate(`/fandom/${notification.fandomId}/posts`);
       onClose();
     }
   };
@@ -267,6 +279,11 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
               const imageUrl = getNotificationImage(notification);
               const imageFallback = getNotificationImageFallback(notification);
               const notificationTitle = getNotificationTitle(notification);
+              const notificationContent = getNotificationContent(notification);
+              
+              // Делаем уведомление кликабельным только если это ивент или пост
+              const isClickable = notification.type === FandomNotificationType.EventCreated || 
+                                 notification.type === FandomNotificationType.PostCreated;
               
               return (
                 <div key={notification.id} className={styles.notificationGroup}>
@@ -282,18 +299,31 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
                     className={`${styles.notificationItem} ${
                       !notification.isViewed ? styles.unread : ""
                     } ${notification.isHidden ? styles.hidden : ""} ${
-                      notification.type === FandomNotificationType.EventCreated
-                        ? styles.clickable
-                        : ""
+                      isClickable ? styles.clickable : ""
                     }`}
-                    onClick={() => handleNotificationClick(notification)}
+                    onClick={() => isClickable && handleNotificationClick(notification)}
                   >
                     <div className={styles.notificationImageWrapper}>
                       {imageUrl ? (
                         <img
                           src={imageUrl}
-                          alt={notificationTitle.prefix + (notificationTitle.fandomName || "")}
+                          alt={notificationContent}
                           className={styles.notificationImage}
+                          onError={(e) => {
+                            // Если изображение не загрузилось, показываем плейсхолдер
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                            const parent = target.parentElement;
+                            if (parent) {
+                              parent.innerHTML = `
+                                <div class="${styles.notificationImagePlaceholder}">
+                                  <div class="${styles.firstLetterContainer}">
+                                    ${imageFallback.charAt(0).toUpperCase()}
+                                  </div>
+                                </div>
+                              `;
+                            }
+                          }}
                         />
                       ) : (
                         <div className={styles.notificationImagePlaceholder}>
@@ -302,16 +332,14 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
                       )}
                     </div>
                     <div className={styles.notificationContent}>
-                      <div className={styles.notificationFandomName}>
-                        {notification.eventTitle}
+                      <div className={styles.notificationContentText}>
+                        {notificationContent}
                       </div>
                     </div>
                     <div className={styles.notificationStatus}>
-                      {notification.isHidden ? (
-                        <span className={styles.statusHidden}>Hidden</span>
-                      ) : notification.isViewed ? (
-                        <div className={styles.statusReadWrapper}>
-                          <span className={styles.statusRead}>✓</span>
+                      {!notification.isHidden && !notification.isViewed && (
+                        <div className={styles.statusUnreadWrapper}>
+                          <span className={styles.statusUnreadDot}></span>
                           <button
                             className={styles.statusHideButton}
                             onClick={(e) => {
@@ -323,7 +351,24 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
                             ×
                           </button>
                         </div>
-                      ) : null}
+                      )}
+                      {!notification.isHidden && notification.isViewed && (
+                        <div className={styles.statusReadWrapper}>
+                          <button
+                            className={styles.statusHideButton}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleHide(notification.id);
+                            }}
+                            title="Hide notification"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      )}
+                      {notification.isHidden && (
+                        <span className={styles.statusHidden}>Hidden</span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -337,4 +382,3 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
 };
 
 export default NotificationDropdown;
-

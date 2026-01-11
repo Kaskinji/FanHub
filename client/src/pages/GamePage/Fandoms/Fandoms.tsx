@@ -15,9 +15,12 @@ export const Fandoms = ({ fandoms }: FandomsProps) => {
     );
   }
 
+  const displayedFandoms = fandoms.slice(0, 2);
+  const isSingleFandom = displayedFandoms.length === 1;
+
   return (
-    <section className={styles.fandoms}>
-      {fandoms.slice(0, 2).map((fandom) => (
+    <section className={`${styles.fandoms} ${isSingleFandom ? styles.singleFandom : ''}`}>
+      {displayedFandoms.map((fandom) => (
         <FandomCard
           key={fandom.id}
           id={fandom.id}

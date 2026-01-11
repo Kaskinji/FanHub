@@ -24,14 +24,13 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [games, setGames] = useState<GamePreview[]>([]);
-  const [allGamesData, setAllGamesData] = useState<GameReadDto[]>([]); // Все игры для поиска
+  const [allGamesData, setAllGamesData] = useState<GameReadDto[]>([]);
   const [fandoms, setFandoms] = useState<FandomPreview[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingFandoms, setLoadingFandoms] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [fandomsError, setFandomsError] = useState<string | null>(null);
   
-  // Состояния для поиска игр
   const [searchResults, setSearchResults] = useState<GameReadDto[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const searchTimeoutRef = useRef<number | null>(null);
@@ -45,13 +44,10 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
         
         const gamesData = await gameApi.getGames();
         
-        // Сохраняем все игры для поиска в Header
         setAllGamesData(gamesData);
         
-        // только первые 6 для отображения
         const firstSixGames = gamesData.slice(0, 6);
         
-        // Преобразуем в GamePreview
         const gamePreviews = gameApi.adaptToGamePreviews(firstSixGames);
         
         setGames(gamePreviews);
@@ -73,10 +69,8 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
         setLoadingFandoms(true);
         setFandomsError(null);
         
-        // Загружаем топ 6 популярных фандомов
         const fandomsData = await fandomApi.getPopularFandoms(6);
         
-        // Преобразуем FandomReadDto в FandomPreview
         const fandomPreviews: FandomPreview[] = fandomsData.map((fandom) => ({
           id: fandom.id,
           name: fandom.name,
@@ -96,7 +90,6 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
     loadFandoms();
   }, []);
 
-  // Поиск игр с debounce
   const performSearch = useCallback(async (query: string) => {
     if (!query.trim()) {
       setSearchResults([]);
@@ -115,35 +108,28 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
     }
   }, []);
 
-  // Обработчик изменения поискового запроса
   const handleSearchChange = useCallback((query: string) => {
     setSearchQuery(query);
     
-    // Очищаем предыдущий таймаут
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
     }
 
-    // Устанавливаем новый таймаут для debounce (300ms)
     searchTimeoutRef.current = setTimeout(() => {
       performSearch(query);
     }, 300);
   }, [performSearch]);
 
-  // Обработчик отправки формы поиска
   const handleSearchSubmit = useCallback(() => {
     onSearch();
     setSearchQuery("");
     setSearchResults([]);
   }, [onSearch]);
 
-  // Обработчик поиска для Header
   const handleSearch = useCallback(() => {
-    // Просто вызываем onSearch для Header
     onSearch();
   }, [onSearch]);
 
-  // Обработчик клика на результат поиска
   const handleGameClick = useCallback((game: GameReadDto) => {
     navigate(`/game/${game.id}`, {
       state: { game }
@@ -152,7 +138,6 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
     setSearchResults([]);
   }, [navigate]);
 
-  // Закрытие выпадающего списка при клике вне его
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchContainerRef.current && !searchContainerRef.current.contains(event.target as Node)) {
@@ -167,7 +152,6 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
     };
   }, []);
 
-  // Очистка таймаута при размонтировании
   useEffect(() => {
     return () => {
       if (searchTimeoutRef.current) {
@@ -184,7 +168,6 @@ const MainPage: FC<MainPageProps> = ({ onSearch = () => {} }) => {
     window.location.reload();
   };
 
-  // Функция для рендеринга скелетон-карточек
   const renderSkeletons = (count: number) => {
     return Array.from({ length: count }).map((_, index) => (
       <div key={`skeleton-${index}`} className={styles.cardSkeleton}>

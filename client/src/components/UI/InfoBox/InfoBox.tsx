@@ -1,4 +1,3 @@
-// components/UI/InfoBox/InfoBox.tsx
 import React from 'react';
 import styles from './InfoBox.module.scss';
 
