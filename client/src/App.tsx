@@ -12,6 +12,7 @@ import AllGamesPage from "./pages/AllGamesPage/AllGamesPage.tsx";
 import PostsPage from "./pages/PostsPage/PostsPage.tsx";
 import { AuthProvider } from "./contexts/AuthContext/AuthProvider.tsx";
 import { ProfilePage } from "./pages/ProfilePage/ProfilePage.tsx";
+import FandomServiceManagement from "./pages/FandomServiceManagement/FandomServiceManagement.tsx";
 
 const App: FC = () => {
   return (
@@ -30,6 +31,7 @@ const App: FC = () => {
               <Route path="/allgames" element={<AllGamesPage />} />
               <Route path="/posts" element={<PostsPage />} />
               <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/fandom-service-management" element={<FandomServiceManagement />} />
             </Routes>
           </Layout>
         </div>

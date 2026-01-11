@@ -1,5 +1,6 @@
-import { useState, useEffect, type FC } from "react";
+import { useState, useEffect, useCallback, type FC } from "react";
 import { categoryApi } from "../../api/CategoryApi";
+import { postApi } from "../../api/PostApi";
 import type { Category } from "../../types/Category";
 import { useAuth } from "../../hooks/useAuth";
 import { Role } from "../../types/enums/Roles";
@@ -7,7 +8,9 @@ import styles from "./CategoriesManagement.module.scss";
 import { AddButton } from "../UI/buttons/AddButton/AddButton";
 import Button from "../UI/buttons/Button/Button";
 import SectionTitle from "../UI/SectionTitle/SectionTitle";
+import Modal from "../UI/Modal/Modal";
 import deleteIcon from "../../assets/delete.svg";
+import editIcon from "../../assets/edit.svg";
 
 export const CategoriesManagement: FC = () => {
   const { user } = useAuth();
@@ -16,19 +19,21 @@ export const CategoriesManagement: FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [editingCategoryId, setEditingCategoryId] = useState<number | null>(null);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [newCategoryIcon, setNewCategoryIcon] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState<number | null>(null);
+  const [postsCount, setPostsCount] = useState<number>(0);
+  const [checkingPosts, setCheckingPosts] = useState(false);
+  const [categoryToDeleteName, setCategoryToDeleteName] = useState<string>("");
 
-  useEffect(() => {
-    if (isAdmin) {
-      loadCategories();
-    }
-  }, [isAdmin]);
-
-  const loadCategories = async () => {
+  const loadCategories = useCallback(async (showLoading: boolean = true) => {
     try {
-      setLoading(true);
+      if (showLoading) {
+        setLoading(true);
+      }
       setError(null);
       const data = await categoryApi.getAllCategories();
       setCategories(data);
@@ -37,9 +42,17 @@ export const CategoriesManagement: FC = () => {
       setError(errorMessage);
       console.error("Error loading categories:", err);
     } finally {
-      setLoading(false);
+      if (showLoading) {
+        setLoading(false);
+      }
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (isAdmin) {
+      loadCategories();
+    }
+  }, [isAdmin, loadCategories]);
 
   const handleAddCategory = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,14 +61,15 @@ export const CategoriesManagement: FC = () => {
     setIsSubmitting(true);
     setError(null);
     try {
-      const category = await categoryApi.createCategory(
+      await categoryApi.createCategory(
         newCategoryName.trim(),
         newCategoryIcon.trim() || undefined
       );
-      setCategories([...categories, category]);
       setNewCategoryName("");
       setNewCategoryIcon("");
       setShowAddForm(false);
+      // Перезагружаем список категорий для синхронизации с сервером
+      await loadCategories(false);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to create category";
       setError(errorMessage);
@@ -65,17 +79,93 @@ export const CategoriesManagement: FC = () => {
     }
   };
 
-  const handleDeleteCategory = async (id: number) => {
-    if (!confirm("Are you sure you want to delete this category?")) return;
+  const handleEditCategory = (category: Category) => {
+    setEditingCategoryId(category.id);
+    setNewCategoryName(category.name);
+    setShowAddForm(false);
+    setError(null);
+  };
+
+  const handleUpdateCategory = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newCategoryName.trim() || !editingCategoryId) return;
+
+    setIsSubmitting(true);
+    setError(null);
+    try {
+      await categoryApi.updateCategory(
+        editingCategoryId,
+        newCategoryName.trim()
+      );
+      setNewCategoryName("");
+      setEditingCategoryId(null);
+      // Перезагружаем список категорий для синхронизации с сервером
+      await loadCategories(false);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to update category";
+      setError(errorMessage);
+      console.error("Error updating category:", err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingCategoryId(null);
+    setNewCategoryName("");
+    setError(null);
+  };
+
+  const handleDeleteCategory = async (id: number, categoryName: string) => {
+    setCategoryToDelete(id);
+    setCategoryToDeleteName(categoryName);
+    setCheckingPosts(true);
+    setError(null);
+    
+    try {
+      // Проверяем, есть ли посты с этой категорией
+      const posts = await postApi.getPostsByCategoryId(id);
+      setPostsCount(posts.length);
+      setShowDeleteConfirm(true);
+    } catch (err) {
+      console.error("Error checking posts for category:", err);
+      // Если не удалось проверить, всё равно показываем модальное окно
+      setPostsCount(0);
+      setShowDeleteConfirm(true);
+    } finally {
+      setCheckingPosts(false);
+    }
+  };
+
+  const confirmDelete = async () => {
+    if (!categoryToDelete) return;
+
+    // Если есть посты с этой категорией, запрещаем удаление
+    if (postsCount > 0) {
+      setError(`Cannot delete category "${categoryToDeleteName}". There are ${postsCount} post(s) using this category. Please reassign or delete these posts first.`);
+      setShowDeleteConfirm(false);
+      setCategoryToDelete(null);
+      setCategoryToDeleteName("");
+      setPostsCount(0);
+      return;
+    }
 
     try {
       setError(null);
-      await categoryApi.deleteCategory(id);
-      setCategories(categories.filter(cat => cat.id !== id));
+      await categoryApi.deleteCategory(categoryToDelete);
+      setCategories(prev => prev.filter(cat => cat.id !== categoryToDelete));
+      setShowDeleteConfirm(false);
+      setCategoryToDelete(null);
+      setCategoryToDeleteName("");
+      setPostsCount(0);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to delete category";
       setError(errorMessage);
       console.error("Error deleting category:", err);
+      setShowDeleteConfirm(false);
+      setCategoryToDelete(null);
+      setCategoryToDeleteName("");
+      setPostsCount(0);
     }
   };
 
@@ -98,7 +188,7 @@ export const CategoriesManagement: FC = () => {
     <section className={styles.categoriesSection}>
       <div className={styles.sectionHeader}>
         <SectionTitle title="Categories Management" />
-        {!showAddForm && (
+        {!showAddForm && editingCategoryId === null && (
           <AddButton
             text="Add Category"
             onClick={() => setShowAddForm(true)}
@@ -112,8 +202,11 @@ export const CategoriesManagement: FC = () => {
         </div>
       )}
 
-      {showAddForm && (
-        <form onSubmit={handleAddCategory} className={styles.addForm}>
+      {(showAddForm || editingCategoryId !== null) && (
+        <form 
+          onSubmit={editingCategoryId !== null ? handleUpdateCategory : handleAddCategory} 
+          className={styles.addForm}
+        >
           <div className={styles.formGroup}>
             <label htmlFor="categoryName">Category Name *</label>
             <input
@@ -127,25 +220,13 @@ export const CategoriesManagement: FC = () => {
               autoFocus
             />
           </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="categoryIcon">Icon (optional)</label>
-            <input
-              type="text"
-              id="categoryIcon"
-              value={newCategoryIcon}
-              onChange={(e) => setNewCategoryIcon(e.target.value)}
-              placeholder="Icon URL or emoji"
-              disabled={isSubmitting}
-            />
-          </div>
           <div className={styles.formActions}>
             <Button
               type="button"
               variant="light"
-              onClick={() => {
+              onClick={editingCategoryId !== null ? handleCancelEdit : () => {
                 setShowAddForm(false);
                 setNewCategoryName("");
-                setNewCategoryIcon("");
                 setError(null);
               }}
               disabled={isSubmitting}
@@ -157,7 +238,10 @@ export const CategoriesManagement: FC = () => {
               variant="light"
               disabled={!newCategoryName.trim() || isSubmitting}
             >
-              {isSubmitting ? "Adding..." : "Add Category"}
+              {isSubmitting 
+                ? (editingCategoryId !== null ? "Updating..." : "Adding...") 
+                : (editingCategoryId !== null ? "Update Category" : "Add Category")
+              }
             </Button>
           </div>
         </form>
@@ -171,22 +255,95 @@ export const CategoriesManagement: FC = () => {
         <div className={styles.categoriesList}>
           {categories.map((category) => (
             <div key={category.id} className={styles.categoryItem}>
-              <div className={styles.categoryInfo}>
-                {category.icon && (
-                  <span className={styles.categoryIcon}>{category.icon}</span>
-                )}
-                <span className={styles.categoryName}>{category.name}</span>
-              </div>
-              <button
-                className={styles.deleteButton}
-                onClick={() => handleDeleteCategory(category.id)}
-                title="Delete category"
-              >
-                <img src={deleteIcon} alt="Delete" className={styles.deleteIcon} />
-              </button>
+              {editingCategoryId === category.id ? (
+                <div className={styles.categoryInfo}>
+                  <span className={styles.categoryName}>{category.name}</span>
+                  <span className={styles.editingLabel}>(Editing...)</span>
+                </div>
+              ) : (
+                <>
+                  <div className={styles.categoryInfo}>
+                    <span className={styles.categoryName}>{category.name}</span>
+                  </div>
+                  <div className={styles.categoryActions}>
+                    <button
+                      className={styles.editButton}
+                      onClick={() => handleEditCategory(category)}
+                      title="Edit category"
+                      disabled={showAddForm || editingCategoryId !== null}
+                    >
+                      <img src={editIcon} alt="Edit" className={styles.editIcon} />
+                    </button>
+                    <button
+                      className={styles.deleteButton}
+                      onClick={() => handleDeleteCategory(category.id, category.name)}
+                      title="Delete category"
+                      disabled={showAddForm || editingCategoryId !== null || checkingPosts}
+                    >
+                      <img src={deleteIcon} alt="Delete" className={styles.deleteIcon} />
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           ))}
         </div>
+      )}
+
+      {showDeleteConfirm && (
+        <Modal
+          isOpen={showDeleteConfirm}
+          onClose={() => {
+            setShowDeleteConfirm(false);
+            setCategoryToDelete(null);
+            setCategoryToDeleteName("");
+            setPostsCount(0);
+          }}
+          title={postsCount > 0 ? "Cannot Delete Category" : "Confirm Deletion"}
+        >
+          {checkingPosts ? (
+            <p className={styles.deleteConfirmText}>Checking posts...</p>
+          ) : postsCount > 0 ? (
+            <>
+              <p className={styles.deleteConfirmText}>
+                Cannot delete category <strong>"{categoryToDeleteName}"</strong>.
+              </p>
+              <p className={styles.deleteConfirmText}>
+                There {postsCount === 1 ? "is" : "are"} <strong>{postsCount}</strong> post{postsCount !== 1 ? "s" : ""} using this category.
+              </p>
+              <p className={styles.deleteConfirmWarning}>
+                Please reassign these posts to another category or delete them before deleting this category.
+              </p>
+            </>
+          ) : (
+            <p className={styles.deleteConfirmText}>
+              Are you sure you want to delete category <strong>"{categoryToDeleteName}"</strong>? This action cannot be undone.
+            </p>
+          )}
+          <div className={styles.deleteConfirmActions}>
+            <Button
+              type="button"
+              variant="light"
+              onClick={() => {
+                setShowDeleteConfirm(false);
+                setCategoryToDelete(null);
+                setCategoryToDeleteName("");
+                setPostsCount(0);
+              }}
+            >
+              {postsCount > 0 ? "Close" : "Cancel"}
+            </Button>
+            {postsCount === 0 && (
+              <button
+                type="button"
+                className={styles.deleteConfirmButton}
+                onClick={confirmDelete}
+              >
+                Delete
+              </button>
+            )}
+          </div>
+        </Modal>
       )}
     </section>
   );

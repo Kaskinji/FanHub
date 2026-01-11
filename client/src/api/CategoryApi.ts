@@ -51,6 +51,27 @@ export class CategoryApi {
   }
 
   /**
+   * Обновить категорию
+   */
+  async updateCategory(id: number, name: string, icon?: string): Promise<Category> {
+    try {
+      const response = await axios.put<Category>(
+        `${this.baseUrl}/categories/${id}`,
+        { name, icon },
+        {
+          withCredentials: true,
+          timeout: 10000,
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error("Failed to update category:", error);
+      this.handleCategoryError(error, "Failed to update category");
+    }
+  }
+
+  /**
    * Удалить категорию
    */
   async deleteCategory(id: number): Promise<void> {

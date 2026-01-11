@@ -9,13 +9,14 @@ import { useNavigate } from "react-router-dom";
 import type { User } from "../../types/AuthTypes";
 import { formatDateTime } from "../../utils/dateUtils";
 import { SERVER_CONFIG } from "../../config/apiConfig";
+import { Role } from "../../types/enums/Roles";
 
 export const ProfilePage: FC = () => {
   const { user, updateUser, isLoading: authLoading } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
   const navigate = useNavigate();
-
+  const isAdmin = user?.role === Role.Admin;
 
   const { logout } = useAuth();
 
@@ -111,6 +112,15 @@ export const ProfilePage: FC = () => {
                 <Button className={styles.editButton} onClick={handleEditClick}>
                   Manage Account
                 </Button>
+                {isAdmin && (
+                  <Button
+                    variant="light"
+                    onClick={() => navigate("/fandom-service-management")}
+                    className={styles.adminButton}
+                  >
+                    Service Management
+                  </Button>
+                )}
                 <Button
                   variant="light"
                   onClick={handleLogout}

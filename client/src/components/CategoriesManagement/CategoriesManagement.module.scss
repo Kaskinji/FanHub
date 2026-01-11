@@ -131,6 +131,52 @@
   font-weight: 500;
 }
 
+.editingLabel {
+  color: rgba(189, 143, 213, 0.8);
+  font-size: 0.85rem;
+  font-style: italic;
+  margin-left: 0.5rem;
+}
+
+.categoryActions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.editButton {
+  background: rgba(189, 143, 213, 0.1);
+  border: 1px solid rgba(189, 143, 213, 0.3);
+  border-radius: 8px;
+  padding: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: rgba(189, 143, 213, 0.2);
+    border-color: rgba(189, 143, 213, 0.5);
+    transform: scale(1.05);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.editIcon {
+  width: 18px;
+  height: 18px;
+  filter: invert(1);
+}
+
 .deleteButton {
   background: rgba(255, 107, 107, 0.1);
   border: 1px solid rgba(255, 107, 107, 0.3);
@@ -142,14 +188,34 @@
   justify-content: center;
   transition: all 0.2s ease;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background: rgba(255, 107, 107, 0.2);
     border-color: rgba(255, 107, 107, 0.5);
     transform: scale(1.05);
   }
 
-  &:active {
+  &:active:not(:disabled) {
     transform: scale(0.95);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.deleteConfirmButton
+{
+    background: transparent;
+  color: #ff6b6b;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 107, 107, 0.06);
   }
 }
 
