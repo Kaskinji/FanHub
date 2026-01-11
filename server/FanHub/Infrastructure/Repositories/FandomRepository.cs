@@ -50,6 +50,20 @@ namespace Infrastructure.Repositories
                 .FirstOrDefaultAsync( f => f.Id == id );
         }
 
+        public async Task<Fandom?> GetByIdWithAllIncludesAsync( int id )
+        {
+            return await _entities
+                .Include( f => f.Events )
+                .Include( f => f.Subscriptions )
+                .Include( f => f.Notifications )
+                    .ThenInclude( n => n.NotificationsViewed )
+                .Include( f => f.Posts )
+                    .ThenInclude( p => p.Reactions )
+                .Include( f => f.Posts )
+                    .ThenInclude( p => p.Comments )
+                .FirstOrDefaultAsync( f => f.Id == id );
+        }
+
         public async Task<List<Fandom>> GetPopularAsync( int limit )
         {
             return await _entities

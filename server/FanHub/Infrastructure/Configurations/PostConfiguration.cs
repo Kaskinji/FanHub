@@ -34,12 +34,12 @@ public class PostConfiguration : IEntityTypeConfiguration<Post>
         builder.HasMany( p => p.Comments )
             .WithOne( c => c.Post )
             .HasForeignKey( c => c.PostId )
-            .OnDelete( DeleteBehavior.Restrict );
+            .OnDelete( DeleteBehavior.ClientCascade );
 
         builder.HasMany( p => p.Reactions )
             .WithOne( c => c.Post )
             .HasForeignKey( c => c.PostId )
-            .OnDelete( DeleteBehavior.Restrict );
+            .OnDelete( DeleteBehavior.ClientCascade );
 
         builder.HasIndex( p => p.UserId );
         builder.HasIndex( p => p.FandomId );

@@ -118,6 +118,24 @@ namespace Application.Services
             await _categoryRepository.GetByIdAsyncThrow( post.CategoryId );
         }
 
+        public override async Task DeleteAsync( int id )
+        {
+            Post? entity = await _postRepository.GetByIdWithIncludesAsync( id );
+
+            if ( entity is null )
+            {
+                throw new KeyNotFoundException( $"Post with id {id} is not found" );
+            }
+
+            _logger.LogTrace( $"{typeof( Post ).Name} with id '{id}' was deleted." );
+
+            await CleanupBeforeDelete( entity );
+
+            _repository.Delete( entity );
+
+            await _unitOfWork.CommitAsync();
+        }
+
         protected override async Task CleanupBeforeDelete( Post entity )
         {
             if ( !string.IsNullOrEmpty( entity.MediaContent ) )

@@ -130,6 +130,24 @@ namespace Application.Services
             }
         }
 
+        public override async Task DeleteAsync( int id )
+        {
+            Fandom? entity = await _fandomRepository.GetByIdWithAllIncludesAsync( id );
+
+            if ( entity is null )
+            {
+                throw new KeyNotFoundException( $"Fandom with id {id} is not found" );
+            }
+
+            _logger.LogTrace( $"{typeof( Fandom ).Name} with id '{id}' was deleted." );
+
+            await CleanupBeforeDelete( entity );
+
+            _repository.Delete( entity );
+
+            await _unitOfWork.CommitAsync();
+        }
+
         protected override async Task CleanupBeforeDelete( Fandom entity )
         {
             if ( !string.IsNullOrEmpty( entity.CoverImage ) )

@@ -31,19 +31,23 @@ public class FandomConfiguration : IEntityTypeConfiguration<Fandom>
 
         builder.HasMany( f => f.Events )
             .WithOne( e => e.Fandom )
-            .HasForeignKey( e => e.FandomId );
+            .HasForeignKey( e => e.FandomId )
+            .OnDelete( DeleteBehavior.ClientCascade );
 
         builder.HasMany( f => f.Posts )
             .WithOne( p => p.Fandom )
-            .HasForeignKey( p => p.FandomId );
+            .HasForeignKey( p => p.FandomId )
+            .OnDelete( DeleteBehavior.ClientCascade );
 
         builder.HasMany( f => f.Subscriptions )
             .WithOne( s => s.Fandom )
-            .HasForeignKey( s => s.FandomId );
+            .HasForeignKey( s => s.FandomId )
+            .OnDelete( DeleteBehavior.ClientCascade );
 
         builder.HasMany( f => f.Notifications )
             .WithOne( s => s.Fandom )
-            .HasForeignKey( s => s.FandomId );
+            .HasForeignKey( s => s.FandomId )
+            .OnDelete( DeleteBehavior.ClientCascade );
 
         builder.HasIndex( f => f.GameId );
         builder.HasIndex( f => f.Name );

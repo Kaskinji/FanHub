@@ -38,7 +38,6 @@ namespace WebApi.Controllers
             return Ok( reaction );
         }
 
-        [Authorize]
         [HttpGet( "post/{postId}" )]
         public async Task<ActionResult<IReadOnlyList<ReactionReadDto>>> GetReactionsByPostId(
              [FromRoute] int postId )

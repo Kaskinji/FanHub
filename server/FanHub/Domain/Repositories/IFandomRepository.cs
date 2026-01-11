@@ -8,6 +8,7 @@ namespace Domain.Repositories
         Task<List<Fandom>> SearchByNameWithStatsAsync( string searchTerm );
         Task<List<Fandom>> GetAllWithStatsAsync();
         Task<Fandom?> GetByIdWithStatsAsync( int id );
+        Task<Fandom?> GetByIdWithAllIncludesAsync( int id );
         Task<List<Fandom>> GetPopularAsync( int limit );
         Task<List<Fandom>> GetPopularByGameAsync( int gameId, int? limit = null );
         Task<bool> IsFandomExistAsync( Fandom entity );

@@ -32,7 +32,7 @@ namespace Infrastructure.Configurations
             builder.HasOne( nv => nv.Notification )
                 .WithMany( n => n.NotificationsViewed )
                 .HasForeignKey( nv => nv.NotificationId )
-                .OnDelete( DeleteBehavior.Cascade );
+                .OnDelete( DeleteBehavior.ClientCascade );
 
             builder.HasOne( nv => nv.User )
                 .WithMany( u => u.NotificationsViewed )
