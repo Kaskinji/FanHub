@@ -30,12 +30,18 @@ export default function PostsPage() {
     loading,
     error,
     sortOption,
+    categories,
+    selectedCategory,
+    showCategoryFilter,
     loadPosts,
     refreshPost,
     updatePost,
     removePost,
     postsRef,
     setSort,
+    filterByCategory,
+    toggleCategoryFilter,
+    resetFilters,
   } = usePosts({
     fandomId: postsData?.fandomId,
   });
@@ -173,10 +179,16 @@ export default function PostsPage() {
         fandomName={postsData?.fandomName}
         isAuthenticated={isAuthenticated}
         sortOption={sortOption}
+        categories={categories}
+        selectedCategory={selectedCategory}
+        showCategoryFilter={showCategoryFilter}
         onPostClick={setSelectedPostId}
         onReaction={handleReaction}
         onAddPost={() => setShowPostForm(true)}
         onSortChange={setSort}
+        onCategorySelect={filterByCategory}
+        onToggleFilter={toggleCategoryFilter}
+        onResetFilters={resetFilters}
       />
 
       {selectedPost && (
