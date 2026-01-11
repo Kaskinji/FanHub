@@ -13,6 +13,7 @@ namespace Infrastructure.Repositories
         public async Task<List<NotificationViewed>> GetViewedNotificationsByUserIdAsync( int userId )
         {
             return await _entities
+                .Include( nv => nv.Notification )
                 .Where( nv => nv.UserId == userId )
                 .OrderByDescending( nv => nv.ViewedAt )
                 .ToListAsync();
@@ -21,6 +22,7 @@ namespace Infrastructure.Repositories
         public async Task<List<NotificationViewed>> GetViewedNotificationsByUserIdAsync( int userId, bool? isHidden )
         {
             IQueryable<NotificationViewed> query = _entities
+                .Include( nv => nv.Notification )
                 .Where( nv => nv.UserId == userId );
 
             if ( isHidden.HasValue )

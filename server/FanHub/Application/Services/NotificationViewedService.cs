@@ -17,12 +17,14 @@ namespace Application.Services
         private readonly INotificationRepository _notificationRepository;
         private readonly IUserRepository _userRepository;
         private readonly IFandomNotificationService _fandomNotificationService;
+        private readonly ISubscriptionRepository _subscriptionRepository;
 
         public NotificationViewedService(
             INotificationViewedRepository repository,
             INotificationRepository notificationRepository,
             IUserRepository userRepository,
             IFandomNotificationService fandomNotificationService,
+            ISubscriptionRepository subscriptionRepository,
             IMapper mapper,
             IValidator<NotificationViewed> validator,
             ILogger<NotificationViewedService> logger,
@@ -33,6 +35,7 @@ namespace Application.Services
             _notificationRepository = notificationRepository;
             _userRepository = userRepository;
             _fandomNotificationService = fandomNotificationService;
+            _subscriptionRepository = subscriptionRepository;
         }
 
         public async Task<List<NotificationViewedReadDto>> GetViewedNotificationsByUserIdAsync( int userId )
@@ -40,7 +43,15 @@ namespace Application.Services
             List<NotificationViewed> entities = await _notificationViewedRepository
                 .GetViewedNotificationsByUserIdAsync( userId );
 
-            return _mapper.Map<List<NotificationViewedReadDto>>( entities );
+            List<Subscription> subscriptions = await _subscriptionRepository.GetSubscriptionsByUserIdAsync( userId );
+            Dictionary<int, DateTime> subscriptionDates = subscriptions.ToDictionary( s => s.FandomId, s => s.Date );
+
+            List<NotificationViewed> filteredEntities = entities
+                .Where( nv => subscriptionDates.ContainsKey( nv.Notification.FandomId ) &&
+                              nv.Notification.CreatedAt >= subscriptionDates[nv.Notification.FandomId] )
+                .ToList();
+
+            return _mapper.Map<List<NotificationViewedReadDto>>( filteredEntities );
         }
 
         public async Task<List<NotificationViewedReadDto>> GetViewedNotificationsByUserIdAsync( int userId, bool? isHidden )
@@ -48,7 +59,15 @@ namespace Application.Services
             List<NotificationViewed> entities = await _notificationViewedRepository
                 .GetViewedNotificationsByUserIdAsync( userId, isHidden );
 
-            return _mapper.Map<List<NotificationViewedReadDto>>( entities );
+            List<Subscription> subscriptions = await _subscriptionRepository.GetSubscriptionsByUserIdAsync( userId );
+            Dictionary<int, DateTime> subscriptionDates = subscriptions.ToDictionary( s => s.FandomId, s => s.Date );
+
+            List<NotificationViewed> filteredEntities = entities
+                .Where( nv => subscriptionDates.ContainsKey( nv.Notification.FandomId ) &&
+                              nv.Notification.CreatedAt >= subscriptionDates[nv.Notification.FandomId] )
+                .ToList();
+
+            return _mapper.Map<List<NotificationViewedReadDto>>( filteredEntities );
         }
 
         public async Task<List<NotificationViewedReadDto>> GetViewedNotificationsByNotificationIdAsync( int notificationId )
@@ -249,10 +268,19 @@ namespace Application.Services
             Dictionary<int, NotificationViewed> viewedDict = viewedNotifications
                 .ToDictionary( v => v.NotificationId, v => v );
 
+            List<Subscription> subscriptions = await _subscriptionRepository.GetSubscriptionsByUserIdAsync( userId );
+            Dictionary<int, DateTime> subscriptionDates = subscriptions.ToDictionary( s => s.FandomId, s => s.Date );
+
             List<NotificationWithViewedDto> result = new();
 
             foreach ( FandomNotificationReadDto notification in notifications )
             {
+                if ( !subscriptionDates.ContainsKey( notification.FandomId ) ||
+                     notification.CreatedAt < subscriptionDates[notification.FandomId] )
+                {
+                    continue;
+                }
+
                 viewedDict.TryGetValue( notification.Id, out NotificationViewed? viewed );
 
                 if ( isHidden.HasValue )

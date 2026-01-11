@@ -43,5 +43,13 @@ namespace WebApi.Controllers
 
             return Ok( notifications );
         }
+        [Authorize]
+        [HttpDelete( "{id}" )]
+        public async Task<IActionResult> DeleteById( int id )
+        {
+            await _notificationService.DeleteAsync( id );
+
+            return Ok();
+        }
     }
 }

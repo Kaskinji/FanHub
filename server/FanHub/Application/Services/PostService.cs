@@ -21,6 +21,7 @@ namespace Application.Services
         private readonly IUserRepository _userRepository;
         private readonly IPostRepository _postRepository;
         private readonly IImageTools _imageTools;
+        private readonly INotificationRepository _notificationRepository;
 
         public PostService( IPostRepository repository,
             IFandomService fandomService,
@@ -30,13 +31,15 @@ namespace Application.Services
             IValidator<Post> validator,
             ILogger<PostService> logger,
             IUnitOfWork unitOfWork,
-            IImageTools imageTools ) : base( repository, mapper, validator, logger, unitOfWork )
+            IImageTools imageTools,
+            INotificationRepository notificationRepository ) : base( repository, mapper, validator, logger, unitOfWork )
         {
             _fandomService = fandomService;
             _categoryRepository = categoryRepository;
             _userRepository = userRepository;
             _postRepository = repository;
             _imageTools = imageTools;
+            _notificationRepository = notificationRepository;
         }
 
         public override async Task<List<PostReadDto>> GetAll()
@@ -141,6 +144,15 @@ namespace Application.Services
             if ( !string.IsNullOrEmpty( entity.MediaContent ) )
             {
                 await _imageTools.TryDeleteImageAsync( entity.MediaContent );
+            }
+
+            // Удаляем связанные уведомления
+            List<FandomNotification> notifications = await _notificationRepository.FindAllAsync( 
+                n => n.NotifierId == entity.Id && n.Type == FandomNotificationType.NewPost );
+            
+            foreach ( FandomNotification notification in notifications )
+            {
+                _notificationRepository.Delete( notification );
             }
         }
 

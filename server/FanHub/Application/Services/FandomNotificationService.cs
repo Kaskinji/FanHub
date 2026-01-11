@@ -15,6 +15,7 @@ namespace Application.Services
         private readonly INotificationRepository _notificationRepository;
         private readonly ISubscriptionRepository _subscriptionRepository;
         private readonly INotificationHubService _notificationHubService;
+        private readonly INotificationViewedRepository _notificationViewedRepository;
 
         public FandomNotificationService( INotificationRepository NotificationRepository,
             IUserRepository UserRepository,
@@ -22,6 +23,7 @@ namespace Application.Services
             IEventRepository eventRepository,
             ISubscriptionRepository subscriptionRepository,
             INotificationHubService notificationHubService,
+            INotificationViewedRepository notificationViewedRepository,
             IMapper mapper,
             IValidator<FandomNotification> validator,
             ILogger<FandomNotificationService> logger,
@@ -30,6 +32,7 @@ namespace Application.Services
             _notificationRepository = NotificationRepository;
             _subscriptionRepository = subscriptionRepository;
             _notificationHubService = notificationHubService;
+            _notificationViewedRepository = notificationViewedRepository;
         }
 
         public async Task<List<FandomNotificationReadDto>> GetNotificationsByFandomIdAsync( int fandomId )
@@ -71,6 +74,17 @@ namespace Application.Services
             if ( userIds.Count > 0 )
             {
                 await _notificationHubService.SendNotificationToUsersAsync( userIds, notificationDto );
+            }
+        }
+
+        protected override async Task CleanupBeforeDelete( FandomNotification entity )
+        {
+            // Удаляем все просмотры этого уведомления
+            List<NotificationViewed> vieweds = await _notificationViewedRepository.GetViewedNotificationsByNotificationIdAsync( entity.Id );
+            
+            if ( vieweds.Count > 0 )
+            {
+                await _notificationViewedRepository.BulkDeleteAsync( vieweds );
             }
         }
     }
