@@ -42,4 +42,4 @@ Frontend:
 
 #### ER-диаграмма
 
-![FanHubERD](https://github.com/user-attachments/assets/43649526-bc89-477c-8d4a-2f71fa0d90cc)
+![FanHubDiagram](https://github.com/user-attachments/assets/8c04937c-cd3f-4b38-99de-39d83a7b7621)
