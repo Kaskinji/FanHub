@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import Header from "../../components/Header/Header";
 import PostFull from "../../components/Post/PostFull/PostFull";
@@ -6,6 +6,7 @@ import PostForm from "./PostForm/PostForm";
 import styles from "./PostsPage.module.scss";
 import type { PostsContextData } from "../../types/Post";
 import { postApi } from "../../api/PostApi";
+import { fandomApi } from "../../api/FandomApi";
 import ErrorState from "../../components/ErrorState/ErrorState";
 import { useAuth } from "../../hooks/useAuth";
 import { usePosts } from "../../hooks/usePosts";
@@ -15,7 +16,16 @@ import { PostsList } from "./components/PostsList";
 
 export default function PostsPage() {
   const location = useLocation();
-  const postsData = location.state as PostsContextData;
+  const params = useParams<{ id: string }>();
+  const postsDataFromState = location.state as PostsContextData | undefined;
+  
+  // Приоритет: сначала проверяем параметр из URL, затем из state
+  const fandomIdFromUrl = params.id ? parseInt(params.id, 10) : undefined;
+  const fandomId = fandomIdFromUrl || postsDataFromState?.fandomId;
+  const fandomNameFromState = postsDataFromState?.fandomName;
+  const postIdFromState = postsDataFromState?.postId;
+  
+  const [fandomName, setFandomName] = useState<string | undefined>(fandomNameFromState);
   const { isAuthenticated } = useAuth();
   
   const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
@@ -43,7 +53,7 @@ export default function PostsPage() {
     toggleCategoryFilter,
     resetFilters,
   } = usePosts({
-    fandomId: postsData?.fandomId,
+    fandomId: fandomId,
   });
 
   const {
@@ -75,18 +85,34 @@ export default function PostsPage() {
     onPostUpdate: handlePostUpdate,
   });
 
+  // Загружаем название фандома через API, если его нет в state
+  useEffect(() => {
+    const loadFandomName = async () => {
+      if (fandomId && !fandomName) {
+        try {
+          const fandom = await fandomApi.getFandomById(fandomId);
+          setFandomName(fandom.name);
+        } catch (err) {
+          console.error("Failed to load fandom name:", err);
+        }
+      }
+    };
+
+    loadFandomName();
+  }, [fandomId, fandomName]);
+
   // Устанавливаем selectedPostId после загрузки постов (только один раз при монтировании)
   useEffect(() => {
-    if (postsData?.postId && !loading && !hasProcessedInitialPostId.current) {
+    if (postIdFromState && !loading && !hasProcessedInitialPostId.current) {
       // Устанавливаем ID поста после завершения загрузки
       // useSelectedPost сам проверит наличие поста в списке или загрузит через API
       hasProcessedInitialPostId.current = true;
       const timer = setTimeout(() => {
-        setSelectedPostId(postsData.postId!);
+        setSelectedPostId(postIdFromState);
       }, 300); // Задержка, чтобы убедиться, что postsRef обновлен после загрузки
       return () => clearTimeout(timer);
     }
-  }, [postsData?.postId, loading]);
+  }, [postIdFromState, loading]);
 
   const handleAddComment = async (content: string) => {
     if (!selectedPostId) return;
@@ -176,7 +202,7 @@ export default function PostsPage() {
       <PostsList
         posts={posts}
         loading={loading}
-        fandomName={postsData?.fandomName}
+        fandomName={fandomName}
         isAuthenticated={isAuthenticated}
         sortOption={sortOption}
         categories={categories}
@@ -207,20 +233,20 @@ export default function PostsPage() {
         />
       )}
 
-      {showPostForm && postsData?.fandomId && (
+      {showPostForm && fandomId && (
         <div className={styles.formContainer}>
           <PostForm
-            fandomId={postsData.fandomId}
+            fandomId={fandomId}
             onCancel={() => setShowPostForm(false)}
             onSuccess={handleCreatePostSuccess}
           />
         </div>
       )}
 
-      {editingPostId && postsData?.fandomId && (
+      {editingPostId && fandomId && (
         <div className={styles.formContainer}>
           <PostForm
-            fandomId={postsData.fandomId}
+            fandomId={fandomId}
             postId={editingPostId}
             onCancel={() => setEditingPostId(null)}
             onSuccess={handleEditPostSuccess}

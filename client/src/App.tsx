@@ -27,6 +27,7 @@ const App: FC = () => {
               <Route path="/game/:id" element={<GamePage />} />
               <Route path="/fandom/:id" element={<FandomPage />} />
               <Route path="/fandom/:id/events" element={<FandomEventsPage />} />
+              <Route path="/fandom/:id/posts" element={<PostsPage />} />
               <Route path="/allfandoms/:gameId?" element={<AllFandomsPage />} />
               <Route path="/allgames" element={<AllGamesPage />} />
               <Route path="/posts" element={<PostsPage />} />

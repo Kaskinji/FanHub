@@ -79,7 +79,7 @@ const GameFormModal: FC<GameFormModalProps> = ({ isOpen, onClose, onSubmit }) =>
   const genres = [
     'Action', 'Adventure', 'RPG', 'Strategy', 'Simulation', 
     'Sports', 'Puzzle', 'Idle', 'Arcade', 'Racing', 'Fighting',
-    'Shooter', 'Survival', 'Horror', 'Platformer', 'MMO'
+    'Shooter', 'Survival', 'Horror', 'Platformer', 'MMO', 'Novel'
   ];
 
   return (

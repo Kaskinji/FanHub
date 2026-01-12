@@ -115,6 +115,10 @@ const PostFull: FC<PostFullProps> = ({
           </div>
         </header>
         
+        <article className={styles.content}>
+          <h1 className={styles.title}>{post.title}</h1>
+        </article>
+        
         {post.image && (
           <div className={styles.postImage}>
             <img src={post.image} alt={post.title} />
@@ -122,11 +126,9 @@ const PostFull: FC<PostFullProps> = ({
         )}
         
         <article className={styles.content}>
-          <h1 className={styles.title}>{post.title}</h1>
           <div className={styles.text}>
             {post.content}
           </div>
-          
         </article>
         
         <div className={styles.reactions}>

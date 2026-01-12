@@ -152,6 +152,7 @@ export const PostForm = ({
   const handleRemoveImage = () => {
     setImageFile(null);
     setImagePreview("");
+    setFormData((prev) => ({ ...prev, image: undefined }));
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -196,11 +197,32 @@ export const PostForm = ({
           return;
         }
         
+        // Определяем значение mediaContent:
+        // 1. Если загружено новое изображение - используем его
+        // 2. Если изображение было удалено (imagePreview пустое) - отправляем пустую строку
+        // 3. Если старое изображение существует и не было удалено - используем его
+        let mediaContent: string | undefined;
+        if (imageName) {
+          // Новое изображение загружено
+          mediaContent = imageName;
+        } else if (!imagePreview) {
+          // Изображение было удалено или его не было
+          // Если было старое изображение, отправляем пустую строку для удаления
+          // Если не было, отправляем undefined
+          mediaContent = formData.image ? "" : undefined;
+        } else if (formData.image && !imageFile) {
+          // Старое изображение остается (есть preview и нет нового файла)
+          mediaContent = formData.image;
+        } else {
+          // Нет изображения
+          mediaContent = undefined;
+        }
+
         const updateDto: PostUpdateDto = {
           title: formData.title.trim(),
           content: formData.content.trim(),
           categoryId: formData.categoryId,
-          mediaContent: imageName || (formData.image ? undefined : ""),
+          mediaContent: mediaContent,
         };
         await postApi.updatePost(postId, updateDto);
         onSuccess(postId);

@@ -9,6 +9,7 @@ import { FirstLetter } from "../UI/FirstLetter/FirstLetter";
 import { getImageUrl } from "../../utils/urlUtils";
 import styles from "./NotificationDropdown.module.scss";
 import { postApi } from "../../api/PostApi";
+import type { PostsContextData } from "../../types/Post";
 
 interface NotificationDropdownProps {
   isOpen: boolean;
@@ -107,7 +108,7 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
           } catch (err) {
             console.error("Failed to load fandom for notification:", err);
           }
-          
+          console.log(enriched)
           return enriched;
         })
       );
@@ -123,6 +124,16 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
   const handleHide = (notificationId: number) => {
     // Добавляем в буфер удаления вместо немедленного удаления
     setPendingDeleteIds((prev) => new Set([...prev, notificationId]));
+  };
+
+  const handleHideAll = () => {
+    // Добавляем все уведомления (кроме уже скрытых) в буфер удаления
+    setPendingDeleteIds((prev) => {
+      const allVisibleIds = notifications
+        .filter((n) => !prev.has(n.id))
+        .map((n) => n.id);
+      return new Set([...prev, ...allVisibleIds]);
+    });
   };
 
   const handleDeletePending = useCallback(async (idsToDelete: number[]) => {
@@ -244,8 +255,14 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
       onClose();
     } 
     else if (notification.type === FandomNotificationType.PostCreated) {
-      // Добавьте навигацию для постов, если нужно
-      navigate(`/fandom/${notification.fandomId}/posts`);
+      // Переходим на страницу постов с передачей данных о фандоме
+      navigate(`/fandom/${notification.fandomId}/posts`, {
+        state: {
+          fandomId: notification.fandomId,
+          fandomName: notification.fandomName,
+          postId: notification.notifierId, // ID поста для автоматического открытия
+        } as PostsContextData,
+      });
       onClose();
     }
   };
@@ -261,6 +278,15 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
       <div className={styles.header}>
         <h3 className={styles.title}>Notifications</h3>
         <div className={styles.headerActions}>
+          {!isLoading && visibleNotifications.length > 0 && (
+            <button 
+              className={styles.hideAllButton} 
+              onClick={handleHideAll}
+              title="Hide all notifications"
+            >
+              Hide all
+            </button>
+          )}
           <button className={styles.closeButton} onClick={onClose} aria-label="Close">
             ×
           </button>
@@ -268,7 +294,23 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
       </div>
       <div className={styles.content}>
         {isLoading ? (
-          <div className={styles.loading}>Loading notifications...</div>
+          <div className={styles.loading}>
+            <div className={styles.notificationSkeletons}>
+              {Array.from({ length: 4 }).map((_, index) => (
+                <div key={`skeleton-${index}`} className={styles.notificationSkeletonGroup}>
+                  <div className={styles.notificationSkeletonHeader} />
+                  <div className={styles.notificationSkeletonItem}>
+                    <div className={styles.notificationSkeletonImage} />
+                    <div className={styles.notificationSkeletonContent}>
+                      <div className={styles.notificationSkeletonText} />
+                      <div className={styles.notificationSkeletonText} />
+                    </div>
+                    <div className={styles.notificationSkeletonStatus} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         ) : error ? (
           <div className={styles.error}>{error}</div>
         ) : visibleNotifications.length === 0 ? (

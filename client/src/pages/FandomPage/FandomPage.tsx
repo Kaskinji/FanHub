@@ -206,7 +206,7 @@ export default function FandomPage() {
   }
 
   const handleShowMore = () => {
-    navigate(`/posts`, {
+    navigate(`/fandom/${fandomData.id}/posts`, {
       state: {
         fandomId: fandomData.id,
         fandomName: fandomData.title,

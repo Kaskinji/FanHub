@@ -27,7 +27,7 @@ export function PostCard({ id, title, image, author, reactions, fandomId, fandom
   const handleClick = () => {
     // Редирект на страницу постов с передачей данных о фандоме
     if (fandomId && fandomName) {
-      navigate(`/posts`, {
+      navigate(`/fandom/${fandomId}/posts`, {
         state: {
           fandomId: fandomId,
           fandomName: fandomName,
