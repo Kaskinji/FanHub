@@ -35,6 +35,7 @@ Backend:
  - **СУБД:** MSSQL server
  - **Язык:** C#
  - **Фреймворк:** Entity Framework
+ - **Контейнеризация** Docker
 
 Frontend:
  - **Язык:** Typescript
