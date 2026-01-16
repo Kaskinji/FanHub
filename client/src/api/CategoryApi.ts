@@ -9,9 +9,7 @@ export class CategoryApi {
     this.baseUrl = baseUrl;
   }
 
-  /**
-   * Получить все категории
-   */
+  
   async getAllCategories(): Promise<Category[]> {
     try {
       const response = await axios.get<Category[]>(
@@ -29,9 +27,7 @@ export class CategoryApi {
     }
   }
 
-  /**
-   * Создать новую категорию
-   */
+  
   async createCategory(name: string, icon?: string): Promise<Category> {
     try {
       const response = await axios.post<Category>(
@@ -50,9 +46,7 @@ export class CategoryApi {
     }
   }
 
-  /**
-   * Обновить категорию
-   */
+  
   async updateCategory(id: number, name: string, icon?: string): Promise<Category> {
     try {
       const response = await axios.put<Category>(
@@ -71,9 +65,7 @@ export class CategoryApi {
     }
   }
 
-  /**
-   * Удалить категорию
-   */
+  
   async deleteCategory(id: number): Promise<void> {
     try {
       await axios.delete(
@@ -89,9 +81,7 @@ export class CategoryApi {
     }
   }
 
-  /**
-   * Обработка ошибок
-   */
+  
   private handleCategoryError(error: unknown, defaultMessage: string): never {
     if (axios.isAxiosError(error)) {
       if (error.response) {

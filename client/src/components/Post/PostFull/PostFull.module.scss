@@ -1,4 +1,4 @@
-// components/Post/PostFull.module.scss
+
 .overlay {
   position: fixed;
   top: 0;
@@ -215,17 +215,17 @@
   place-items: center;
   
   img {
-    // Базовые ограничения
+    
     max-width: 100%;
     max-height: 700px;
     
-    // Автоматическое определение ориентации
-    // Если ширина больше высоты - горизонтальное
+    
+    
     &[width] {
       height: auto;
     }
     
-    // Если высота больше ширины - вертикальное  
+    
     &[height] {
       width: auto;
     }

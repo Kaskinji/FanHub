@@ -4,7 +4,7 @@ import styles from "./Top.module.scss";
 import subscriberIcon from "../../../assets/subscriberIcon.svg";
 import postIcon from "../../../assets/postIcon.svg";
 
-interface TopProps {
+type TopProps = {
   onSearch: (query: string) => void;
   gameTitle: string;
   gameId?: number;
@@ -18,14 +18,14 @@ interface TopProps {
 export const Top = ({ onSearch, gameTitle, searchQuery, sortBy, sortOrder, onSortChange, hasStats }: TopProps)  => {
   const [searchValue, setSearchValue] = useState(searchQuery);
 
-  // Синхронизируем локальное состояние с пропом (например, при сбросе фильтров)
+  
   useEffect(() => {
     setSearchValue(searchQuery);
   }, [searchQuery]);
 
   const handleChange = (query: string) => {
     setSearchValue(query);
-    onSearch(query); // Фильтрация происходит сразу при изменении
+    onSearch(query); 
   };
 
   const handleSubmit = (query: string) => {
@@ -34,10 +34,10 @@ export const Top = ({ onSearch, gameTitle, searchQuery, sortBy, sortOrder, onSor
 
   const getSortIcon = (type: 'name' | 'subscribers' | 'posts') => {
     if (sortBy !== type) {
-      // Если не выбрана эта сортировка - показываем нейтральную иконку
+      
       return <span className={styles.sortIcon}>⇅</span>;
     }
-    // Показываем направление сортировки
+    
     return sortOrder === 'asc' ? (
       <span className={styles.sortIcon}>↑</span>
     ) : (

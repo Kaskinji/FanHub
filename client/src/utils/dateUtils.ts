@@ -18,7 +18,7 @@ export const formatDateTime = (dateInput: string | Date): string => {
 
 export const formatDateOnly = (dateInput: string | Date): string => {
   const date = new Date(dateInput);
-  return date.toLocaleDateString("ru-RU"); // 24.12.2025
+  return date.toLocaleDateString("ru-RU"); 
 };
 
 export const formatTimeOnly = (dateInput: string | Date): string => {
@@ -26,5 +26,5 @@ export const formatTimeOnly = (dateInput: string | Date): string => {
   return date.toLocaleTimeString("ru-RU", {
     hour: "2-digit",
     minute: "2-digit",
-  }); // 20:28
+  }); 
 };

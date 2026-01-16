@@ -3,13 +3,13 @@ import { API_CONFIG } from "../config/apiConfig";
 
 export type ReactionType = "like" | "dislike";
 
-// Маппинг между числовыми значениями enum с сервера и строковыми типами
+
 export const ReactionTypeMap: Record<number, ReactionType> = {
   0: "like",
   1: "dislike",
 };
 
-// Обратный маппинг: строка -> число (для отправки на сервер)
+
 export const ReactionTypeToNumber: Record<ReactionType, number> = {
   like: 0,
   dislike: 1,
@@ -46,7 +46,7 @@ export class ReactionApi {
       );
       return response.data || [];
     } catch (error) {
-      // Если endpoint не существует, возвращаем пустой массив
+      
       if (axios.isAxiosError(error) && error.response?.status === 404) {
         return [];
       }
@@ -55,9 +55,7 @@ export class ReactionApi {
     }
   }
 
-  /**
-   * Получить реакции по postId
-   */
+  
   async getPostReactions(postId: number): Promise<ReactionReadDto[]> {
     try {
       const response = await axios.get<ReactionReadDto[]>(
@@ -69,19 +67,19 @@ export class ReactionApi {
       );
       return response.data || [];
     } catch (error) {
-      // Если endpoint не существует, возвращаем пустой массив
+      
       if (axios.isAxiosError(error) && error.response?.status === 404) {
         console.warn(`Endpoint /reactions/post/${postId} not found, falling back to getReactionsByPost`);
-        // Fallback на старый метод для обратной совместимости
+        
         try {
           const allReactions = await this.getReactionsByPost();
           return allReactions.filter((r: ReactionReadDto) => r.postId === postId);
         } catch (fallbackError) {
-          // Если и fallback не работает (например, 401), возвращаем пустой массив
+          
           return [];
         }
       }
-      // Для 401 (Unauthorized) просто возвращаем пустой массив без логирования
+      
       if (axios.isAxiosError(error) && error.response?.status === 401) {
         return [];
       }
@@ -90,9 +88,7 @@ export class ReactionApi {
     }
   }
 
-  /**
-   * Получить реакцию пользователя на пост по типу
-   */
+  
   async getUserReaction(
     postId: number,
     reactionType: ReactionType,
@@ -110,34 +106,32 @@ export class ReactionApi {
     }
   }
 
-  /**
-   * Добавить реакцию на пост
-   */
+  
   async addReaction(
     postId: number,
     reactionType: ReactionType
   ): Promise<number> {
     try {
-      // Проверяем валидность postId
+      
       if (!postId || postId === 0) {
         throw new Error(`Invalid postId: ${postId}`);
       }
 
-      // Преобразуем строковый тип в числовое значение enum для сервера
+      
       const reactionTypeNumber = ReactionTypeToNumber[reactionType];
       
       if (reactionTypeNumber === undefined) {
         throw new Error(`Invalid reaction type: ${reactionType}`);
       }
       
-      // Отправляем данные напрямую, как в других API методах
-      // Пробуем оба варианта: с dto и без dto
+      
+      
       const requestDataDirect = {
         postId,
-        type: reactionTypeNumber, // Отправляем число (enum value)
+        type: reactionTypeNumber, 
       };
       
-      // Также пробуем с оберткой dto (на случай, если сервер требует)
+      
       const requestDataWithDto = {
         dto: requestDataDirect
       };
@@ -145,7 +139,7 @@ export class ReactionApi {
       console.log('Sending reaction data (direct):', requestDataDirect);
       console.log('PostId:', postId, 'Original type:', reactionType, 'Numeric type:', reactionTypeNumber);
       
-      // Пробуем сначала без обертки dto
+      
       let response;
       try {
         response = await axios.post<number>(
@@ -161,7 +155,7 @@ export class ReactionApi {
         );
         return response.data;
       } catch (directError) {
-        // Если не сработало без dto, пробуем с оберткой dto
+        
         if (axios.isAxiosError(directError) && directError.response?.status === 400) {
           console.log('Direct request failed, trying with dto wrapper...');
           response = await axios.post<number>(
@@ -194,9 +188,7 @@ export class ReactionApi {
     }
   }
 
-  /**
-   * Удалить реакцию с поста
-   */
+  
   async removeReaction(reactionId: number): Promise<void> {
     try {
       await axios.delete(
@@ -214,9 +206,7 @@ export class ReactionApi {
     }
   }
 
-  /**
-   * Обработка ошибок
-   */
+  
   private handleReactionError(error: unknown, defaultMessage: string): never {
     if (axios.isAxiosError(error)) {
       if (error.response) {
@@ -250,8 +240,8 @@ export class ReactionApi {
   }
 }
 
-// Экспортируем экземпляр по умолчанию
+
 export const reactionApi = new ReactionApi();
 
-// Для использования с кастомным URL
+
 export default ReactionApi;

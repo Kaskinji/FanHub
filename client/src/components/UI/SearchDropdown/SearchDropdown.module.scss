@@ -13,7 +13,7 @@
     overflow-x: hidden;
     z-index: 1000;
 
-    // Стилизация скроллбара
+    
     &::-webkit-scrollbar {
         width: 8px;
     }
@@ -27,7 +27,7 @@
     }
 }
 
-// Темная тема
+
 .searchDropdownDark {
     background-color: #59119d;
 
@@ -44,7 +44,7 @@
     }
 }
 
-// Светлая тема
+
 .searchDropdownLight {
     background: white;
     border: 2px solid rgba(64, 10, 114, 0.3);
@@ -96,7 +96,7 @@
     }
 }
 
-// Темная тема - hover для элемента и разделитель
+
 .searchDropdownDark .searchResultItem {
     &:hover {
         background: rgba(73, 16, 126, 0.5);
@@ -108,7 +108,7 @@
     }
 }
 
-// Светлая тема - hover для элемента и разделитель
+
 .searchDropdownLight .searchResultItem {
     &:hover {
         background: rgba(64, 10, 114, 0.1);
@@ -129,12 +129,12 @@
     flex-shrink: 0;
 }
 
-// Темная тема - граница изображения
+
 .searchDropdownDark .searchResultImage {
     border: 2px solid rgba(189, 67, 255, 0.3);
 }
 
-// Светлая тема - граница изображения
+
 .searchDropdownLight .searchResultImage {
     border: 2px solid rgba(64, 10, 114, 0.2);
 }
@@ -153,12 +153,12 @@
     flex-shrink: 0;
 }
 
-// Темная тема - граница placeholder
+
 .searchDropdownDark .searchResultPlaceholder {
     border: 2px solid rgba(189, 67, 255, 0.3);
 }
 
-// Светлая тема - граница placeholder
+
 .searchDropdownLight .searchResultPlaceholder {
     border: 2px solid rgba(64, 10, 114, 0.2);
 }
@@ -171,12 +171,12 @@
     gap: 4px;
 }
 
-// Темная тема - заголовок
+
 .searchDropdownDark .searchResultTitle {
     color: white;
 }
 
-// Светлая тема - заголовок
+
 .searchDropdownLight .searchResultTitle {
     color: #400A72;
 }
@@ -189,12 +189,12 @@
     text-overflow: ellipsis;
 }
 
-// Темная тема - жанр
+
 .searchDropdownDark .searchResultGenre {
     color: rgba(255, 255, 255, 0.7);
 }
 
-// Светлая тема - жанр
+
 .searchDropdownLight .searchResultGenre {
     color: rgba(64, 10, 114, 0.7);
 }
@@ -206,13 +206,13 @@
     text-overflow: ellipsis;
 }
 
-// Темная тема - загрузка и нет результатов
+
 .searchDropdownDark .searchLoading,
 .searchDropdownDark .searchNoResults {
     color: rgba(255, 255, 255, 0.7);
 }
 
-// Светлая тема - загрузка и нет результатов
+
 .searchDropdownLight .searchLoading,
 .searchDropdownLight .searchNoResults {
     color: rgba(64, 10, 114, 0.7);

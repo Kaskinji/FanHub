@@ -1,4 +1,4 @@
-// components/GameForm/GameFormModal.tsx
+
 import { useState, type FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Input from "../UI/Input/Input";
@@ -44,7 +44,7 @@ const GameFormModal: FC<GameFormModalProps> = ({ isOpen, onClose, onSubmit }) =>
     }
   });
 
-  // Сброс формы при открытии/закрытии
+  
   useEffect(() => {
     if (!isOpen) {
       reset();

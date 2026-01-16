@@ -97,7 +97,7 @@
   }
   
   .sortButtonIcon {
-    filter: brightness(0) invert(1); // Белая иконка для активной кнопки
+    filter: brightness(0) invert(1); 
   }
   
   .sortButtonLabel {
@@ -117,12 +117,12 @@
   width: 20px;
   height: 20px;
   object-fit: contain;
-  filter: brightness(0) invert(0); // Делаем иконку белой
+  filter: brightness(0) invert(0); 
   transition: filter 0.2s ease;
 }
 
 .sortButtonActive .sortButtonIcon {
-  filter: brightness(0) saturate(100%) invert(45%) sepia(95%) saturate(3000%) hue-rotate(265deg) brightness(1.1) contrast(1.1); // Фиолетовый для активной кнопки
+  filter: brightness(0) saturate(100%) invert(45%) sepia(95%) saturate(3000%) hue-rotate(265deg) brightness(1.1) contrast(1.1); 
 }
 
 .sortIcon {

@@ -1,8 +1,8 @@
 export interface Post {
   id: number;
   title: string;
-  content: string; // Полный текст поста
-  excerpt?: string; // Краткое описание для превью
+  content: string; 
+  excerpt?: string; 
   image?: string;
   author: {
     id: number;
@@ -28,7 +28,7 @@ export interface Comment {
   createdAt: string;
   updatedAt?: string;
   reactions?: Reaction[];
-  replies?: Comment[]; // Для вложенных комментариев
+  replies?: Comment[]; 
 }
 
 export interface Reaction {
@@ -40,5 +40,5 @@ export interface Reaction {
 export interface PostsContextData {
   fandomId: number;
   fandomName: string;
-  postId?: number; // Опциональный ID поста для автоматического открытия
+  postId?: number; 
 }

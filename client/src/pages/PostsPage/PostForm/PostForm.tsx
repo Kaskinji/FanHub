@@ -7,7 +7,7 @@ import styles from "./PostForm.module.scss";
 import { getImageUrl } from "../../../utils/urlUtils";
 import Modal from "../../../components/UI/Modal/Modal";
 
-interface PostFormProps {
+type PostFormProps = {
   fandomId: number;
   postId?: number;
   onCancel: () => void;
@@ -37,11 +37,11 @@ export const PostForm = ({
     fandomId,
     title: "",
     content: "",
-    categoryId: 1, // Дефолтная категория, будет обновлена после загрузки
+    categoryId: 1, 
     image: undefined,
   });
 
-  // Загрузка категорий при открытии формы
+  
   useEffect(() => {
     const loadCategories = async () => {
       try {
@@ -49,8 +49,8 @@ export const PostForm = ({
         const categoriesData = await categoryApi.getAllCategories();
         setCategories(categoriesData);
         
-        // Если категории загружены и formData.categoryId еще не установлен корректно, 
-        // устанавливаем первую доступную категорию
+        
+        
         if (categoriesData.length > 0 && !isEditMode) {
           setFormData(prev => ({
             ...prev,
@@ -59,7 +59,7 @@ export const PostForm = ({
         }
       } catch (err) {
         console.error("Failed to load categories:", err);
-        // Не блокируем форму, если категории не загрузились
+        
       } finally {
         setLoadingCategories(false);
       }
@@ -197,24 +197,24 @@ export const PostForm = ({
           return;
         }
         
-        // Определяем значение mediaContent:
-        // 1. Если загружено новое изображение - используем его
-        // 2. Если изображение было удалено (imagePreview пустое) - отправляем пустую строку
-        // 3. Если старое изображение существует и не было удалено - используем его
+        
+        
+        
+        
         let mediaContent: string | undefined;
         if (imageName) {
-          // Новое изображение загружено
+          
           mediaContent = imageName;
         } else if (!imagePreview) {
-          // Изображение было удалено или его не было
-          // Если было старое изображение, отправляем пустую строку для удаления
-          // Если не было, отправляем undefined
+          
+          
+          
           mediaContent = formData.image ? "" : undefined;
         } else if (formData.image && !imageFile) {
-          // Старое изображение остается (есть preview и нет нового файла)
+          
           mediaContent = formData.image;
         } else {
-          // Нет изображения
+          
           mediaContent = undefined;
         }
 

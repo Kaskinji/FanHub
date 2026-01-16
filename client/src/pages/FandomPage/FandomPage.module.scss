@@ -5,7 +5,7 @@
   height: 100%;
 }
 
-/* Modal overlay used by ManageFandomForm */
+
 .formContainer {
   position: fixed;
   top: 0;
@@ -80,7 +80,7 @@
     background: rgba(236, 207, 255, 0.916);
   }
 }
-/* ================= CONTENT ================= */
+
 
 .content {
   display: flex;
@@ -93,7 +93,7 @@
   align-items: center;
 }
 
-/* ================= FANDOM CARD ================= */
+
 
 .fandomCard {
   display: grid;
@@ -260,7 +260,7 @@
   }
 }
 
-/* ================= FANDOMS ================= */
+
 
 .fandoms {
   display: grid;
@@ -281,8 +281,8 @@
   padding: 0;
   border: 1px solid rgba(0, 0, 0, 0.1);
   display: flex;
-  height: 170px; // Фиксированная высота
-  width: 270px; // Ширина прямоугольника
+  height: 170px; 
+  width: 270px; 
   overflow: hidden;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -295,8 +295,8 @@
 }
 
 .postImage {
-  width: 135px; // Фиксированная ширина для изображения
-  height: 100%; // Заполняет всю высоту
+  width: 135px; 
+  height: 100%; 
   object-fit: cover;
   flex-shrink: 0;
   display: block;
@@ -316,7 +316,7 @@
     font-weight: 600;
     margin: 0 0 16px 0;
     line-height: 1.4;
-    // Обрезание длинных заголовков
+    
     display: -webkit-box;
     -webkit-line-clamp: 2;
     line-clamp: 2;
@@ -344,7 +344,7 @@
   color: #667eea;
   font-weight: 500;
 
-  // Стили для разных типов реакций
+  
   &[data-type="like"] {
     background: rgba(66, 153, 225, 0.1);
     color: #4299e1;
@@ -358,7 +358,7 @@
 
 .postMeta {
   height: 50%;
-  margin-top: auto; // Прижимаем к низу
+  margin-top: auto; 
   display: flexbox;
   align-items: last baseline;
   gap: 10px;
@@ -381,7 +381,7 @@
   border: 2px solid rgba(102, 126, 234, 0.2);
 }
 
-/* ================= EVENTS SECTION ================= */
+
 .events {
   display: flex;
   flex-direction: row;
@@ -390,14 +390,14 @@
 }
 
 .eventCard {
-  background: white; // Белый фон для всей карточки
+  background: white; 
   border-radius: 0px;
-  padding: 0; // Убираем padding, так как все будет внутри
+  padding: 0; 
   border: 1px solid rgba(255, 255, 255, 0.3);
   display: flex;
-  height: 180px; // Фиксированная высота как на референсе
-  width: 350px; // Ширина прямоугольника
-  overflow: hidden; // Чтобы изображение не выходило за границы
+  height: 180px; 
+  width: 350px; 
+  overflow: hidden; 
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
@@ -409,12 +409,12 @@
 }
 
 .eventImage {
-  width: 150px; // Фиксированная ширина для изображения
-  height: 100%; // Заполняет всю высоту карточки
-  object-fit: cover; // Растягиваем изображение по высоте
+  width: 150px; 
+  height: 100%; 
+  object-fit: cover; 
   flex-shrink: 0;
   display: block;
-  margin: 0; // Убираем отступы
+  margin: 0; 
 }
 
 .eventContent {
@@ -423,10 +423,10 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: white; // Белый фон для текстовой части
+  background: white; 
 
   h4 {
-    color: #333; // Темный текст для контраста на белом фоне
+    color: #333; 
     font-size: 1.125rem;
     margin: 0 0 12px 0;
     font-weight: 600;
@@ -434,7 +434,7 @@
   }
 }
 
-/* ================= EXTRA ================= */
+
 
 .showMore {
   text-align: center;
@@ -442,7 +442,7 @@
   opacity: 0.8;
 }
 
-// Стили для скелетонов FandomPage
+
 .contentSkeleton {
   display: flex;
   flex-direction: column;

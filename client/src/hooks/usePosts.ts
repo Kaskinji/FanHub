@@ -8,13 +8,10 @@ interface UsePostsParams {
   fandomId?: number;
 }
 
-/**
- * Хук для загрузки и управления постами
- * Использует PostStatsDto, который уже включает количество комментариев и реакции
- */
+
 export const usePosts = ({ fandomId }: UsePostsParams) => {
-  const [allPosts, setAllPosts] = useState<Post[]>([]); // Исходный список всех постов
-  const [posts, setPosts] = useState<Post[]>([]); // Отфильтрованные посты
+  const [allPosts, setAllPosts] = useState<Post[]>([]); 
+  const [posts, setPosts] = useState<Post[]>([]); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [sortOption, setSortOption] = useState<SortOption>('default');
@@ -22,17 +19,17 @@ export const usePosts = ({ fandomId }: UsePostsParams) => {
   const [showCategoryFilter, setShowCategoryFilter] = useState(false);
   const postsRef = useRef<Post[]>([]);
 
-  // Извлекаем уникальные категории из всех загруженных постов
+  
   const categories = useMemo(() => 
     Array.from(new Set(allPosts.map(post => post.category).filter(Boolean))).sort(),
     [allPosts]
   );
 
-  // Применяем фильтры локально к загруженным постам
+  
   const filteredPosts = useMemo(() => {
     let filtered = [...allPosts];
     
-    // Фильтр по категории
+    
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(post => post.category === selectedCategory);
     }
@@ -40,18 +37,18 @@ export const usePosts = ({ fandomId }: UsePostsParams) => {
     return filtered;
   }, [allPosts, selectedCategory]);
 
-  // Обновляем posts когда изменяются фильтры
+  
   useEffect(() => {
     setPosts(filteredPosts);
   }, [filteredPosts]);
 
-  // Сохраняем оригинальный список всех постов в ref для использования в других хуках
-  // (sortedPosts используется только для отображения)
+  
+  
   useEffect(() => {
     postsRef.current = allPosts;
   }, [allPosts]);
 
-  // Сортируем посты перед отображением
+  
   const sortedPosts = useMemo(() => {
     if (sortOption === 'default') {
       return posts;
@@ -59,15 +56,15 @@ export const usePosts = ({ fandomId }: UsePostsParams) => {
     
     const sorted = [...posts];
     sorted.sort((a, b) => {
-      // Суммируем все реакции для поста a
+      
       const totalReactionsA = a.reactions.reduce((sum, reaction) => sum + reaction.count, 0);
-      // Суммируем все реакции для поста b
+      
       const totalReactionsB = b.reactions.reduce((sum, reaction) => sum + reaction.count, 0);
       
       if (sortOption === 'reactions-asc') {
-        return totalReactionsA - totalReactionsB; // От меньшего к большему
+        return totalReactionsA - totalReactionsB; 
       } else {
-        return totalReactionsB - totalReactionsA; // От большего к меньшему
+        return totalReactionsB - totalReactionsA; 
       }
     });
     
@@ -85,14 +82,14 @@ export const usePosts = ({ fandomId }: UsePostsParams) => {
       setLoading(true);
       setError(null);
 
-      // Получаем посты со статистикой (уже включают комментарии и реакции)
+      
       const postsStatsDto = await postApi.getPopularPostsByFandom(fandomId);
       
-      // Преобразуем PostStatsDto в Post (уже включает commentCount и reactions)
+      
       const fullPosts = await postApi.adaptStatsDtosToFullPosts(postsStatsDto);
 
-      setAllPosts(fullPosts); // Сохраняем исходный список
-      // Фильтры применятся автоматически через useMemo
+      setAllPosts(fullPosts); 
+      
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Failed to load posts"
@@ -109,10 +106,10 @@ export const usePosts = ({ fandomId }: UsePostsParams) => {
   const refreshPost = useCallback(
     async (postId: number) => {
       try {
-        // Получаем пост со статистикой (уже включает комментарии и реакции)
+        
         const postStatsDto = await postApi.getPostWithStatsById(postId);
         
-        // Преобразуем PostStatsDto в Post
+        
         const updatedPost = await postApi.adaptStatsDtoToFullPost(postStatsDto);
 
         if (updatedPost) {
@@ -123,7 +120,7 @@ export const usePosts = ({ fandomId }: UsePostsParams) => {
           return updatedPost;
         }
       } catch {
-        // При ошибке перезагружаем все посты
+        
         await loadPosts();
       }
       return null;
@@ -148,7 +145,7 @@ export const usePosts = ({ fandomId }: UsePostsParams) => {
   const filterByCategory = useCallback((category: string) => {
     setSelectedCategory(category);
     setShowCategoryFilter(false);
-    // Фильтрация происходит автоматически через useMemo
+    
   }, []);
 
   const toggleCategoryFilter = useCallback(() => {
@@ -158,11 +155,11 @@ export const usePosts = ({ fandomId }: UsePostsParams) => {
   const resetFilters = useCallback(() => {
     setSelectedCategory('all');
     setShowCategoryFilter(false);
-    // Фильтрация происходит автоматически через useMemo
+    
   }, []);
 
   return {
-    posts: sortedPosts, // Возвращаем отсортированные посты
+    posts: sortedPosts, 
     loading,
     error,
     sortOption,

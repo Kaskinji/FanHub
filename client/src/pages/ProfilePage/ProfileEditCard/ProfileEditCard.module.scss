@@ -18,7 +18,7 @@
   gap: 25px;
 }
 
-// Общая ошибка формы
+
 .formError {
   background-color: rgba(220, 53, 69, 0.1);
   border: 1px solid rgba(220, 53, 69, 0.3);
@@ -88,7 +88,7 @@
   }
 }
 
-// Ошибка файла
+
 .fileError {
   color: #dc3545;
   font-size: 13px;
@@ -153,7 +153,7 @@
     opacity: 0.6;
   }
   
-  // Стили для ошибок в инпуте
+  
   &--error {
     border-color: #dc3545;
     background-color: rgba(220, 53, 69, 0.05);

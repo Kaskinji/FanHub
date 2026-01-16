@@ -49,9 +49,7 @@ export class CommentApi {
     this.baseUrl = baseUrl;
   }
 
-  /**
-   * Получить все комментарии с данными автора
-   */
+  
   async getAllComments(): Promise<CommentShowDto[]> {
     try {
       const response = await axios.get<CommentShowDto[]>(
@@ -68,9 +66,7 @@ export class CommentApi {
     }
   }
 
-  /**
-   * Получить комментарии по ID поста
-   */
+  
   async getCommentsByPostId(postId: number): Promise<CommentShowDto[]> {
     try {
       const response = await axios.get<CommentShowDto[]>(
@@ -98,9 +94,7 @@ export class CommentApi {
     }
   }
 
-  /**
-   * Получить комментарий по ID
-   */
+  
   async getCommentById(id: number): Promise<CommentReadDto> {
     try {
       const response = await axios.get<CommentReadDto>(
@@ -117,9 +111,7 @@ export class CommentApi {
     }
   }
 
-  /**
-   * Создать новый комментарий
-   */
+  
   async createComment(commentData: CommentCreateDto): Promise<number> {
     try {
       const response = await axios.post<number>(
@@ -140,9 +132,7 @@ export class CommentApi {
     }
   }
 
-  /**
-   * Обновить комментарий
-   */
+  
   async updateComment(id: number, commentData: CommentUpdateDto): Promise<void> {
     try {
       await axios.put(`${this.baseUrl}/comments/${id}`, commentData, {
@@ -157,9 +147,7 @@ export class CommentApi {
     }
   }
 
-  /**
-   * Удалить комментарий
-   */
+  
   async deleteComment(id: number): Promise<void> {
     try {
       await axios.delete(`${this.baseUrl}/comments/${id}`, {
@@ -171,9 +159,7 @@ export class CommentApi {
     }
   }
 
-  /**
-   * Преобразовать URL изображения
-   */
+  
   private getImageUrl(imageUrl?: string | null): string | null {
     if (!imageUrl || imageUrl.trim() === "") {
       return null;
@@ -184,9 +170,7 @@ export class CommentApi {
     return `${SERVER_CONFIG.BASE_URL}${imageUrl}`;
   }
 
-  /**
-   * Преобразовать CommentShowDto в формат Comment
-   */
+  
   adaptToComment(comment: CommentShowDto): CommentType | null {
     if (!comment || !comment.id || !comment.content) {
       console.warn("Invalid comment data:", comment);
@@ -233,9 +217,7 @@ export class CommentApi {
     return adapted;
   }
 
-  /**
-   * Преобразовать массив CommentShowDto в формат Comment
-   */
+  
   adaptToComments(comments: CommentShowDto[]): CommentType[] {
     if (!comments || !Array.isArray(comments)) {
       console.warn("Invalid comments array:", comments);
@@ -289,9 +271,7 @@ export class CommentApi {
     return rootComments;
   }
 
-  /**
-   * Обработка ошибок
-   */
+  
   private handleCommentError(error: unknown, defaultMessage: string): never {
     if (axios.isAxiosError(error)) {
       if (error.response) {
@@ -325,8 +305,8 @@ export class CommentApi {
   }
 }
 
-// Экспортируем экземпляр по умолчанию
+
 export const commentApi = new CommentApi();
 
-// Для использования с кастомным URL
+
 export default CommentApi;

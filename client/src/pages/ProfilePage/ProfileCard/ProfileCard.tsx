@@ -1,7 +1,7 @@
 import { Avatar } from "../../../components/UI/Avatar/Avatar";
 import styles from "./ProfileCard.module.scss";
 
-interface ProfileCardProps {
+type ProfileCardProps = {
   name: string;
   image: string | undefined;
 }

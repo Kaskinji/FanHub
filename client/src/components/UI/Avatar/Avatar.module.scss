@@ -17,54 +17,54 @@
   }
 }
 
-// Размеры с пропорциональными шрифтами
+
 .small {
   width: 32px;
   height: 32px;
-  font-size: 14px; // Примерно 44% от ширины
+  font-size: 14px; 
 }
 
 .medium {
   width: 48px;
   height: 48px;
-  font-size: 20px; // Примерно 42% от ширины
+  font-size: 20px; 
 }
 
 .large {
   width: 150px;
   height: 150px;
-  font-size: 64px; // Примерно 43% от ширины
+  font-size: 64px; 
 }
 
 .xlarge {
   width: 200px;
   height: 200px;
-  font-size: 86px; // Примерно 43% от ширины
+  font-size: 86px; 
 }
 
-// Альтернативный подход с относительными единицами
+
 .relativeSmall {
-  width: 2rem; // 32px при базовом 16px
+  width: 2rem; 
   height: 2rem;
-  font-size: 0.875rem; // 14px
+  font-size: 0.875rem; 
 }
 
 .relativeMedium {
-  width: 3rem; // 48px
+  width: 3rem; 
   height: 3rem;
-  font-size: 1.25rem; // 20px
+  font-size: 1.25rem; 
 }
 
 .relativeLarge {
-  width: 9.375rem; // 150px
+  width: 9.375rem; 
   height: 9.375rem;
-  font-size: 4rem; // 64px
+  font-size: 4rem; 
 }
 
 .relativeXlarge {
-  width: 12.5rem; // 200px
+  width: 12.5rem; 
   height: 12.5rem;
-  font-size: 5.375rem; // 86px
+  font-size: 5.375rem; 
 }
 
 .image {
@@ -84,10 +84,10 @@
   align-items: center;
   justify-content: center;
   font-family: "Baloo 2";
-  // Автоматическое масштабирование текста под размер контейнера
+  
   &::after {
     content: attr(data-initial);
-    font-size: inherit; // Наследуем размер шрифта от .avatar
+    font-size: inherit; 
     font-weight: inherit;
   }
 }

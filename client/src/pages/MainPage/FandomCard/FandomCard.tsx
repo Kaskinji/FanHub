@@ -3,7 +3,7 @@ import BaseCard from "../../../components/BaseCard/BaseCard";
 import { useNavigate } from "react-router-dom";
 import styles from "./FandomCard.module.scss";
 
-interface FandomCardProps {
+type FandomCardProps = {
     id: number;
     name: string;
     imageUrl?: string;

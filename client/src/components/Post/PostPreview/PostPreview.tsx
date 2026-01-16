@@ -1,4 +1,4 @@
-// components/Post/PostPreview.tsx
+
 import { useState, type FC } from "react";
 import styles from "./PostPreview.module.scss";
 import type { Post } from "../../../types/Post";

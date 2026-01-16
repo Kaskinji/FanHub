@@ -41,7 +41,7 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
   useEffect(() => {
     if (isOpen) {
       loadNotifications();
-      // Очищаем буфер удаления при открытии
+      
       setPendingDeleteIds(new Set());
     }
   }, [isOpen]);
@@ -76,17 +76,17 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
     try {
       const data = await fandomNotificationApi.getNotificationsWithViewed(false);
       
-      // Загружаем дополнительную информацию для каждого уведомления
+      
       const enrichedNotifications = await Promise.all(
         data.map(async (notification) => {
           const enriched: NotificationData = { ...notification };
           
           try {
-            // Загружаем информацию о фандоме
+            
             const fandom = await fandomApi.getFandomById(notification.fandomId);
             enriched.fandomName = fandom.name;
             
-            // Загружаем информацию в зависимости от типа уведомления
+            
             if (notification.type === FandomNotificationType.EventCreated) {
               try {
                 const event = await eventApi.getEventById(notification.notifierId);
@@ -122,12 +122,12 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
   };
 
   const handleHide = (notificationId: number) => {
-    // Добавляем в буфер удаления вместо немедленного удаления
+    
     setPendingDeleteIds((prev) => new Set([...prev, notificationId]));
   };
 
   const handleHideAll = () => {
-    // Добавляем все уведомления (кроме уже скрытых) в буфер удаления
+    
     setPendingDeleteIds((prev) => {
       const allVisibleIds = notifications
         .filter((n) => !prev.has(n.id))
@@ -143,9 +143,9 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
       await fandomNotificationApi.hideNotifications({
         notificationIds: idsToDelete,
       });
-      // Обновляем список уведомлений
+      
       await loadNotifications();
-      // Уведомляем о обновлении уведомлений
+      
       if (onNotificationsUpdated) {
         onNotificationsUpdated();
       }
@@ -159,7 +159,7 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
       await fandomNotificationApi.markNotificationsAsViewed({
         notificationIds,
       });
-      // Уведомляем о обновлении уведомлений
+      
       if (onNotificationsUpdated) {
         onNotificationsUpdated();
       }
@@ -168,21 +168,21 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
     }
   }, [onNotificationsUpdated]);
 
-  // Автоматически помечаем все непрочитанные уведомления как прочитанные при закрытии
-  // и удаляем помеченные на удаление уведомления
+  
+  
   useEffect(() => {
-    // Если dropdown был открыт и теперь закрыт
+    
     if (prevIsOpenRef.current && !isOpen) {
       const idsToDelete = Array.from(pendingDeleteIds);
       
-      // Сначала удаляем помеченные уведомления
+      
       if (idsToDelete.length > 0) {
         handleDeletePending(idsToDelete);
-        // Очищаем буфер после начала удаления
+        
         setPendingDeleteIds(new Set());
       }
       
-      // Затем помечаем как прочитанные (исключая те, что удаляются)
+      
       if (notifications.length > 0 && idsToDelete.length > 0) {
         const idsToDeleteSet = new Set(idsToDelete);
         const unreadNotifications = notifications.filter(
@@ -255,12 +255,12 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
       onClose();
     } 
     else if (notification.type === FandomNotificationType.PostCreated) {
-      // Переходим на страницу постов с передачей данных о фандоме
+      
       navigate(`/fandom/${notification.fandomId}/posts`, {
         state: {
           fandomId: notification.fandomId,
           fandomName: notification.fandomName,
-          postId: notification.notifierId, // ID поста для автоматического открытия
+          postId: notification.notifierId, 
         } as PostsContextData,
       });
       onClose();
@@ -323,7 +323,7 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
               const notificationTitle = getNotificationTitle(notification);
               const notificationContent = getNotificationContent(notification);
               
-              // Делаем уведомление кликабельным только если это ивент или пост
+              
               const isClickable = notification.type === FandomNotificationType.EventCreated || 
                                  notification.type === FandomNotificationType.PostCreated;
               
@@ -352,7 +352,7 @@ const NotificationDropdown: FC<NotificationDropdownProps> = ({
                           alt={notificationContent}
                           className={styles.notificationImage}
                           onError={(e) => {
-                            // Если изображение не загрузилось, показываем плейсхолдер
+                            
                             const target = e.target as HTMLImageElement;
                             target.style.display = 'none';
                             const parent = target.parentElement;

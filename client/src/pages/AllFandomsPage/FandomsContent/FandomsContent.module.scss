@@ -37,7 +37,7 @@
     grid-template-columns: 1fr;
   }
 }
-// Стили для карточек фандомов (адаптируем под референс)
+
 .fandomCard {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
@@ -94,7 +94,7 @@
   margin: 0 0 6px 0;
   line-height: 1.3;
   
-  // Обрезание длинных названий
+  
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -141,7 +141,7 @@
   }
 }
 
-// Стили для skeleton-карточек фандомов
+
 .fandomSkeleton {
   width: 200px;
   height: 250px;

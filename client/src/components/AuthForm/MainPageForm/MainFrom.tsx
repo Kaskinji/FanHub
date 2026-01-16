@@ -29,14 +29,14 @@ const LoginForm: FC<LoginFormProps> = ({
         setIsSubmitting(true);
 
         try {
-            // ��������� API �������
+            
             await new Promise(resolve => setTimeout(resolve, 1000));
 
             if (onLogin) {
                 await onLogin(data);
             } else {
                 console.log("Login data:", data);
-                // ����� ����� ���������� � ����� ��������
+                
             }
         } catch (error) {
             setError("root", {

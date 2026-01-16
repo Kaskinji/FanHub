@@ -11,9 +11,7 @@ interface UseSelectedPostParams {
   postsRef: React.MutableRefObject<Post[]>;
 }
 
-/**
- * Хук для работы с выбранным постом и его комментариями
- */
+
 export const useSelectedPost = ({
   selectedPostId,
   posts,
@@ -51,7 +49,7 @@ export const useSelectedPost = ({
             setSelectedPost(fullPost);
           }
         } catch {
-          // Post loading failed silently
+          
         }
       }
 
@@ -59,7 +57,7 @@ export const useSelectedPost = ({
         try {
           setLoadingComments(true);
           
-          // Запрашиваем реакции только если их нет в существующем посте из postStats
+          
           const commentsPromise = commentApi.getCommentsByPostId(selectedPostId);
           const reactionsPromise = existingReactions 
             ? Promise.resolve(existingReactions) 
@@ -80,7 +78,7 @@ export const useSelectedPost = ({
                 return {
                   ...currentPost,
                   commentCount: countAllComments(comments),
-                  // Используем реакции из postStats, если они есть, иначе из API, иначе оставляем текущие
+                  
                   reactions: reactions && reactions.length > 0 ? reactions : (currentPost.reactions || existingReactions || []),
                 };
               }
@@ -90,7 +88,7 @@ export const useSelectedPost = ({
         } catch {
           if (!isCancelled) {
             setSelectedPostComments([]);
-            // При ошибке сохраняем существующие реакции из postStats, если они есть
+            
             setSelectedPost((currentPost) => {
               if (currentPost && existingReactions && (!currentPost.reactions || currentPost.reactions.length === 0)) {
                 return {

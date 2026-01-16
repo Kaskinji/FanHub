@@ -1,4 +1,4 @@
-// PostsPage.module.scss
+
 .page {
   min-height: 100vh;
   color: #e0e0e0;
@@ -77,11 +77,11 @@
   padding: 20px;
   overflow-y: auto;
   
-  /* Firefox */
+  
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;
   
-  /* WebKit - скроллбар появляется только при наведении */
+  
   &::-webkit-scrollbar {
     width: 3px;
     transition: all 0.3s ease;

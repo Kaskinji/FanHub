@@ -18,9 +18,7 @@ export class SubscriptionApi {
     this.baseUrl = baseUrl;
   }
 
-  /**
-   * Получить все подписки
-   */
+  
   async getSubscriptions(): Promise<SubscriptionReadDto[]> {
     try {
       const response = await axios.get<SubscriptionReadDto[]>(`${this.baseUrl}/subscriptions`, {
@@ -34,9 +32,7 @@ export class SubscriptionApi {
     }
   }
 
-  /**
-   * Получить подписку по ID
-   */
+  
   async getSubscriptionById(id: number): Promise<SubscriptionReadDto> {
     try {
       const response = await axios.get<SubscriptionReadDto>(`${this.baseUrl}/subscriptions/${id}`, {
@@ -50,9 +46,7 @@ export class SubscriptionApi {
     }
   }
 
-  /**
-   * Создать подписку
-   */
+  
   async createSubscription(dto: SubscriptionCreateDto): Promise<number> {
     try {
       const response = await axios.post<number>(`${this.baseUrl}/subscriptions`, dto, {
@@ -69,9 +63,7 @@ export class SubscriptionApi {
     }
   }
 
-  /**
-   * Получить подписку текущего пользователя на фандом
-   */
+  
   async getCurrentUserSubscription(fandomId: number): Promise<number | null> {
     try {
       const response = await axios.get<number | null>(`${this.baseUrl}/subscriptions/current/${fandomId}`, {
@@ -87,9 +79,7 @@ export class SubscriptionApi {
     }
   }
 
-  /**
-   * Удалить подписку
-   */
+  
   async deleteSubscription(id: number): Promise<void> {
     try {
       await axios.delete(`${this.baseUrl}/subscriptions/${id}`, {
@@ -101,9 +91,7 @@ export class SubscriptionApi {
     }
   }
 
-  /**
-   * Обработка ошибок
-   */
+  
   private handleSubscriptionError(error: unknown, defaultMessage: string): never {
     if (axios.isAxiosError(error)) {
       if (error.response) {
@@ -137,8 +125,8 @@ export class SubscriptionApi {
   }
 }
 
-// Экспортируем экземпляр по умолчанию
+
 export const subscriptionApi = new SubscriptionApi();
 
-// Для использования с кастомным URL
+
 export default SubscriptionApi;

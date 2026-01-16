@@ -23,7 +23,7 @@ export const useNotificationHub = (
     setHasNewNotification(false);
   }, []);
 
-  // Функция для проверки непрочитанных уведомлений
+  
   const checkUnreadNotifications = useCallback(async () => {
     if (!isAuthenticated || !userId) {
       return;
@@ -31,18 +31,18 @@ export const useNotificationHub = (
 
     try {
       const notifications = await fandomNotificationApi.getNotificationsWithViewed(false);
-      // Проверяем, есть ли непрочитанные уведомления
+      
       const hasUnread = notifications.some((notification) => !notification.isViewed);
       setHasNewNotification(hasUnread);
     } catch (error) {
       console.error("Failed to check unread notifications:", error);
-      // В случае ошибки не устанавливаем флаг
+      
     }
   }, [isAuthenticated, userId]);
 
   useEffect(() => {
     if (!isAuthenticated || !userId) {
-      // Если пользователь не авторизован, закрываем соединение если оно есть
+      
       if (connectionRef.current) {
         connectionRef.current.stop();
         connectionRef.current = null;
@@ -52,10 +52,10 @@ export const useNotificationHub = (
       return;
     }
 
-    // Проверяем непрочитанные уведомления при подключении
+    
     checkUnreadNotifications();
 
-    // Создаем соединение
+    
     const connection = new signalR.HubConnectionBuilder()
       .withUrl(`${SERVER_CONFIG.BASE_URL}/notificationHub`, {
         withCredentials: true,
@@ -65,15 +65,15 @@ export const useNotificationHub = (
 
     connectionRef.current = connection;
 
-    // Обработчик получения уведомления
+    
     connection.on("ReceiveNotification", (notification: FandomNotificationReadDto) => {
       console.log("Received notification:", notification);
       setHasNewNotification(true);
-      // Обновляем список уведомлений
+      
       checkUnreadNotifications();
     });
 
-    // Обработчики состояния соединения
+    
     connection.onclose(() => {
       setIsConnected(false);
     });
@@ -87,7 +87,7 @@ export const useNotificationHub = (
       checkUnreadNotifications();
     });
 
-    // Подключаемся
+    
     connection
       .start()
       .then(() => {
@@ -97,7 +97,7 @@ export const useNotificationHub = (
         setIsConnected(false);
       });
 
-    // Cleanup при размонтировании или изменении зависимостей
+    
     return () => {
       if (connectionRef.current) {
         connectionRef.current.stop();

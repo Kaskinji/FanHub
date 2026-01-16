@@ -1,4 +1,4 @@
-// components/UI/ErrorState/ErrorState.tsx
+
 import React from "react";
 import styles from "./ErrorState.module.scss";
 

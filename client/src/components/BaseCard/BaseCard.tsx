@@ -9,16 +9,16 @@ interface BaseCardProps {
     imageUrl?: string;
     className?: string;
 
-    // ✅ Одна внешняя функция вместо onClick + onNavigate
+    
     onAction?: (event: MouseEvent, id: number) => void;
 
-    // Визуальные настройки
+    
     showOverlay?: boolean;
     overlayContent?: React.ReactNode;
     placeholderChar?: string;
     isClickable?: boolean;
 
-    // Атрибуты
+    
     "data-testid"?: string;
 }
 

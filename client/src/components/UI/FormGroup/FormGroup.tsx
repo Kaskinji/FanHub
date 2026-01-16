@@ -1,4 +1,4 @@
-// components/UI/FormGroup/FormGroup.tsx
+
 import type { ReactNode } from "react";
 import styles from "./FormGroup.module.scss";
 

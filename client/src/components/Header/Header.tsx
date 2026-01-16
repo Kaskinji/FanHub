@@ -13,13 +13,13 @@ import { gameApi } from "../../api/GameApi";
 import type { GameReadDto } from "../../api/GameApi";
 import SearchDropdown from "../UI/SearchDropdown/SearchDropdown";
 
-// Импорт SVG файлов
+
 import notificationIcon from "../../assets/notification.svg";
 import notificationAlertIcon from "../../assets/notification-alert.svg";
 
 interface HeaderProps {
   onSearch: (query: string) => void;
-  allGames?: GameReadDto[]; // Все загруженные игры для локального поиска
+  allGames?: GameReadDto[]; 
 }
 
 const Header: FC<HeaderProps> = ({ onSearch, allGames }) => {
@@ -31,7 +31,7 @@ const Header: FC<HeaderProps> = ({ onSearch, allGames }) => {
     user?.id ? Number(user.id) : undefined
   );
 
-  // Состояния для поиска игр
+  
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<GameReadDto[]>([]);
   const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
@@ -47,7 +47,7 @@ const Header: FC<HeaderProps> = ({ onSearch, allGames }) => {
     navigate("/profile");
   };
 
-  // Функция для входа
+  
   const handleSignIn = () => {
     navigate("/login");
   };
@@ -58,7 +58,7 @@ const Header: FC<HeaderProps> = ({ onSearch, allGames }) => {
   };
 
   const handleNotificationsUpdated = () => {
-    // Проверяем, остались ли непрочитанные уведомления после обновления
+    
     checkUnreadNotifications();
   };
 
@@ -68,7 +68,7 @@ const Header: FC<HeaderProps> = ({ onSearch, allGames }) => {
 
   useEffect(() => {}, [user?.avatar]);
 
-  // Поиск игр с debounce
+  
   const performSearch = useCallback(async (query: string) => {
     if (!query.trim()) {
       setSearchResults([]);
@@ -78,7 +78,7 @@ const Header: FC<HeaderProps> = ({ onSearch, allGames }) => {
 
     setIsSearchDropdownOpen(true);
     
-    // Если есть все игры, используем локальный поиск (синхронно)
+    
     if (allGames && allGames.length > 0) {
       const lowerQuery = query.toLowerCase().trim();
       const results = allGames.filter(game => 
@@ -89,7 +89,7 @@ const Header: FC<HeaderProps> = ({ onSearch, allGames }) => {
       return;
     }
     
-    // Иначе используем API (для обратной совместимости)
+    
     setIsSearching(true);
     try {
       const results = await gameApi.searchGamesByName(query);
@@ -102,18 +102,18 @@ const Header: FC<HeaderProps> = ({ onSearch, allGames }) => {
     }
   }, [allGames]);
 
-  // Обработчик изменения поискового запроса
+  
   const handleSearchChange = useCallback(
     (query: string) => {
       setSearchQuery(query);
 
-      // Очищаем предыдущий таймаут
+      
       if (searchTimeoutRef.current) {
         clearTimeout(searchTimeoutRef.current);
       }
 
-      // Если есть все игры, выполняем поиск сразу (локальный поиск быстрый)
-      // Иначе используем debounce для API запросов (150ms вместо 300ms для меньшей задержки)
+      
+      
       const debounceDelay = allGames && allGames.length > 0 ? 0 : 150;
       
       searchTimeoutRef.current = setTimeout(() => {
@@ -123,7 +123,7 @@ const Header: FC<HeaderProps> = ({ onSearch, allGames }) => {
     [performSearch, allGames]
   );
 
-  // Обработчик отправки формы поиска
+  
   const handleSearchSubmit = useCallback(
     (query: string) => {
       onSearch(query);
@@ -133,7 +133,7 @@ const Header: FC<HeaderProps> = ({ onSearch, allGames }) => {
     [onSearch]
   );
 
-  // Обработчик клика на результат поиска
+  
   const handleGameClick = useCallback(
     (game: GameReadDto) => {
       navigate(`/game/${game.id}`, {
@@ -146,7 +146,7 @@ const Header: FC<HeaderProps> = ({ onSearch, allGames }) => {
     [navigate]
   );
 
-  // Закрытие выпадающего списка при клике вне его
+  
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -163,7 +163,7 @@ const Header: FC<HeaderProps> = ({ onSearch, allGames }) => {
     };
   }, []);
 
-  // Очистка таймаута при размонтировании
+  
   useEffect(() => {
     return () => {
       if (searchTimeoutRef.current) {

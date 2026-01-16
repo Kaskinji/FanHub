@@ -20,7 +20,7 @@ export interface PostReadDto {
 }
 
 export interface ReactionSummaryDto {
-  reactionType: ReactionType | number; // Может быть числом с сервера или строкой после преобразования
+  reactionType: ReactionType | number; 
   count: number;
 }
 
@@ -41,15 +41,15 @@ export interface PostCreateDto {
   title: string;
   content: string;
   fandomId: number;
-  categoryId: number; // Обязательное поле на бэкенде
-  mediaContent?: string; // Соответствует MediaContent на бэкенде (вместо image)
+  categoryId: number; 
+  mediaContent?: string; 
 }
 
 export interface PostUpdateDto {
   title?: string;
   content?: string;
   categoryId?: number;
-  mediaContent?: string; // Соответствует MediaContent на бэкенде (вместо image)
+  mediaContent?: string; 
 }
 
 export class PostApi {
@@ -61,9 +61,7 @@ export class PostApi {
     this.baseUrl = baseUrl;
   }
 
-  /**
-   * Загрузить категории и создать маппинг
-   */
+  
   private async loadCategoriesIfNeeded(): Promise<void> {
     if (this.categoriesCache === null) {
       try {
@@ -79,16 +77,12 @@ export class PostApi {
     }
   }
 
-  /**
-   * Получить название категории по ID
-   */
+  
   private getCategoryName(categoryId: number): string {
     return this.categoriesMap.get(categoryId) || "General";
   }
 
-  /**
-   * Получить все посты
-   */
+  
   async getAllPosts(): Promise<PostReadDto[]> {
     try {
       const response = await axios.get<PostReadDto[]>(
@@ -105,9 +99,7 @@ export class PostApi {
     }
   }
 
-  /**
-   * Получить посты по названию категории
-   */
+  
   async getPostsByCategoryName(categoryName: string): Promise<PostStatsDto[]> {
     try {
       const response = await axios.get<PostStatsDto[]>(
@@ -128,9 +120,7 @@ export class PostApi {
     }
   }
 
-  /**
-   * Получить посты по ID категории
-   */
+  
   async getPostsByCategoryId(categoryId: number): Promise<PostStatsDto[]> {
     try {
       const response = await axios.get<PostStatsDto[]>(
@@ -150,9 +140,7 @@ export class PostApi {
     }
   }
 
-  /**
-   * Поиск постов по категории
-   */
+  
   async searchPosts(
     categoryId?: number,
     categoryName?: string
@@ -176,9 +164,7 @@ export class PostApi {
     }
   }
 
-  /**
-   * Получить пост по ID
-   */
+  
   async getPostById(id: number): Promise<PostReadDto> {
     try {
       const response = await axios.get<PostReadDto>(
@@ -195,9 +181,7 @@ export class PostApi {
     }
   }
 
-  /**
-   * Получить популярные посты
-   */
+  
   async getPopularPosts(limit?: number): Promise<PostStatsDto[]> {
     try {
       const response = await axios.get<PostStatsDto[]>(
@@ -218,9 +202,7 @@ export class PostApi {
     }
   }
 
-  /**
-   * Получить популярные посты по фандому
-   */
+  
   async getPopularPostsByFandom(
     fandomId: number,
     limit?: number
@@ -244,9 +226,7 @@ export class PostApi {
     }
   }
 
-  /**
-   * Получить пост со статистикой по ID
-   */
+  
   async getPostWithStatsById(id: number): Promise<PostStatsDto> {
     try {
       const response = await axios.get<PostStatsDto>(
@@ -263,9 +243,7 @@ export class PostApi {
     }
   }
 
-  /**
-   * Создать новый пост
-   */
+  
   async createPost(postData: PostCreateDto): Promise<number> {
     try {
       console.log('Creating post with data:', postData);
@@ -291,10 +269,10 @@ export class PostApi {
         console.error('Status:', error.response?.status);
         console.error('Status text:', error.response?.statusText);
         
-        // Улучшенная обработка ошибок на основе сообщения от сервера
+        
         if (error.response?.status === 404) {
           const errorMessage = error.response?.data?.message || error.response?.statusText || 'Not Found';
-          // Если ошибка связана с категорией
+          
           if (errorMessage.includes('Category')) {
             throw new Error(`Category not found. ${errorMessage}. Please select a valid category.`);
           }
@@ -305,9 +283,7 @@ export class PostApi {
     }
   }
 
-  /**
-   * Обновить пост
-   */
+  
   async updatePost(id: number, postData: PostUpdateDto): Promise<void> {
     try {
       await axios.put(`${this.baseUrl}/posts/${id}`, postData, {
@@ -322,9 +298,7 @@ export class PostApi {
     }
   }
 
-  /**
-   * Удалить пост
-   */
+  
   async deletePost(id: number): Promise<void> {
     try {
       await axios.delete(`${this.baseUrl}/posts/${id}`, {
@@ -338,9 +312,7 @@ export class PostApi {
 
 
 
-  /**
-   * Преобразовать URL изображения
-   */
+  
   private getImageUrl(imageUrl?: string | null): string | null {
     if (!imageUrl || imageUrl.trim() === "") {
       return null;
@@ -351,29 +323,27 @@ export class PostApi {
     return `${SERVER_CONFIG.BASE_URL}${imageUrl}`;
   }
 
-  /**
-   * Получить реакции поста и построить массив реакций по типам
-   */
+  
   private async getPostReactionsPreview(postId: number): Promise<Array<{ type: "like" | "dislike"; count: number }>> {
     try {
-      // Получаем реакции конкретного поста через GET /reactions/post/{postId}
+      
       const postReactions = await reactionApi.getPostReactions(postId);
       
-      // Подсчитываем количество реакций по типам
+      
       const reactionCounts: Partial<Record<"like" | "dislike", number>> = {
         like: 0,
         dislike: 0
       };
 
       postReactions.forEach((reaction) => {
-        // Преобразуем числовой тип реакции в строковый
+        
         const type = ReactionTypeMap[reaction.type];
         if (type === "like" || type === "dislike") {
           reactionCounts[type] = (reactionCounts[type] || 0) + 1;
         }
       });
 
-      // Преобразуем в массив, показывая только like и dislike
+      
       const result: Array<{ type: "like" | "dislike"; count: number }> = [];
       
       result.push({
@@ -388,7 +358,7 @@ export class PostApi {
       return result;
     } catch (error) {
       console.warn(`Failed to load reactions for post ${postId}:`, error);
-      // Возвращаем пустые реакции при ошибке
+      
       return [
         { type: 'like', count: 0 },
         { type: 'dislike', count: 0 },
@@ -396,9 +366,7 @@ export class PostApi {
     }
   }
 
-  /**
-   * Преобразовать PostReadDto в формат для превью поста (с загрузкой автора и реакций)
-   */
+  
   async adaptToPostPreview(post: PostReadDto): Promise<{
     id: number;
     title: string;
@@ -410,22 +378,22 @@ export class PostApi {
     };
     reactions: Array<{ type: "like" | "dislike"; count: number }>;
   } | null> {
-    // Проверяем наличие обязательных полей
+    
     if (!post || !post.id || !post.title) {
       console.warn("Invalid post data:", post);
       return null;
     }
 
-    // Проверяем наличие userId
+    
     if (!post.userId) {
       console.warn("Post missing userId:", post);
       return null;
     }
 
-    // Преобразуем MediaContent в image
+    
     const imageUrl = this.getImageUrl(post.mediaContent);
 
-    // Загружаем данные автора
+    
     let author: { id: number; username: string; avatar?: string };
     try {
       const userData = await userApi.getUserById(post.userId);
@@ -436,7 +404,7 @@ export class PostApi {
         avatar: avatarUrl || undefined,
       };
     } catch (error) {
-      // Для 401 (Unauthorized) используем fallback без логирования
+      
       const isUnauthorized = 
         (axios.isAxiosError(error) && error.response?.status === 401) ||
         (error instanceof Error && (error as Error & { status?: number }).status === 401) ||
@@ -458,7 +426,7 @@ export class PostApi {
       }
     }
 
-    // Загружаем реакции поста
+    
     const reactions = await this.getPostReactionsPreview(post.id);
 
     return {
@@ -470,9 +438,7 @@ export class PostApi {
     };
   }
 
-  /**
-   * Преобразовать массив PostReadDto в формат для превью постов
-   */
+  
   async adaptToPostPreviews(
     posts: PostReadDto[]
   ): Promise<Array<{
@@ -491,7 +457,7 @@ export class PostApi {
       return [];
     }
 
-    // Загружаем все посты параллельно
+    
     const adaptedPosts = await Promise.all(
       posts.map((post) => this.adaptToPostPreview(post))
     );
@@ -499,9 +465,7 @@ export class PostApi {
     return adaptedPosts.filter((post): post is NonNullable<typeof post> => post !== null);
   }
 
-  /**
-   * Преобразовать PostStatsDto в формат для превью поста (с загрузкой автора, реакции уже включены)
-   */
+  
   async adaptStatsDtoToPostPreview(post: PostStatsDto): Promise<{
     id: number;
     title: string;
@@ -513,22 +477,22 @@ export class PostApi {
     };
     reactions: Array<{ type: "like" | "dislike"; count: number }>;
   } | null> {
-    // Проверяем наличие обязательных полей
+    
     if (!post || !post.id || !post.title) {
       console.warn("Invalid post data:", post);
       return null;
     }
 
-    // Проверяем наличие userId
+    
     if (!post.userId) {
       console.warn("Post missing userId:", post);
       return null;
     }
 
-    // Преобразуем MediaContent в image
+    
     const imageUrl = this.getImageUrl(post.mediaContent);
 
-    // Загружаем данные автора
+    
     let author: { id: number; username: string; avatar?: string };
     try {
       const userData = await userApi.getUserById(post.userId);
@@ -539,7 +503,7 @@ export class PostApi {
         avatar: avatarUrl || undefined,
       };
     } catch (error) {
-      // Для 401 (Unauthorized) используем fallback без логирования
+      
       const isUnauthorized = 
         (axios.isAxiosError(error) && error.response?.status === 401) ||
         (error instanceof Error && (error as Error & { status?: number }).status === 401) ||
@@ -561,7 +525,7 @@ export class PostApi {
       }
     }
 
-    // Преобразуем ReactionsSummaries в формат реакций (реакции уже включены в DTO)
+    
     const reactions: Array<{ type: "like" | "dislike"; count: number }> = 
       post.reactionsSummaries.map((summary) => {
         const reactionType = typeof summary.reactionType === 'number' 
@@ -582,9 +546,7 @@ export class PostApi {
     };
   }
 
-  /**
-   * Преобразовать массив PostStatsDto в формат для превью постов
-   */
+  
   async adaptStatsDtosToPostPreviews(
     posts: PostStatsDto[]
   ): Promise<Array<{
@@ -603,7 +565,7 @@ export class PostApi {
       return [];
     }
 
-    // Загружаем все посты параллельно
+    
     const adaptedPosts = await Promise.all(
       posts.map((post) => this.adaptStatsDtoToPostPreview(post))
     );
@@ -611,9 +573,7 @@ export class PostApi {
     return adaptedPosts.filter((post): post is NonNullable<typeof post> => post !== null);
   }
 
-  /**
-   * Преобразовать PostReadDto в полный формат Post с загрузкой данных автора
-   */
+  
   async adaptToFullPost(post: PostReadDto): Promise<Post | null> {
     if (!post || !post.id || !post.title) {
       console.warn("Invalid post data:", post);
@@ -625,10 +585,10 @@ export class PostApi {
       return null;
     }
 
-    // Загружаем категории если нужно
+    
     await this.loadCategoriesIfNeeded();
 
-    // Загружаем данные автора
+    
     let author: { id: number; username: string; avatar?: string };
     try {
       const userData = await userApi.getUserById(post.userId);
@@ -639,7 +599,7 @@ export class PostApi {
         avatar: avatarUrl || undefined,
       };
     } catch (error) {
-      // Для 401 (Unauthorized) используем fallback без логирования
+      
       const isUnauthorized = 
         (axios.isAxiosError(error) && error.response?.status === 401) ||
         (error instanceof Error && (error as Error & { status?: number }).status === 401) ||
@@ -661,13 +621,13 @@ export class PostApi {
       }
     }
 
-    // Преобразуем MediaContent в image
+    
     const imageUrl = this.getImageUrl(post.mediaContent);
 
-    // Для PostReadDto нет реакций, возвращаем пустой массив
+    
     const reactions: Array<{ type: "like" | "dislike"; count: number }> = [];
 
-    // Создаем excerpt из content (первые 150 символов)
+    
     const excerpt =
       post.content.length > 150
         ? post.content.substring(0, 150) + "..."
@@ -681,16 +641,14 @@ export class PostApi {
       image: imageUrl || undefined,
       author,
       reactions,
-      category: this.getCategoryName(post.categoryId), // Используем реальное название категории
+      category: this.getCategoryName(post.categoryId), 
       tags: [],
       createdAt: post.postDate,
-      commentCount: 0, // Будет обновлено при загрузке комментариев
+      commentCount: 0, 
     };
   }
 
-  /**
-   * Преобразовать массив PostReadDto в полный формат Post
-   */
+  
   async adaptToFullPosts(posts: PostReadDto[]): Promise<Post[]> {
     if (!posts || !Array.isArray(posts)) {
       console.warn("Invalid posts array:", posts);
@@ -706,9 +664,7 @@ export class PostApi {
     );
   }
 
-  /**
-   * Преобразовать PostStatsDto в полный формат Post с загрузкой данных автора
-   */
+  
   async adaptStatsDtoToFullPost(post: PostStatsDto): Promise<Post | null> {
     if (!post || !post.id || !post.title) {
       console.warn("Invalid post data:", post);
@@ -720,10 +676,10 @@ export class PostApi {
       return null;
     }
 
-    // Загружаем категории если нужно
+    
     await this.loadCategoriesIfNeeded();
 
-    // Загружаем данные автора
+    
     let author: { id: number; username: string; avatar?: string };
     try {
       const userData = await userApi.getUserById(post.userId);
@@ -734,7 +690,7 @@ export class PostApi {
         avatar: avatarUrl || undefined,
       };
     } catch (error) {
-      // Для 401 (Unauthorized) используем fallback без логирования
+      
       const isUnauthorized = 
         (axios.isAxiosError(error) && error.response?.status === 401) ||
         (error instanceof Error && (error as Error & { status?: number }).status === 401) ||
@@ -756,16 +712,16 @@ export class PostApi {
       }
     }
 
-    // Преобразуем MediaContent в image
+    
     const imageUrl = this.getImageUrl(post.mediaContent);
 
-    // Загружаем реакции с информацией о том, поставил ли пользователь реакцию
+    
     let reactions: Array<{ type: "like" | "dislike"; count: number; userReacted: boolean }> = [];
     try {
       const userId = Number(localStorage.getItem("user_id")) || undefined;
       const postReactions = await reactionApi.getPostReactions(post.id);
 
-      // Создаем мапу для подсчета реакций и проверки userReacted
+      
       const reactionCounts: Partial<
         Record<ReactionType, { count: number; userReacted: boolean }>
       > = {
@@ -773,7 +729,7 @@ export class PostApi {
         dislike: { count: 0, userReacted: false },
       };
 
-      // Подсчитываем реакции из postReactions
+      
       postReactions.forEach((reaction) => {
         const type = ReactionTypeMap[reaction.type];
         if (type && reactionCounts[type]) {
@@ -784,7 +740,7 @@ export class PostApi {
         }
       });
 
-      // Используем данные из reactionsSummaries для count, но userReacted из postReactions
+      
       post.reactionsSummaries.forEach((summary) => {
         const reactionType = typeof summary.reactionType === 'number' 
           ? ReactionTypeMap[summary.reactionType] || 'like'
@@ -795,7 +751,7 @@ export class PostApi {
         }
       });
 
-      // Формируем массив реакций
+      
       reactions = [
         {
           type: "like" as ReactionType,
@@ -809,7 +765,7 @@ export class PostApi {
         },
       ];
     } catch {
-      // Если не удалось загрузить реакции, используем только данные из reactionsSummaries
+      
       reactions = post.reactionsSummaries.map((summary) => {
         const reactionType = typeof summary.reactionType === 'number' 
           ? ReactionTypeMap[summary.reactionType] || 'like'
@@ -822,7 +778,7 @@ export class PostApi {
       });
     }
 
-    // Создаем excerpt из content (первые 150 символов)
+    
     const excerpt =
       post.content.length > 150
         ? post.content.substring(0, 150) + "..."
@@ -843,9 +799,7 @@ export class PostApi {
     };
   }
 
-  /**
-   * Преобразовать массив PostStatsDto в полный формат Post
-   */
+  
   async adaptStatsDtosToFullPosts(posts: PostStatsDto[]): Promise<Post[]> {
     if (!posts || !Array.isArray(posts)) {
       console.warn("Invalid posts array:", posts);
@@ -861,9 +815,7 @@ export class PostApi {
     );
   }
 
-  /**
-   * Обработка ошибок
-   */
+  
   private handlePostError(error: unknown, defaultMessage: string): never {
     if (axios.isAxiosError(error)) {
       if (error.response) {
@@ -897,8 +849,8 @@ export class PostApi {
   }
 }
 
-// Экспортируем экземпляр по умолчанию
+
 export const postApi = new PostApi();
 
-// Для использования с кастомным URL
+
 export default PostApi;

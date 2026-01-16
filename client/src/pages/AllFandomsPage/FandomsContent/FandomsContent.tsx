@@ -1,4 +1,4 @@
-// FandomsContent/FandomsContent.tsx
+
 import type { FandomReadDto } from "../../../api/FandomApi";
 import ErrorState from "../../../components/ErrorState/ErrorState";
 import SectionTitle from "../../../components/UI/SectionTitle/SectionTitle";
@@ -10,12 +10,12 @@ import { getImageUrl } from "../../../utils/urlUtils";
 
 type FandomWithStats = FandomReadDto | import("../../../api/FandomApi").FandomStatsDto;
 
-interface FandomsProps {
+type FandomsProps = {
   fandoms: FandomWithStats[];
   loading: boolean;
   error: string | null;
   gameTitle?: string | null;
-  onAddFandomClick?: () => void; // Колбек для открытия формы
+  onAddFandomClick?: () => void; 
 }
 
 export const FandomsContent = ({ 
@@ -30,7 +30,7 @@ export const FandomsContent = ({
     imageUrl: fandom.coverImage ? getImageUrl(fandom.coverImage) : undefined, 
   });
 
-  // Функция для рендеринга skeleton-карточек фандомов
+  
   const renderFandomSkeletons = (count: number = 6) => {
     return Array.from({ length: count }).map((_, index) => (
       <div key={`fandom-skeleton-${index}`} className={styles.fandomSkeleton}>
@@ -46,7 +46,7 @@ export const FandomsContent = ({
 
   return (
     <section className={styles.fandomsSection}>
-      {/* Заголовок с кнопкой добавления */}
+      {}
       <div className={styles.sectionHeader}>
         <SectionTitle title={`Fandoms ${hasFandoms && !loading ? `(${fandoms.length})` : ''}`} />
         {onAddFandomClick && !loading && (
@@ -57,21 +57,21 @@ export const FandomsContent = ({
         )}
       </div>
 
-      {/* Состояние ошибки */}
+      {}
       {error ? (
         <ErrorState error={error} onRetry={() => window.location.reload()} />
       ) : loading ? (
-        /* Skeleton при загрузке */
+        
         <div className={styles.fandomsGrid}>
           {renderFandomSkeletons(6)}
         </div>
       ) : !hasFandoms ? (
-        /* Пустое состояние */
+        
         <div className={styles.emptyState}>
           <p>No fandoms found</p>
         </div>
       ) : (
-        /* Список фандомов */
+        
         <div className={styles.fandomsGrid}>
           {fandoms.map((fandom) => (
             <FandomCard

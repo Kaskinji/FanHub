@@ -40,9 +40,7 @@ export class UserApi {
     this.baseUrl = baseUrl;
   }
 
-  /**
-   * Получить всех пользователей (только для администраторов)
-   */
+  
   async getUsers(): Promise<UserReadDto[]> {
     try {
       const response = await axios.get<UserReadDto[]>(`${this.baseUrl}/users`, {
@@ -56,9 +54,7 @@ export class UserApi {
     }
   }
 
-  /**
-   * Получить пользователя по ID (безопасные данные)
-   */
+  
   async getUserById(id: number): Promise<UserSafeReadDto> {
     try {
       const response = await axios.get<UserSafeReadDto>(`${this.baseUrl}/users/${id}`, {
@@ -68,7 +64,7 @@ export class UserApi {
 
       return response.data;
     } catch (error) {
-      // Для 401 (Unauthorized) выбрасываем специальную ошибку, которую можно обработать
+      
       if (axios.isAxiosError(error) && error.response?.status === 401) {
         const unauthorizedError = new Error('UNAUTHORIZED') as Error & { status?: number };
         unauthorizedError.status = 401;
@@ -78,9 +74,7 @@ export class UserApi {
     }
   }
   
-  /**
-   * Получить текущего авторизованного пользователя
-   */
+  
   async getCurrentUser(): Promise<UserReadDto | undefined> {
     try {
       const userId = localStorage.getItem('user_id');
@@ -96,9 +90,7 @@ export class UserApi {
     }
   }
 
-  /**
-   * Обновить данные пользователя
-   */
+  
   async updateUser(id: number, userData: UserUpdateDto): Promise<void> {
     try {
       await axios.put(`${this.baseUrl}/users/${id}`, userData, {
@@ -113,9 +105,7 @@ export class UserApi {
     }
   }
 
-  /**
-   * Обновить данные текущего пользователя
-   */
+  
   async updateCurrentUser(userData: UserUpdateDto): Promise<void> {
     try {
       const userId = localStorage.getItem('user_id');
@@ -130,9 +120,7 @@ export class UserApi {
     }
   }
 
-  /**
-   * Удалить пользователя (только для администраторов или самого пользователя)
-   */
+  
   async deleteUser(id: number): Promise<void> {
     try {
       await axios.delete(`${this.baseUrl}/users/${id}`, {
@@ -144,9 +132,7 @@ export class UserApi {
     }
   }
 
-  /**
-   * Удалить текущего пользователя
-   */
+  
   async deleteCurrentUser(): Promise<void> {
     try {
       const userId = localStorage.getItem('user_id');
@@ -157,16 +143,14 @@ export class UserApi {
 
       await this.deleteUser(Number(userId));
       
-      // Очищаем localStorage после удаления аккаунта
+      
       localStorage.removeItem('user_id');
     } catch (error) {
       this.handleUserError(error, 'Failed to delete current user');
     }
   }
 
-  /**
-   * Обработка ошибок
-   */
+  
   private handleUserError(error: unknown, defaultMessage: string): never {
     if (axios.isAxiosError(error)) {
       if (error.response) {
@@ -200,8 +184,8 @@ export class UserApi {
   }
 }
 
-// Экспортируем экземпляр по умолчанию
+
 export const userApi = new UserApi();
 
-// Для использования с кастомным URL
+
 export default UserApi;

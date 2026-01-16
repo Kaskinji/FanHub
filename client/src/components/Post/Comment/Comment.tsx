@@ -1,4 +1,3 @@
-// components/Post/Comment.tsx
 import { useState, type FC } from "react";
 import { FirstLetter } from "../../UI/FirstLetter/FirstLetter";
 import styles from "./Comment.module.scss";

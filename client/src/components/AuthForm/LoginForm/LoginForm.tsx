@@ -19,7 +19,7 @@ const LoginForm: FC<LoginFormProps> = ({
   isLoading = false,
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const navigate = useNavigate(); // Для навигации после успешного логина
+  const navigate = useNavigate(); 
 
   const {
     register,
@@ -32,7 +32,7 @@ const LoginForm: FC<LoginFormProps> = ({
     setIsSubmitting(true);
 
     try {
-      // Отправляем запрос на сервер
+      
       const response = await authApi.login({login: data.login, password: data.password});
       
         console.log("Login successful. User ID:", response);
@@ -45,10 +45,10 @@ const LoginForm: FC<LoginFormProps> = ({
       
 
     } catch (error) {
-      // Обработка ошибок
+      
       if (axios.isAxiosError(error)) {
         if (error.response) {
-          // Сервер ответил с ошибкой
+          
           switch (error.response.status) {
             case 400:
               setError("root", {
@@ -86,14 +86,14 @@ const LoginForm: FC<LoginFormProps> = ({
             message: "Network error. Please check your connection."
           });
         } else {
-          // Что-то пошло не так при настройке запроса
+          
           setError("root", {
             type: "manual",
             message: "An unexpected error occurred."
           });
         }
       } else {
-        // Не axios ошибка
+        
         setError("root", {
           type: "manual",
           message: "An unexpected error occurred."

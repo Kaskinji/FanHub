@@ -1,4 +1,3 @@
-// components/Post/PostFull.tsx
 import {  type FC } from "react";
 import { FirstLetter } from "../../UI/FirstLetter/FirstLetter";
 import styles from "./PostFull.module.scss";

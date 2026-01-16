@@ -1,4 +1,3 @@
-// components/Post/PostComments.tsx
 import { type FC } from "react";
 import styles from "./PostComments.module.scss";
 import type { Comment as CommentType } from "../../../types/Post";

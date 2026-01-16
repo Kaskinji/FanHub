@@ -2,13 +2,13 @@ import { useNavigate } from "react-router-dom";
 import { FirstLetter } from "../../../components/UI/FirstLetter/FirstLetter";
 import styles from "./EventCard.module.scss";
 
-interface EventCardProps {
+type EventCardProps = {
   title: string;
   image?: string;
   fandomId?: number;
 }
 
-export function EventCard({ title, image, fandomId }: EventCardProps) {
+export const EventCard = ({ title, image, fandomId }: EventCardProps) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -31,7 +31,7 @@ export function EventCard({ title, image, fandomId }: EventCardProps) {
       </div>
     </div>
   );
-}
+};
 
 export default EventCard;
 

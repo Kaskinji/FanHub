@@ -6,8 +6,8 @@ import styles from "./GameForm.module.scss";
 import { getImageUrl } from "../../../utils/urlUtils";
 import Modal from "../../../components/UI/Modal/Modal";
 
-interface GameFormProps {
-  gameId?: number; // Если передан, то режим редактирования
+type GameFormProps = {
+  gameId?: number; 
   onCancel: () => void;
   onSuccess: (gameId: number) => void;
 }
@@ -40,7 +40,7 @@ export const GameForm = ({
   >({
     title: "",
     description: "",
-    releaseDate: new Date().toISOString().split('T')[0], // Текущая дата в формате YYYY-MM-DD
+    releaseDate: new Date().toISOString().split('T')[0], 
     developer: "",
     publisher: "",
     genre: "Action",
@@ -54,7 +54,7 @@ export const GameForm = ({
           setFormData({
             title: data.title,
             description: data.description,
-            releaseDate: data.releaseDate.split('T')[0], // Конвертируем в формат даты для input
+            releaseDate: data.releaseDate.split('T')[0], 
             developer: data.developer,
             publisher: data.publisher,
             genre: data.genre,
@@ -150,7 +150,7 @@ export const GameForm = ({
         }
       }
 
-      // Форматируем дату для API
+      
       const formattedDate = new Date(formData.releaseDate).toISOString();
 
       if (isEditMode && gameId) {
@@ -204,7 +204,7 @@ export const GameForm = ({
     try {
       await gameApi.deleteGame(gameId);
       setShowDeleteConfirm(false);
-      navigate(`/allgames`); // Перенаправляем на список игр
+      navigate(`/allgames`); 
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Failed to delete game";

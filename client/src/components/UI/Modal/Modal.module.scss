@@ -1,4 +1,4 @@
-// components/UI/Modal/Modal.module.scss
+
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -17,8 +17,8 @@
   &.noOverlay {
     background-color: transparent;
     backdrop-filter: none;
-    pointer-events: auto; // Оставляем pointer-events для обработки кликов
-    z-index: 1001; // Выше формы редактирования
+    pointer-events: auto; 
+    z-index: 1001; 
   }
 }
 
@@ -86,7 +86,7 @@
   flex: 1;
   background: rgb(38, 18, 77);
 
-  // Scrollbar styling
+  
   &::-webkit-scrollbar {
     width: 6px;
   }
@@ -105,7 +105,7 @@
   }
 }
 
-// Анимации
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -126,7 +126,7 @@
   }
 }
 
-// Адаптивность
+
 @media (max-width: 768px) {
   .modal {
     max-width: 95%;

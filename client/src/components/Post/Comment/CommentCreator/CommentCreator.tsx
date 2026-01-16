@@ -1,4 +1,3 @@
-// components/Comment/CommentCreator.tsx
 import { useState, type FC, useRef } from "react";
 import styles from "../CommentCreator/CommentCreator.module.scss";
 

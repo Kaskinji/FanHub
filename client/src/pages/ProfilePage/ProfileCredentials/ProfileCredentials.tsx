@@ -1,6 +1,6 @@
 import styles from "./ProfileCard.module.scss";
 
-interface ProfileCredentialsProps {
+type ProfileCredentialsProps = {
   name: string;
   image: string | undefined;
 }

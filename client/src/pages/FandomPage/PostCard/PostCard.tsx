@@ -5,7 +5,7 @@ import styles from "./PostCard.module.scss";
 import likeIcon from "../../../assets/like.svg";
 import dislikeIcon from "../../../assets/dislike.svg";
 
-interface PostCardProps {
+type PostCardProps = {
   id: number;
   title: string;
   image: string | null;
@@ -19,19 +19,19 @@ interface PostCardProps {
   fandomName?: string;
 }
 
-export function PostCard({ id, title, image, author, reactions, fandomId, fandomName }: PostCardProps) {
+export const PostCard = ({ id, title, image, author, reactions, fandomId, fandomName }: PostCardProps) => {
   const navigate = useNavigate();
   const [imageError, setImageError] = useState(false);
   const [avatarError, setAvatarError] = useState(false);
 
   const handleClick = () => {
-    // Редирект на страницу постов с передачей данных о фандоме
+    
     if (fandomId && fandomName) {
       navigate(`/fandom/${fandomId}/posts`, {
         state: {
           fandomId: fandomId,
           fandomName: fandomName,
-          postId: id, // Передаем ID поста для открытия
+          postId: id, 
         },
       });
     }
@@ -92,7 +92,7 @@ export function PostCard({ id, title, image, author, reactions, fandomId, fandom
       </div>
     </div>
   );
-}
+};
 
 export default PostCard;
 

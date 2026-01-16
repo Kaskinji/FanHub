@@ -10,13 +10,13 @@ import postIcon from "../../../assets/postIcon.svg";
 import subscriberIcon from "../../../assets/subscriberIcon.svg";
 import styles from "./FandomCard.module.scss";
 
-interface FandomCardProps {
+type FandomCardProps = {
   fandom: FandomPageData;
   initialIsCreator?: boolean | null;
   initialSubscriptionId?: number | null | undefined;
 }
 
-export function FandomCard({ fandom, initialIsCreator, initialSubscriptionId }: FandomCardProps) {
+export const FandomCard = ({ fandom, initialIsCreator, initialSubscriptionId }: FandomCardProps) => {
   const [isSubscribed, setIsSubscribed] = useState<boolean | null>(null);
   const [subscriptionId, setSubscriptionId] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
@@ -161,7 +161,7 @@ export function FandomCard({ fandom, initialIsCreator, initialSubscriptionId }: 
       </section>
     </>
   );
-}
+};
 
 export default FandomCard;
 

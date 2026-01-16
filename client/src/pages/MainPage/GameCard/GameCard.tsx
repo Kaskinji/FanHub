@@ -5,7 +5,7 @@ import styles from "./GameCard.module.scss";
 import type { GamePreview } from "../../../types/AllGamesPageData";
 import type { GameReadDto } from "../../../api/GameApi";
 
-interface GameCardProps {
+type GameCardProps = {
   gamePreview: GamePreview; 
   gameFull?: GameReadDto;  
   className?: string;

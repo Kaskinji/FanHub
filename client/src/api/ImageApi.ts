@@ -24,9 +24,9 @@ export class ImageApi {
       }
     );
 
-    return response.data; // Вернется имя файла (string)
+    return response.data; 
   } catch (error: unknown) {
-    // Детальная отладка
+    
     const axiosError = error as { response?: { status?: number; data?: unknown; headers?: unknown }; message?: string };
     console.error('Upload failed:', {
       status: axiosError.response?.status,
@@ -38,9 +38,7 @@ export class ImageApi {
   }
 }
 
-  /**
-   * Удалить картинку по name
-   */
+  
   async deleteImage(imageName: string): Promise<void> {
     try {
       await axios.delete<string>(`${this.baseUrl}/images/${imageName}`, {

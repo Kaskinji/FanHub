@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&display=swap");
 
 * {
     box-sizing: border-box;
@@ -21,7 +21,7 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-/* Глобальная структура для управления скроллом */
+
 html, body {
     height: 100%;
     margin: 0;
@@ -37,11 +37,11 @@ html, body {
 #app-wrapper {
     height: 100%;
     position: relative;
-    overflow-y: scroll; /* Скроллбар всегда виден, чтобы избежать сдвига */
+    overflow-y: scroll; 
     overflow-x: hidden;
 }
 
-/* Стили для печати */
+
 @media print {
     html, body {
         height: auto;

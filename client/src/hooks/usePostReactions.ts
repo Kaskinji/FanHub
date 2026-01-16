@@ -8,9 +8,7 @@ export interface PostReaction {
   userReacted: boolean;
 }
 
-/**
- * Хук для работы с реакциями постов
- */
+
 export const usePostReactions = () => {
   const { isAuthenticated } = useAuth();
 

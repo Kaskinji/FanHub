@@ -46,9 +46,7 @@ export class FandomApi {
     this.baseUrl = baseUrl;
   }
 
-  /**
-   * Получить все фандомы
-   */
+  
   async getFandoms(): Promise<FandomReadDto[]> {
     try {
       const response = await axios.get<FandomReadDto[]>(
@@ -65,9 +63,7 @@ export class FandomApi {
     }
   }
 
-  /**
-   * Получить фандом по ID (базовые данные)
-   */
+  
   async getFandomById(id: number): Promise<FandomReadDto> {
     try {
       const response = await axios.get<FandomReadDto>(
@@ -84,9 +80,7 @@ export class FandomApi {
     }
   }
 
-  /**
-   * Получить фандом со статистикой по ID
-   */
+  
   async getFandomWithStatsById(id: number): Promise<FandomStatsDto> {
     try {
       const response = await axios.get<FandomStatsDto>(
@@ -106,9 +100,7 @@ export class FandomApi {
     }
   }
 
-  /**
-   * Поиск фандомов по названию
-   */
+  
   async searchFandomsByName(name: string): Promise<FandomReadDto[]> {
     try {
       const response = await axios.get<FandomReadDto[]>(
@@ -129,9 +121,7 @@ export class FandomApi {
     }
   }
 
-  /**
-   * Поиск фандомов по названию и игре
-   */
+  
   async searchFandomsByNameAndGame(
     gameId: number,
     name?: string
@@ -155,9 +145,7 @@ export class FandomApi {
     }
   }
 
-  /**
-   * Получить популярные фандомы
-   */
+  
   async getPopularFandoms(limit: number = 20): Promise<FandomReadDto[]> {
     try {
       const response = await axios.get<FandomReadDto[]>(
@@ -178,9 +166,7 @@ export class FandomApi {
     }
   }
 
-  /**
-   * Получить популярные фандомы по игре
-   */
+  
   async getPopularFandomsByGame(
     gameId: number,
     limit: number = 20
@@ -204,9 +190,7 @@ export class FandomApi {
     }
   }
 
-  /**
-   * Проверить, является ли текущий пользователь создателем фандома
-   */
+  
   async checkCreator(fandomId: number): Promise<boolean> {
     try {
       const response = await axios.get<boolean>(
@@ -226,9 +210,7 @@ export class FandomApi {
     }
   }
 
-  /**
-   * Создать новый фандом
-   */
+  
   async createFandom(fandomData: FandomCreateDto): Promise<number> {
     try {
       const response = await axios.post<number>(
@@ -248,9 +230,7 @@ export class FandomApi {
     }
   }
 
-  /**
-   * Обновить данные фандома
-   */
+  
   async updateFandom(id: number, fandomData: FandomUpdateDto): Promise<void> {
     try {
       await axios.put(`${this.baseUrl}/fandoms/${id}`, fandomData, {
@@ -265,9 +245,7 @@ export class FandomApi {
     }
   }
 
-  /**
-   * Удалить фандом (только для администраторов)
-   */
+  
   async deleteFandom(id: number): Promise<void> {
     try {
       await axios.delete(`${this.baseUrl}/fandoms/${id}`, {
@@ -279,9 +257,7 @@ export class FandomApi {
     }
   }
 
-  /**
-   * Обработка ошибок
-   */
+  
   private handleFandomError(error: unknown, defaultMessage: string): never {
     if (axios.isAxiosError(error)) {
       if (error.response) {
@@ -315,8 +291,8 @@ export class FandomApi {
   }
 }
 
-// Экспортируем экземпляр по умолчанию
+
 export const fandomApi = new FandomApi();
 
-// Для использования с кастомным URL
+
 export default FandomApi;

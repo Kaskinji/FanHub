@@ -16,10 +16,10 @@ export interface AuthState {
   error: string | undefined;
 }
 
-// Используем те же имена полей, что и в AuthService
+
 export interface LoginCredentials {
-  login: string;    // Должно совпадать с AuthService
-  password: string; // Должно совпадать с AuthService
+  login: string;    
+  password: string; 
 }
 
 export interface RegisterData {
@@ -34,9 +34,9 @@ export interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | undefined;
-  login: (credentials: LoginCredentials) => Promise<void>; // Изменено на void
-  register: (data: RegisterData) => Promise<void>; // Изменено на void
-  logout: () => Promise<void>; // Изменено на void
+  login: (credentials: LoginCredentials) => Promise<void>; 
+  register: (data: RegisterData) => Promise<void>; 
+  logout: () => Promise<void>; 
   clearError: () => void;
   updateUser: (userData: Partial<User>) => void;
 }

@@ -40,7 +40,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     return error;
   };
 
-  // Функция для получения пользователя по ID
+  
   const fetchUserById = useCallback(async (userId: number): Promise<User | null> => {
     try {
       const userData = await userApi.getCurrentUser();
@@ -49,15 +49,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
         return null;
       }
 
-      // Преобразуем UserReadDto в User (адаптируем под ваш тип User)
+      
       const user: User = {
         id: userData.id.toString(),
-        login: userData.login, // или userData.email, если есть
+        login: userData.login, 
         name: userData.username,
         role: userData.role,
         avatar: userData.avatar,
         registrationDate: userData.registrationDate
-        // Добавьте другие поля при необходимости
+        
       };
       
       return user;
@@ -67,14 +67,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     }
   }, []);
 
-  // Проверка аутентификации при загрузке
+  
   useEffect(() => {
     const checkAuth = async () => {
       try {
         const { isAuthenticated, userId } = await authApi.checkAuth();
         
         if (isAuthenticated && userId) {
-          // Получаем данные пользователя
+          
           const user = await fetchUserById(userId);
           
           if (user) {
@@ -85,7 +85,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
               isLoading: false 
             }));
           } else {
-            // Пользователь не найден, сбрасываем аутентификацию
+            
             setState(prev => ({ 
               ...prev, 
               user: undefined, 
@@ -115,14 +115,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     checkAuth();
   }, [fetchUserById]);
 
-  // Вход
+  
   const login = useCallback(async (credentials: LoginCredentials): Promise<void> => {
     setState(prev => ({ ...prev, isLoading: true, error: undefined }));
     
     try {
       const userId = await authApi.login(credentials);
       
-      // Получаем данные пользователя после успешного входа
+      
       const user = await fetchUserById(userId);
       
       if (!user) {
@@ -153,7 +153,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     }
   }, [fetchUserById]);
 
-  // Выход
+  
   const logout = useCallback(async (): Promise<void> => {
     setState(prev => ({ ...prev, isLoading: true }));
     
@@ -186,12 +186,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     });
   }, []);
 
-  // Очистка ошибок
+  
   const clearError = useCallback(() => {
     setState(prev => ({ ...prev, error: undefined }));
   }, []);
 
-  // Регистрация
+  
   const register = useCallback(async (data: RegisterData): Promise<void> => {
     setState(prev => ({ ...prev, isLoading: true, error: undefined }));
     
@@ -204,10 +204,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
         throw Error;
       }
 
-      // Преобразуем UserReadDto в User (адаптируем под ваш тип User)
+      
       const user: User = {
         id: userData.id.toString(),
-        login: userData.login, // или userData.email, если есть
+        login: userData.login, 
         name: userData.username,
         role: userData.role,
         avatar: userData.avatar,
@@ -249,7 +249,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     }
   }, []);
 
-  // Значение контекста
+  
   const contextValue: AuthContextType = {
     user: state.user,
     isAuthenticated: state.isAuthenticated,

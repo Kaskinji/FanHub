@@ -1,4 +1,4 @@
-// TitleCard.tsx
+
 import type { FC } from "react";
 import { FirstLetter } from "../UI/FirstLetter/FirstLetter";
 import styles from "./TitleCard.module.scss"

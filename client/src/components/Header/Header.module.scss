@@ -149,7 +149,7 @@
               animation: none;
             }
             
-            // Контейнер для волн
+            
             &::before,
             &::after,
             & span {
@@ -309,7 +309,7 @@
         }
     }
     
-    // Скелетон для загрузки userSection
+    
     .userSectionSkeleton {
         display: flex;
         align-items: center;

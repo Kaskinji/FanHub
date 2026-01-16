@@ -9,7 +9,7 @@ import type { SortOption } from "../../../hooks/usePosts";
 import styles from "./PostsList.module.scss";
 import { CustomSelect } from "../../../components/UI/CustomSelect/CustomSelect";
 
-interface PostsListProps {
+type PostsListProps = {
   posts: Post[];
   loading?: boolean;
   fandomName?: string;
@@ -50,7 +50,7 @@ export const PostsList: FC<PostsListProps> = ({
     { value: "reactions-asc", label: "Least Reactions" },
   ];
 
-  // Функция для рендеринга skeleton-карточек постов
+  
   const renderPostSkeletons = (count: number = 6) => {
     return Array.from({ length: count }).map((_, index) => (
       <div key={`post-skeleton-${index}`} className={styles.postSkeleton}>
@@ -92,7 +92,7 @@ export const PostsList: FC<PostsListProps> = ({
         onToggleFilter={onToggleFilter}
       />
       
-      {/* Фильтр по категориям (показывается/скрывается) */}
+      {}
       {showCategoryFilter && (
         <CategoryFilter
           categories={categories}
@@ -102,7 +102,7 @@ export const PostsList: FC<PostsListProps> = ({
         />
       )}
       
-      {/* Панель активных фильтров */}
+      {}
       <ActiveFilters
         selectedCategory={selectedCategory}
         onReset={onResetFilters}
@@ -137,8 +137,8 @@ export const PostsList: FC<PostsListProps> = ({
   );
 };
 
-/* ================= TOP SECTION ================= */
-interface TopProps {
+
+type TopProps = {
   fandomName?: string;
   sortOption: SortOption;
   sortOptions: Array<{ value: string; label: string }>;
@@ -147,7 +147,7 @@ interface TopProps {
   onToggleFilter: () => void;
 }
 
-function Top({ fandomName, sortOption, sortOptions, showCategoryFilter, onSortChange, onToggleFilter }: TopProps) {
+const Top = ({ fandomName, sortOption, sortOptions, showCategoryFilter, onSortChange, onToggleFilter }: TopProps) => {
   return (
     <div className={styles.topSection}>
       {fandomName && (
@@ -173,15 +173,15 @@ function Top({ fandomName, sortOption, sortOptions, showCategoryFilter, onSortCh
       </div>
     </div>
   );
-}
+};
 
-/* ================= ACTIVE FILTERS ================= */
-interface ActiveFiltersProps {
+
+type ActiveFiltersProps = {
   selectedCategory: string;
   onReset: () => void;
 }
 
-function ActiveFilters({ selectedCategory, onReset }: ActiveFiltersProps) {
+const ActiveFilters = ({ selectedCategory, onReset }: ActiveFiltersProps) => {
   if (selectedCategory === 'all') {
     return null;
   }
@@ -197,17 +197,17 @@ function ActiveFilters({ selectedCategory, onReset }: ActiveFiltersProps) {
       </div>
     </div>
   );
-}
+};
 
-/* ================= CATEGORY FILTER ================= */
-interface CategoryFilterProps {
+
+type CategoryFilterProps = {
   categories: string[];
   selectedCategory: string;
   onSelect: (category: string) => void;
   onClose: () => void;
 }
 
-function CategoryFilter({ categories, selectedCategory, onSelect, onClose }: CategoryFilterProps) {
+const CategoryFilter = ({ categories, selectedCategory, onSelect, onClose }: CategoryFilterProps) => {
   return (
     <div className={styles.categoryFilterPanel}>
       <div className={styles.categoryFilterHeader}>
@@ -233,4 +233,4 @@ function CategoryFilter({ categories, selectedCategory, onSelect, onClose }: Cat
       </div>
     </div>
   );
-}
+};

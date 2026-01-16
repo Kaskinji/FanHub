@@ -8,7 +8,7 @@ import Input from "../../../components/UI/Input/Input";
 import { FormGroup } from "../../../components/UI/FormGroup/FormGroup";
 import { SERVER_CONFIG } from "../../../config/apiConfig";
 
-interface ProfileEditCardProps {
+type ProfileEditCardProps = {
   user: User;
   currentImage: string | undefined;
   onSave: (updatedUser: User) => void;
@@ -77,7 +77,7 @@ export const ProfileEditCard = ({
       }));
     }
     
-    // Сбрасываем общую ошибку формы при изменении полей
+    
     if (errors.form) {
       setErrors(prev => ({ ...prev, form: "" }));
     }
@@ -85,7 +85,7 @@ export const ProfileEditCard = ({
 
   const handleAvatarChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    setFileError(null); // Сбрасываем ошибку файла
+    setFileError(null); 
     
     if (!file) return;
 
@@ -119,7 +119,7 @@ export const ProfileEditCard = ({
     setAvatar(null);
     setAvatarPreview(undefined);
     setShouldRemoveAvatar(true);
-    setFileError(null); // Сбрасываем ошибку
+    setFileError(null); 
   };
 
   const handleRestoreAvatar = () => {
@@ -159,25 +159,25 @@ export const ProfileEditCard = ({
     let hasError = false;
     const newErrors = { ...errors };
 
-    // Валидация пароля
+    
     if (formData.password && formData.password.length < 6) {
       newErrors.password = "Password must be at least 6 characters";
       hasError = true;
     }
 
-    // Валидация подтверждения пароля
+    
     if (formData.password && formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Passwords don't match";
       hasError = true;
     }
 
-    // Валидация логина
+    
     if (formData.login && formData.login.length < 3) {
       newErrors.form = "Login must be at least 3 characters";
       hasError = true;
     }
 
-    // Валидация имени пользователя
+    
     if (formData.username && formData.username.length < 2) {
       newErrors.form = "Username must be at least 2 characters";
       hasError = true;
@@ -288,7 +288,7 @@ export const ProfileEditCard = ({
       <h2 className={styles.title}>Manage Your Account</h2>
 
       <form onSubmit={handleSubmit} className={styles.form}>
-        {/* Общая ошибка формы */}
+        {}
         {errors.form && (
           <div className={styles.formError}>
             {errors.form}

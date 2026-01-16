@@ -5,7 +5,7 @@ import styles from './Avatar.module.scss';
 interface AvatarProps {
   src?: string;
   alt: string;
-  size?: 'small' | 'medium' | 'large' | 'xlarge' | number; // Можно передать число
+  size?: 'small' | 'medium' | 'large' | 'xlarge' | number; 
   className?: string;
   onClick?: () => void;
 }
@@ -19,13 +19,13 @@ export const Avatar: FC<AvatarProps> = ({
 }) => {
   const [imageError, setImageError] = useState(false);
   
-  // Вычисляем размеры если передан number
+  
   const dimensions = useMemo(() => {
     if (typeof size === 'number') {
       return {
         width: size,
         height: size,
-        fontSize: Math.floor(size * 0.43) // 43% от размера
+        fontSize: Math.floor(size * 0.43) 
       };
     }
     

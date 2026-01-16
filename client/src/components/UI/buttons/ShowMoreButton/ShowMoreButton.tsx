@@ -27,7 +27,7 @@ const ShowMoreButton: FC<ShowMoreButtonProps> = ({
         className,
     );
 
-    // Приоритет: text > children > "Show More"
+    
     const displayText = text || children || "Show More";
 
     return (

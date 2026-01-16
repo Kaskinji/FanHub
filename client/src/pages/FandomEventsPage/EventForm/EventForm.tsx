@@ -5,9 +5,9 @@ import styles from "./EventForm.module.scss";
 import { getImageUrl } from "../../../utils/urlUtils";
 import Modal from "../../../components/UI/Modal/Modal";
 
-interface EventFormProps {
+type EventFormProps = {
   fandomId: number;
-  eventId?: number; // If provided, form is in edit mode
+  eventId?: number; 
   onCancel: () => void;
   onSuccess: () => void;
 }
@@ -160,23 +160,23 @@ export const EventForm = ({
 
       let imageUrl: string | null = null;
       
-      // Если изображение было удалено, удаляем его с сервера
+      
       if (imageRemoved && originalImageName) {
         try {
           await imageApi.deleteImage(originalImageName);
         } catch (deleteError) {
           console.warn("Could not delete old image:", deleteError);
-          // Не прерываем процесс, если удаление не удалось
+          
         }
         imageUrl = null;
       } else if (imageFile) {
-        // Если загружается новое изображение, удаляем старое (если есть)
+        
         if (originalImageName) {
           try {
             await imageApi.deleteImage(originalImageName);
           } catch (deleteError) {
             console.warn("Could not delete old image:", deleteError);
-            // Не прерываем процесс, если удаление не удалось
+            
           }
         }
         

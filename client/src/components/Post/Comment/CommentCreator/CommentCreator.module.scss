@@ -1,14 +1,13 @@
-// components/Comment/CommentCreator.module.scss
 .commentCreator {
   background-color: white;
-  border: 2px solid #892be2; // Фиолетовая рамка толщиной 2px
+  border: 2px solid #892be2;
   border-radius: 12px;
   padding: 1rem;
   box-shadow: 0 4px 12px rgba(138, 43, 226, 0.1);
   transition: all 0.3s ease;
   margin-bottom: 20px;
   &:focus-within {
-    border-color: #6a0dad0c; // Темнее при фокусе
+    border-color: #6a0dad0c;
     box-shadow: 0 4px 4px 4px  rgb(169, 19, 219);
   }
 }
@@ -65,7 +64,7 @@
   font-size: 1rem;
   font-family: inherit;
   line-height: 1.5;
-  resize: none; // Отключаем ручное изменение размера
+  resize: none;
   overflow-y: auto;
   transition: height 0.2s ease;
   
@@ -84,7 +83,6 @@
     cursor: not-allowed;
   }
   
-  /* Стили для скроллбара */
   &::-webkit-scrollbar {
     width: 6px;
   }

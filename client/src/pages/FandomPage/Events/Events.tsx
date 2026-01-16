@@ -5,11 +5,11 @@ import { sortEventsByStatus } from "../../../utils/eventUtils";
 import { EventCard } from "../EventCard/EventCard";
 import styles from "./Events.module.scss";
 
-interface EventsProps {
+type EventsProps = {
   fandomId: number;
 }
 
-export function Events({ fandomId }: EventsProps) {
+export const Events = ({ fandomId }: EventsProps) => {
   const [events, setEvents] = useState<Array<{ id: number; title: string; image?: string }>>([]);
   const [loading, setLoading] = useState(true);
 
@@ -60,7 +60,7 @@ export function Events({ fandomId }: EventsProps) {
       ))}
     </section>
   );
-}
+};
 
 export default Events;
 

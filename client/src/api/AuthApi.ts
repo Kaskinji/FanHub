@@ -152,8 +152,8 @@ export class AuthApi {
   }
 }
 
-// Экспортируем экземпляр по умолчанию
+
 export const authApi = new AuthApi();
 
-// Для использования с кастомным URL
+
 export default AuthApi;

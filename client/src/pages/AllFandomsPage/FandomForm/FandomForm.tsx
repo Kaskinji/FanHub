@@ -6,9 +6,9 @@ import styles from "./FandomForm.module.scss";
 import { getImageUrl } from "../../../utils/urlUtils";
 import Modal from "../../../components/UI/Modal/Modal";
 
-interface FandomFormProps {
+type FandomFormProps = {
   gameId?: number;
-  fandomId?: number; // If provided, form is in edit mode
+  fandomId?: number; 
   onCancel: () => void;
   onSuccess: (fandomId: number) => void;
 }
