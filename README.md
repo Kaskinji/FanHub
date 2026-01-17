@@ -35,7 +35,16 @@ Backend:
  - **СУБД:** MSSQL server
  - **Язык:** C#
  - **Фреймворк:** Entity Framework
+ - **Контейнеризация** Docker
 
 Frontend:
  - **Язык:** Typescript
  - **Фреймворк:** React
+
+#### ER-диаграмма
+
+![FanHubDiagram](https://github.com/user-attachments/assets/8c04937c-cd3f-4b38-99de-39d83a7b7621)
+
+#### Дизайн
+
+[https://www.figma.com/design/hscJUXIfzIZxTk8k8Qa80P/Untitled?node-id=1-73&t=xLWBGJ7txyJw6qNv-0](https://www.figma.com/design/hscJUXIfzIZxTk8k8Qa80P/FanHub?node-id=1-73&p=f&t=b91y3gilY8We6BdL-0)
