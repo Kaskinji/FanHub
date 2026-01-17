@@ -1,0 +1,104 @@
+.registerForm {
+    max-width: 900px;
+    width: 100%;
+    background: inherit;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    padding: 2.5rem;
+    margin: 2rem auto;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.title {
+    font-size: 4rem;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 0.5rem 0;
+    font-family: 'Black Han Sans', sans-serif;
+}
+
+.subtitle {
+    color: white;
+    margin: 0;
+    font-size: 1rem;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.inputError {
+    border-color: #ef4444;
+
+    &:focus {
+        border-color: #ef4444;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+}
+
+.errorMessage {
+    color: #ef4444;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.rootError {
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+.submitButton {
+    margin-top: 0.5rem;
+    height: 3rem;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.footer {
+    text-align: center;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.footerText {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.link {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+@media (max-width: 480px) {
+    .loginForm {
+        margin: 1rem;
+        padding: 2rem 1.5rem;
+    }
+
+    .title {
+        font-size: 1.5rem;
+    }
+}

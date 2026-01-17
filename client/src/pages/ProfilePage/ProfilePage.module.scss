@@ -1,0 +1,99 @@
+.page {
+  min-height: 100vh;
+}
+
+.content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px 20px 20px 20px;
+  background-color: #48198645;
+  border-radius: 0px 0px 10px 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+.logoutIcon {
+  width: 20px;
+  height: 20px;
+  filter: invert(100%);
+  margin-left: 2px;
+  
+}
+.wrapper {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.registrationInfo {
+  display: flex;
+  margin-left: auto;
+}
+
+.registrationText {
+  font-weight: 700;
+  margin-right: 20px;
+}
+
+.editButton {
+  background-color: #4a1490;
+  color: white;
+  border: none;
+  padding: 5px 20px;
+  border-radius: 25px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #532587;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+.adminButton {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  background-color: rgba(189, 143, 213, 0.2);
+  border: none;
+  color: white;
+  margin-left: 20px;
+  &:hover {
+    background-color: rgba(189, 143, 213, 0.3);
+  }
+}
+
+.logoutButton {
+  padding: 0px 12px;
+  font-size: 0.85rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  margin-left: 20px;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  font-size: 18px;
+  color: #666;
+}
+
+.error {
+  text-align: center;
+  padding: 40px;
+  color: #dc3545;
+  font-size: 18px;
+}

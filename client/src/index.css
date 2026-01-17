@@ -1,0 +1,55 @@
+@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&display=swap");
+
+* {
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: "Baloo 2", sans-serif;
+    font-weight: 400;
+}
+
+:root {
+    font-family: 'Baloo 2', system-ui, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    width: 100%;
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+#root {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#app-wrapper {
+    height: 100%;
+    position: relative;
+    overflow-y: scroll; 
+    overflow-x: hidden;
+}
+
+
+@media print {
+    html, body {
+        height: auto;
+        overflow: visible;
+    }
+    
+    #app-wrapper {
+        height: auto;
+        overflow: visible;
+    }
+}

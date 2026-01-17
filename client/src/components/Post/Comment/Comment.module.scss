@@ -1,0 +1,363 @@
+.comment {
+  background: rgba(255, 255, 255, 0.13);
+  border: 2px solid #807f824e;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  display: flex;
+  gap: 1rem;
+  position: relative;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: #cacaca;
+    
+    .commentActionsButtons {
+      opacity: 1;
+    }
+  }
+  
+  &.nestedComment {
+    margin-top: 1rem;
+    margin-left: 2rem;
+    background: rgba(255, 255, 255, 0.08);
+    border-width: 1px;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+  }
+}
+
+.authorSection {
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #892be2, #6a1dbd);
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.avatarPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  background: linear-gradient(135deg, #892be2, #6a1dbd);
+}
+
+.contentSection {
+  flex: 1;
+  min-width: 0;
+}
+
+.commentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+}
+
+.username {
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.75);
+}
+
+.date {
+  font-size: 0.85rem;
+  color: #8f8f8f;
+  font-weight: 400;
+}
+
+.commentText {
+  color: #5c5b5b;
+  line-height: 1.5;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  word-break: break-word;
+}
+
+.commentActionsButtons {
+  position: absolute;
+  top: 6.5rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.actionButton {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(137, 43, 226, 0.2);
+  border-radius: 8px;
+  padding: 0.4rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover {
+    background: rgba(137, 43, 226, 0.1);
+    border-color: rgba(137, 43, 226, 0.4);
+    transform: translateY(-1px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.actionIcon {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+.editContainer {
+  margin-bottom: 1rem;
+}
+
+.editTextarea {
+  width: 100%;
+  padding: 0.8rem;
+  border: 2px solid rgba(137, 43, 226, 0.3);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+  color: #5c5b5b;
+  background: rgba(255, 255, 255, 0.9);
+  
+  &:focus {
+    outline: none;
+    border-color: rgba(137, 43, 226, 0.6);
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.editActions {
+  display: flex;
+  gap: 0.0rem;
+  margin-top: 0.5rem;
+}
+
+.cancelButton {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.confirmButton {
+  background: linear-gradient(90deg, #8a2be2, #6a0dad);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3);
+    background: linear-gradient(90deg, #7a1bd2, #5a0b9d);
+  }
+  
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+}
+
+.cancelButton {
+  background: rgba(128, 128, 128, 0.2);
+  color: #5c5b5b;
+  
+  &:hover:not(:disabled) {
+    background: rgba(128, 128, 128, 0.3);
+  }
+}
+
+.deleteConfirmOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.deleteConfirmModal {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.deleteConfirmTitle {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 1rem 0;
+}
+
+.deleteConfirmText {
+  font-size: 1rem;
+  color: #666;
+  margin: 0 0 1.5rem 0;
+  line-height: 1.5;
+}
+
+.deleteConfirmActions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.deleteConfirmButton,
+.deleteCancelButton {
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.deleteConfirmButton {
+  background: #dc3545;
+  color: white;
+  
+  &:hover:not(:disabled) {
+    background: #c82333;
+  }
+}
+
+.deleteCancelButton {
+  background: rgba(128, 128, 128, 0.2);
+  color: #5c5b5b;
+  
+  &:hover:not(:disabled) {
+    background: rgba(128, 128, 128, 0.3);
+  }
+}
+
+.commentActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(137, 43, 226, 0.1);
+}
+
+.reactions {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.reaction {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: #666;
+  font-size: 0.9rem;
+  background: rgba(137, 43, 226, 0.08);
+  padding: 0.3rem 0.6rem;
+  border-radius: 12px;
+  border: 1px solid rgba(137, 43, 226, 0.15);
+}
+
+.replyButton {
+  background: transparent;
+  border: 1px solid #892be2;
+  color: #892be2;
+  padding: 0.4rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: rgba(137, 43, 226, 0.1);
+    transform: translateY(-1px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.replies {
+  margin-top: 1rem;
+}

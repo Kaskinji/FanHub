@@ -1,0 +1,41 @@
+.showMoreButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 25px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    position: relative;
+    
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    &__text {
+        font-weight: 700;
+        line-height: 1;
+        transition: transform 0.3s ease;
+    }
+    
+    &__arrow {
+        font-weight: 700;
+        line-height: 1;
+        transition: transform 0.3s ease;
+        position: absolute;
+        left: 100%; 
+        margin-left: 8px; 
+    }
+    
+    &:not(:disabled):hover &__arrow {
+        transform: translateX(5px); 
+    }
+    
+    &:not(:disabled):hover &__text {
+       transform: scale(1.02);
+    }
+}

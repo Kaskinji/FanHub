@@ -1,0 +1,26 @@
+.fandoms {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  width: 100%;
+}
+
+.fandoms.singleFandom {
+  grid-template-columns: 1fr;
+  justify-items: center;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.noFandoms {
+  width: 100%;
+  text-align: center;
+  padding: 40px 20px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.noFandoms p {
+  margin: 0;
+  font-size: 16px;
+}
+

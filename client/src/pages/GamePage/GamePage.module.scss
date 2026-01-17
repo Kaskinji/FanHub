@@ -1,0 +1,236 @@
+.page {
+  min-height: 100vh;
+  font-family: sans-serif;
+  color: white;
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  color: white;
+}
+
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  padding: 40px;
+  text-align: center;
+}
+
+.errorText {
+  color: white;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.errorActions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.backButton {
+  margin-top: 10px;
+}
+
+.formContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  overflow-y: auto;
+  
+  
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  
+  
+  &::-webkit-scrollbar {
+    width: 3px;
+    transition: all 0.3s ease;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 1.5px;
+    transition: all 0.3s ease;
+  }
+  
+  &:hover::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  &:hover::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
+
+.contentSkeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px;
+  background-color: #6214ab34;
+  align-items: center;
+}
+
+.gameCardSkeleton {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 30px;
+  width: 100%;
+  animation: pulse 1.5s infinite;
+}
+
+.gameCardSkeletonLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.gameCardSkeletonTitleImage {
+  width: 100%;
+  height: 300px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+}
+
+.gameCardSkeletonStats {
+  display: flex;
+  gap: 20px;
+}
+
+.gameCardSkeletonStat {
+  width: 100px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.gameCardSkeletonRight {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.gameCardSkeletonDescription {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.gameCardSkeletonLine {
+  width: 100%;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.gameCardSkeletonLineShort {
+  width: 60%;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.gameCardSkeletonDetails {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  width: 100%;
+}
+
+.gameCardSkeletonDetail {
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.sectionTitleSkeleton {
+  width: 200px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  margin: 20px 0;
+  animation: pulse 1.5s infinite;
+}
+
+.fandomsSkeleton {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+.fandomCardSkeleton {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  overflow: hidden;
+  animation: pulse 1.5s infinite;
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+}
+
+.fandomCardSkeletonImage {
+  width: 100%;
+  height: 120px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.fandomCardSkeletonContent {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.fandomCardSkeletonTitle {
+  width: 70%;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.fandomCardSkeletonText {
+  width: 100%;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  
+  &:nth-child(2) {
+    width: 85%;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

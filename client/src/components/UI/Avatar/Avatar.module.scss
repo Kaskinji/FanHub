@@ -1,0 +1,93 @@
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 50%;
+  font-weight: bold;
+  user-select: none;
+  
+  &.clickable {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
+
+
+.small {
+  width: 32px;
+  height: 32px;
+  font-size: 14px; 
+}
+
+.medium {
+  width: 48px;
+  height: 48px;
+  font-size: 20px; 
+}
+
+.large {
+  width: 150px;
+  height: 150px;
+  font-size: 64px; 
+}
+
+.xlarge {
+  width: 200px;
+  height: 200px;
+  font-size: 86px; 
+}
+
+
+.relativeSmall {
+  width: 2rem; 
+  height: 2rem;
+  font-size: 0.875rem; 
+}
+
+.relativeMedium {
+  width: 3rem; 
+  height: 3rem;
+  font-size: 1.25rem; 
+}
+
+.relativeLarge {
+  width: 9.375rem; 
+  height: 9.375rem;
+  font-size: 4rem; 
+}
+
+.relativeXlarge {
+  width: 12.5rem; 
+  height: 12.5rem;
+  font-size: 5.375rem; 
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #741ec5;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Baloo 2";
+  
+  &::after {
+    content: attr(data-initial);
+    font-size: inherit; 
+    font-weight: inherit;
+  }
+}

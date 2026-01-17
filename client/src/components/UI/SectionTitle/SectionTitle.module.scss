@@ -1,0 +1,65 @@
+.sectionTitleWrapper {
+  width: 100%;
+  background: rgb(53, 7, 96);
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  
+}
+
+.sectionTitle {
+  background: white;
+  color: black;
+  width: fit-content;
+  padding: 6px 24px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 1.25rem;
+  text-align: center;
+  letter-spacing: 0.5px;
+  font-family: "Baloo 2";
+  
+}
+
+.large {
+  .sectionTitle {
+    font-size: 1.5rem;
+    padding: 8px 32px;
+  }
+}
+
+.small {
+  .sectionTitle {
+    font-size: 1rem;
+    padding: 4px 16px;
+    margin: 20px auto 12px;
+  }
+}
+
+.center {
+  text-align: center;
+}
+
+.left {
+  .sectionTitleWrapper {
+    display: flex;
+    justify-content: flex-start;
+  }
+  
+  .sectionTitle {
+    margin-left: 24px;
+    margin-right: auto;
+  }
+}
+
+.right {
+  .sectionTitleWrapper {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .sectionTitle {
+    margin-right: 24px;
+    margin-left: auto;
+  }
+}

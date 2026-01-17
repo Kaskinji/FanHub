@@ -1,0 +1,26 @@
+.gameRight {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.infoBox {
+  background: white;
+  color: #000;
+  border-radius: 14px;
+  padding: 30px;
+}
+
+.infoTitle {
+  color: #4c1682;
+  font-weight: 700;
+}
+
+.detailText {
+  margin-left: 15px;
+}
+
+.detailBox {
+  display: flex;
+}
+

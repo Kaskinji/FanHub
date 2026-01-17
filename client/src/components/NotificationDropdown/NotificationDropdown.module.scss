@@ -1,0 +1,504 @@
+.dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 450px;
+  max-height: 600px;
+  background: rgb(38, 18, 77);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #400A72;
+  border-bottom: 2px solid rgb(189, 67, 255);
+}
+
+.title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: white;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.markAllReadButton {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+    color: white;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.hideAllButton {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+    color: white;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.closeButton {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-size: 24px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  line-height: 1;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  background: rgb(38, 18, 77);
+}
+
+.error,
+.empty {
+  padding: 24px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+}
+
+.loading {
+  padding: 12px;
+}
+
+.notificationSkeletons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.notificationSkeletonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.notificationSkeletonHeader {
+  height: 16px;
+  width: 200px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  animation: pulse 1.5s infinite;
+  margin: 0 4px;
+}
+
+.notificationSkeletonItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  animation: pulse 1.5s infinite;
+}
+
+.notificationSkeletonImage {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+}
+
+.notificationSkeletonContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.notificationSkeletonText {
+  height: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  width: 80%;
+  
+  &:last-child {
+    width: 60%;
+  }
+}
+
+.notificationSkeletonStatus {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.error {
+  color: #ff6b6b;
+}
+
+.notificationsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.notificationGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.notificationHeader {
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 0 4px;
+}
+
+.fandomNameHighlight {
+  color: #f281ff;
+  font-weight: 700;
+  background: rgba(242, 129, 255, 0.2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 2px;
+}
+
+.notificationItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  transition: background-color 0.2s;
+  border: 1px solid transparent;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  &.unread {
+    background: rgba(64, 10, 114, 0.3);
+    border-left-color: #f281ff;
+    border-left-width: 3px;
+    border-left-style: solid;
+  }
+
+  &.hidden {
+    opacity: 0.6;
+  }
+
+  &.pendingDelete {
+    opacity: 0.5;
+    background: rgba(255, 0, 0, 0.1);
+    border-left-color: #ff6b6b;
+    border-left-width: 3px;
+    border-left-style: solid;
+    text-decoration: line-through;
+    pointer-events: none;
+  }
+
+  &.clickable {
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}
+
+.notificationImageWrapper {
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgb(255, 255, 255);
+}
+
+.notificationImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+}
+
+.notificationImagePlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #400A72;
+  color: white;
+}
+
+.notificationContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.notificationFandomName,
+.notificationEventTitle,
+.notificationPostTitle {
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.notificationStatus {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.statusNew {
+  background: #400A72;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+
+  &::before {
+    content: "Read";
+  }
+
+  &:hover {
+    background: #5a1a9a;
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.statusUnreadWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  gap: 4px;
+}
+
+.statusUnreadDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f281ff;
+  flex-shrink: 0;
+}
+
+.statusUnreadWrapper:hover .statusHideButton {
+  opacity: 1;
+  pointer-events: all;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.statusReadWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.statusRead {
+  color: #f281ff;
+  font-size: 1.2rem;
+  font-weight: bold;
+  transition: opacity 0.2s ease;
+}
+
+.statusHideButton {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  opacity: 0;
+  pointer-events: none;
+  line-height: 1;
+
+  .statusReadWrapper:hover &,
+  .statusUnreadWrapper:hover & {
+    opacity: 1;
+    pointer-events: all;
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.statusReadWrapper:hover .statusRead {
+  opacity: 0;
+}
+
+.statusHidden {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+}
+
+
+.content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
+@media (max-width: 768px) {
+  .dropdown {
+    width: 350px;
+    max-height: 500px;
+    right: -10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dropdown {
+    width: calc(100vw - 20px);
+    right: 10px;
+    left: 10px;
+  }
+
+  .header {
+    padding: 12px 16px;
+  }
+
+  .title {
+    font-size: 1.1rem;
+  }
+
+  .notificationItem {
+    padding: 10px 12px;
+  }
+}
+
